@@ -1,4 +1,4 @@
-# Deploy exoticalloycn.com — V17
+# Deploy exoticalloycn.com — V18
 
 ## Recommended topology
 GitHub private repo `wuxi304-collab/tongjun-overseas` → Vercel → `exoticalloycn.com`
@@ -15,8 +15,11 @@ GitHub private repo `wuxi304-collab/tongjun-overseas` → Vercel → `exoticallo
 
 If the webhook is not configured or delivery fails, the browser falls back to a structured email addressed to `ask2205@outlook.com`.
 
-## V17 RFQ payload
+## RFQ payload
 The server payload includes the structured technical RFQ plus an `evidence_package` planning string derived from the RFQ fields. This is a planning aid only and must not be treated as a certification, stock, origin or capability promise.
+
+## V18 quality model
+Public Quality + Traceability content now separates Manufacturer, Stockholder, Processor and Tongjun Supply Desk responsibilities. This source-role model is informational and must remain consistent with the legal origin and certified source documents used for each order.
 
 ## DNS
 After the domain is registered, add the records exactly as shown by Vercel's Domains screen. Do not copy generic DNS values from old screenshots or tutorials.
