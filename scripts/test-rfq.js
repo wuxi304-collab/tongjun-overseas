@@ -14,7 +14,7 @@ async function run(){
       name:'Buyer',company:'Example',email:'buyer@example.com',grade:'UNS N06625',
       size:'3 x 1000 x 2000 mm',qty:'2 t',application:'Chemical service',
       procurement_stage:'trial',buyer_gate:'approval',decision_ref:'BR-20260907-ABC123',
-      approval:'Project AVL'
+      approval:'Project AVL',incoterm:'CIF',destination:'Hamburg, Germany',delivery_target:'2026-11-15',packing:'Export seaworthy',offer_ref:'OF-20260907-ABC123'
     }
   };
   let statusCode=200, payload=null;
@@ -28,6 +28,11 @@ async function run(){
   assert.equal(sent.buyer_gate,'approval');
   assert.equal(sent.decision_ref,'BR-20260907-ABC123');
   assert.equal(sent.approval,'Project AVL');
+  assert.equal(sent.incoterm,'CIF');
+  assert.equal(sent.destination,'Hamburg, Germany');
+  assert.equal(sent.delivery_target,'2026-11-15');
+  assert.equal(sent.packing,'Export seaworthy');
+  assert.equal(sent.offer_ref,'OF-20260907-ABC123');
 
   const badReq={...req,headers:{origin:'https://untrusted.example'}};
   let badStatus=200;
@@ -35,7 +40,7 @@ async function run(){
   await handler(badReq,badRes);
   assert.equal(badStatus,403);
 
-  console.log('PASS: RFQ V21 buyer-decision payload + origin gate validated.');
+  console.log('PASS: RFQ V22 buyer-decision + qualified-offer payload + origin gate validated.');
 }
 
 run().catch(err=>{ console.error(err); process.exit(1); });
