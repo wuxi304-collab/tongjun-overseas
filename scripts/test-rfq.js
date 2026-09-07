@@ -40,7 +40,27 @@ async function run(){
   await handler(badReq,badRes);
   assert.equal(badStatus,403);
 
-  console.log('PASS: RFQ V22 buyer-decision + qualified-offer payload + origin gate validated.');
+  // No production route: API must fail closed so the browser can invoke the email fallback.
+  delete process.env.RFQ_WEBHOOK_URL;
+  let routeStatus=200, routePayload=null;
+  const routeRes={setHeader(){},status(n){routeStatus=n;return this},json(x){routePayload=x;return x}};
+  await handler(req,routeRes);
+  assert.equal(routeStatus,503);
+  assert.equal(routePayload.error,'rfq_route_not_configured');
+  process.env.RFQ_WEBHOOK_URL='https://example.invalid/hook';
+
+  // Lightweight per-instance rate gate: the ninth request from one forwarded IP is rejected.
+  let limitedStatus=0;
+  for(let i=0;i<9;i++){
+    let currentStatus=200;
+    const rateReq={...req,headers:{origin:'https://exoticalloycn.com','x-forwarded-for':'203.0.113.25'}};
+    const rateRes={setHeader(){},status(n){currentStatus=n;return this},json(x){return x}};
+    await handler(rateReq,rateRes);
+    limitedStatus=currentStatus;
+  }
+  assert.equal(limitedStatus,429);
+
+  console.log('PASS: RFQ V25 payload, origin gate, fail-closed fallback path and rate gate validated.');
 }
 
 run().catch(err=>{ console.error(err); process.exit(1); });
