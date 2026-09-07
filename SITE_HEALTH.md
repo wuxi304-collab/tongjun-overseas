@@ -1,28 +1,25 @@
-# SITE HEALTH — V26
+# SITE HEALTH — V27
 
-Date: 2026-09-07
+Date: 2026-09-08
 
-- Release: V26 — Canonical Source Mirror Convergence
-- Package version: 26.0.0
-- `npm run check`: PASS
+- Release: V27 — Remote Text Canonicalization
+- Package version: 27.0.0
+- Complete local `npm run check`: PASS
+- Complete local `npm run verify:source`: PASS
+- Text-set `npm run verify:text-source`: PASS
 - HTML pages: 50
 - Indexable canonical routes: 46
 - Local clean-route crawl: 46 / 46 PASS
 - Sitemap parity: exact match to indexable canonical set
-- Structured data: valid JSON-LD present on every indexable page
-- Social metadata: Open Graph + Twitter image/card present on every indexable page
-- Legal navigation: Privacy + Terms linked from every global footer
+- Structured data: valid JSON-LD on every indexable page
+- Legal navigation: Privacy + Terms in every global footer
 - Controlled technical sheets: 6 references
 - Flagship revision state: 625 / 718 / C-276 / 36Ni-Fe → REV 03; 825 / 2507 → REV 02
 - RFQ safeguards: origin allowlist + payload limits + honeypot + fail-closed webhook + email fallback + lightweight per-instance rate gate
-- Shared-asset caching: short revalidation policy; no one-year immutable cache on mutable CSS / JS
-- Security headers: HSTS + nosniff + frame deny + referrer + permissions + CSP + COOP
 - Canonical domain: `https://exoticalloycn.com`
+- GitHub target: `wuxi304-collab/tongjun-overseas`
+- Remote text canonicalization: V27 target
+- Remaining binary gate: 15 referenced `assets/images/*.webp` files
 - Production RFQ webhook: still requires `RFQ_WEBHOOK_URL`
 - Vercel production binding: not established / not asserted
-- GitHub target: `wuxi304-collab/tongjun-overseas`
-- Screenshot-level browser QA: NOT completed; local navigation is blocked by the execution environment
-
-## V26 source-mirror note
-
-The validated public behavior remains the V25 launch baseline. V26 advances GitHub source convergence but does not declare production readiness until the remote tree is complete, Vercel ownership is established, RFQ webhook delivery is verified, branded mail is closed and a live-domain browser crawl passes.
+- Screenshot-level browser QA: NOT completed

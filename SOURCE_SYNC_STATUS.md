@@ -17,7 +17,7 @@ The only permitted remote source gap after V27 text canonicalization is the 15 r
 
 ## Production-completion gate
 
-1. Text manifest parity: materialization in progress; remote verification pending.
+1. Text manifest parity: complete.
 2. Mirror and byte-match all 15 WebP assets.
 3. Verify full remote inventory against the full V27 manifest.
 4. Run `npm run check` and `npm run verify:source` from a fresh GitHub checkout.

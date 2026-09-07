@@ -5,7 +5,7 @@ Legal entity: Tongjun Metal Technology (Wuxi) Co., Ltd.
 Location: Wuxi, Jiangsu, China
 
 ## Positioning
-Engineering-led special-metals sourcing and qualification from China. Manufacturing, stockholding, processing and Tongjun supply-desk responsibilities are declared as separate source roles.
+Special-metals sourcing, mill qualification and non-standard material development from China. The company does not claim to manufacture every listed material itself. Manufacturing, stockholding, processing and international-origin routes are kept distinct.
 
 ## Technical navigation
 - Technical data center: /technical-data
@@ -26,10 +26,10 @@ Engineering-led special-metals sourcing and qualification from China. Manufactur
 - Titanium and zirconium project-material routes
 
 ## Buyer workflow
-Requirement -> service fit -> manufacturability -> evidence readiness -> buyer release -> qualified offer -> trial / commercial supply.
+Application -> material -> product form -> dimensional capability -> qualification -> supply route -> trial / commercial supply.
 
 ## Qualification boundary
-Stock, origin, dimensional capability, inspection scope and buyer approval status are confirmed against the RFQ, purchase order and applicable specification before commercial release.
+Website content is sourcing orientation, not a guarantee of current stock, mill approval, end-use qualification or dimensional capability. These are confirmed per RFQ.
 
 ## Flagship technical data
 - Alloy 625 / UNS N06625: /technical-alloy-625

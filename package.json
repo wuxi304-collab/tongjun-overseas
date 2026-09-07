@@ -1,8 +1,10 @@
 {
   "name": "exoticalloycn-site",
   "private": true,
-  "version": "26.0.0",
+  "version": "27.0.0",
   "scripts": {
-    "check": "node --check api/rfq.js && node --check assets/site.js && node scripts/validate-site.js && node scripts/test-rfq.js && node scripts/audit-launch.js"
+    "check": "node --check api/rfq.js && node --check assets/site.js && node scripts/validate-site.js && node scripts/test-rfq.js && node scripts/audit-launch.js",
+    "verify:source": "node scripts/verify-source-manifest.js",
+    "verify:text-source": "node scripts/verify-text-manifest.js"
   }
 }

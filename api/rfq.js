@@ -22,7 +22,7 @@ function clientKey(req){
 }
 function withinRateLimit(req,res){
   const key=clientKey(req);
-  if(!key) return true; // local tests / non-Vercel execution
+  if(!key) return true;
   const now=Date.now();
   let bucket=rateBuckets.get(key);
   if(!bucket || now-bucket.started>=RATE_WINDOW_MS){
@@ -73,7 +73,7 @@ module.exports = async function handler(req, res) {
   if (JSON.stringify(raw).length > MAX_BODY_CHARS) return res.status(413).json({ok:false,error:'payload_too_large'});
   const b={};
   for(const [key,max] of Object.entries(LIMITS)) b[key]=norm(raw[key],max);
-  if (b.website) return res.status(202).json({ok:true}); // honeypot: silently accept bots
+  if (b.website) return res.status(202).json({ok:true});
 
   const required=['name','company','email','grade','size','qty','application'];
   const missing=required.filter(k=>!b[k]);

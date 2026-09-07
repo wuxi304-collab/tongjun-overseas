@@ -24,6 +24,7 @@ V18 made source roles and chain-of-custody explicit. V19 connected claims to evi
   - Alloy C-276
   - 36Ni-Fe / Invar 36
 - Bumped those four controlled technical references from REV 02 to **REV 03** and updated the Document Center register.
+- Added an executable RFQ regression test covering buyer-decision fields and origin rejection.
 
 ## Decision rule
 

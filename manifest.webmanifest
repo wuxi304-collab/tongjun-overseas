@@ -5,13 +5,6 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0b1320",
-  "description": "Engineering-led special-metals sourcing and qualification from China.",
-  "icons": [
-    {
-      "src": "/assets/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ]
+  "description": "Special metals sourcing, mill qualification and non-standard material development from China.",
+  "icons": []
 }

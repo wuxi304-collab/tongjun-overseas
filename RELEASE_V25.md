@@ -1,41 +1,35 @@
-# Release V25 — Launch Gate & Production Hardening
+# Release V25 — Launch Gate
 
 Date: 2026-09-07
 
-V25 is a launch-control release. It does not expand the material portfolio or add a new buyer workflow. It closes production-readiness gaps that could undermine an otherwise credible technical site.
+V25 is a launch-control release. It does not add a new sourcing workflow. It converts launch readiness into executable checks and closes SEO, legal, RFQ-fallback and public-navigation gaps identified in the V24 source.
 
-## Launch-gate changes
+## Changes
 
-- Added Privacy and Terms access to the global footer on every HTML page.
-- Tightened long / weak SEO titles and descriptions and completed Open Graph / Twitter metadata on the remaining indexable routes.
-- Added valid JSON-LD to every indexable page that previously had no structured-data object.
-- Corrected the Technical Data Center directory so Alloy 625, 718, C-276 and 36Ni-Fe display **REV 03**, matching the controlled sheets and Document Center; Alloy 825 and Super Duplex 2507 remain REV 02.
-- Cleaned public Privacy / Terms wording, added explicit legal-entity / last-updated context and removed deployment-scaffolding language.
-- Added an RFQ no-JavaScript email fallback notice and a privacy-processing notice near submission.
-- Added a lightweight per-instance RFQ rate gate while retaining the origin allowlist, honeypot, payload limits and fail-closed webhook behavior.
-- Extended RFQ regression tests to cover the `503 → browser email fallback` path and rate-limit rejection.
-- Replaced one-year immutable caching on mutable shared assets with a short revalidation policy so CSS / JS updates cannot remain stale for a year.
-- Added Content-Security-Policy and Cross-Origin-Opener-Policy response headers.
-- Aligned `llms.txt` and the web manifest with the current source-role / buyer-release model.
-- Added V25 launch assertions to the site validator: metadata range, schema validity, exact sitemap parity, legal links, technical revision parity and deployment hardening.
+- Added `scripts/audit-launch.js` and wired it into `npm run check`.
+- Launch audit now verifies title / meta-description ranges for indexable pages, canonical URLs, one-H1 structure, Open Graph essentials, sitemap/noindex consistency, JSON-LD parseability, internal CTA targets, legal footer links and RFQ email fallback presence.
+- SEO metadata tightened across corporate, application, material and resource pages; indexable pages now sit inside the launch title/description envelope.
+- Homepage organization schema now includes the technical-enquiry contact point and a separate WebSite schema.
+- Privacy Notice expanded around RFQ/contact data, technical requirement data, service providers, retention, security and buyer choices.
+- Terms of Use expanded around reference values, capability/availability, quotation boundaries and transaction-document precedence.
+- RFQ acknowledgement now links the Privacy Notice while retaining the technical-qualification boundary.
+- Privacy and Terms links are exposed in the public footer.
+
+## Technical-data boundary
+
+No chemistry, mechanical-property, density, CTE value or product-standard route changed in V25. Controlled technical document revisions therefore remain unchanged.
 
 ## Validation
 
 `npm run check` → PASS
 
-- 50 HTML files passed structural / route / image / canonical validation.
-- RFQ V25 regression passed payload, origin, fail-closed fallback path and rate-gate tests.
-- Local clean-route crawl: **46 / 46** indexable canonical routes served HTTP 200 and contained the expected production canonical.
+- 50 HTML files: route / canonical / image / deployment validation PASS
+- RFQ V22 regression: buyer-decision + qualified-offer payload + origin gate PASS
+- V25 launch audit: SEO + sitemap + JSON-LD + CTA routes + legal links + RFQ fallback PASS
 
-## Controlled-document boundary
+## Remaining external launch gates
 
-V25 corrects directory revision labels only. It does **not** change chemistry, mechanical properties, density, CTE, product-form standards or sourcing qualification values. Controlled technical sheets therefore keep their existing revisions.
-
-## Remaining launch blockers
-
-- Vercel production project / team is not discoverable through the currently connected Vercel account.
-- `RFQ_WEBHOOK_URL` has not been confirmed in production.
-- Domain DNS does not yet resolve to a live production site from the current environment.
-- Branded-domain email and SPF / DKIM / DMARC remain operational tasks.
-- GitHub `main` is still not a complete production-source mirror.
-- Browser screenshot-level visual QA remains uncompleted because the execution environment blocks local browser navigation.
+- Production Vercel project/domain binding is not asserted by this release.
+- `RFQ_WEBHOOK_URL` must be configured for server-side production routing; structured email fallback remains available.
+- Screenshot-level browser/device QA has not been completed in the current environment.
+- GitHub `main` must be proven against the complete V25 tree from a fresh checkout before it is called production-deployable.

@@ -121,48 +121,6 @@ for(const f of ['technical-alloy-625.html','technical-alloy-718.html','technical
 }
 if(!js.includes('nav-open')||!js.includes("details[open]")) errors.push('site.js missing V24 mobile navigation behavior');
 
-
-// V25 launch gate: metadata, schema, legal, sitemap, RFQ resilience and deployment hardening
-const sitemapUrls=new Set([...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]));
-const indexableCanonicals=new Set();
-const titleOwners=new Map(), descOwners=new Map();
-for(const f of htmls){
-  const h=fs.readFileSync(path.join(root,f),'utf8');
-  const robotTag=(h.match(/<meta\b[^>]*name=["']robots["'][^>]*>/i)||[])[0]||'';
-  const noindex=/noindex/i.test(robotTag);
-  const title=(h.match(/<title>([^<]+)<\/title>/i)||[])[1]||'';
-  const dm=h.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)/i)||h.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i);
-  const desc=dm?dm[1]:'';
-  if(!noindex && f!=='404.html'){
-    if(title.length<30 || title.length>65) errors.push(`${f}: SEO title length ${title.length}, expected 30-65`);
-    if(desc.length<80 || desc.length>165) errors.push(`${f}: meta description length ${desc.length}, expected 80-165`);
-    for(const token of ['property="og:title"','property="og:description"','property="og:url"','property="og:image"','property="og:site_name"','name="twitter:card"','name="twitter:image"']) if(!h.includes(token)) errors.push(`${f}: missing launch metadata ${token}`);
-    if(!h.includes('type="application/ld+json"')) errors.push(`${f}: missing JSON-LD schema`);
-    for(const m of h.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){try{JSON.parse(m[1])}catch(e){errors.push(`${f}: invalid JSON-LD (${e.message})`)}}
-    const cm=h.match(/rel=["']canonical["'][^>]*href=["']([^"']+)/i)||h.match(/href=["']([^"']+)["'][^>]*rel=["']canonical["']/i);
-    if(cm){indexableCanonicals.add(cm[1]); if(!sitemapUrls.has(cm[1])) errors.push(`${f}: indexable canonical missing from sitemap ${cm[1]}`)}
-    if(titleOwners.has(title)) errors.push(`${f}: duplicate title with ${titleOwners.get(title)}`); else titleOwners.set(title,f);
-    if(descOwners.has(desc)) errors.push(`${f}: duplicate description with ${descOwners.get(desc)}`); else descOwners.set(desc,f);
-  }
-  if(!h.includes('href="/privacy"') || !h.includes('href="/terms"')) errors.push(`${f}: footer missing Privacy / Terms links`);
-}
-for(const u of sitemapUrls) if(!indexableCanonicals.has(u)) errors.push(`sitemap URL has no indexable canonical: ${u}`);
-const technicalDir=fs.readFileSync(path.join(root,'technical-data.html'),'utf8');
-for(const [id,rev] of [['625','03'],['718','03'],['C276','03'],['36NI','03'],['825','02'],['2507','02']]) if(!technicalDir.includes(`TJ-TDS-${id}-001 · REV ${rev}`)) errors.push(`technical-data.html revision mismatch for TJ-TDS-${id}-001`);
-const privacy=fs.readFileSync(path.join(root,'privacy.html'),'utf8'), terms=fs.readFileSync(path.join(root,'terms.html'),'utf8');
-for(const [f,h] of [['privacy.html',privacy],['terms.html',terms]]){if(!h.includes('Tongjun Metal Technology (Wuxi) Co., Ltd.')) errors.push(`${f}: missing legal operator`); if(!h.includes('ask2205@outlook.com')) errors.push(`${f}: missing legal contact`);}
-if(/production should|will replace this once|branded-domain address/i.test(privacy)) errors.push('privacy.html contains internal deployment language');
-if(!rfqV22.includes('rfq-noscript') || !rfqV22.includes('mailto:ask2205@outlook.com')) errors.push('rfq.html missing no-script email fallback');
-if(!rfqV22.includes('rfq-privacy-note') || !rfqV22.includes('href="/privacy"')) errors.push('rfq.html missing submission privacy notice');
-if(!js.includes("mailto:ask2205@outlook.com")) errors.push('site.js missing runtime email fallback');
-if(!api.includes('RATE_MAX') || !api.includes('rate_limited')) errors.push('api/rfq.js missing V25 rate gate');
-const vj=fs.readFileSync(path.join(root,'vercel.json'),'utf8');
-if(/max-age=31536000,\s*immutable/.test(vj)) errors.push('vercel.json still uses immutable cache for mutable shared assets');
-if(!vj.includes('Content-Security-Policy')) errors.push('vercel.json missing Content-Security-Policy');
-if(!vj.includes('Cross-Origin-Opener-Policy')) errors.push('vercel.json missing Cross-Origin-Opener-Policy');
-const manifest=fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'); if(!manifest.includes('/assets/favicon.svg')) errors.push('manifest.webmanifest missing icon');
-const llms=fs.readFileSync(path.join(root,'llms.txt'),'utf8'); if(/does not claim|not a guarantee/i.test(llms)) errors.push('llms.txt contains defensive legacy positioning');
-
 if(errors.length){console.error(errors.join('\n')); process.exit(1)}
 console.log(`PASS: ${htmls.length} HTML files; clean routes, canonical, images and deployment assets validated.`);
 

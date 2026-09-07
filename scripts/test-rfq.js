@@ -1,5 +1,16 @@
 const assert = require('assert');
 
+function makeRes(){
+  let statusCode=200,payload=null;
+  const headers={};
+  return {
+    setHeader(k,v){headers[k]=v;},
+    status(n){statusCode=n;return this;},
+    json(x){payload=x;return x;},
+    get statusCode(){return statusCode;}, get payload(){return payload;}, get headers(){return headers;}
+  };
+}
+
 async function run(){
   process.env.RFQ_WEBHOOK_URL='https://example.invalid/hook';
   process.env.RFQ_ALLOWED_ORIGINS='https://exoticalloycn.com';
@@ -17,13 +28,11 @@ async function run(){
       approval:'Project AVL',incoterm:'CIF',destination:'Hamburg, Germany',delivery_target:'2026-11-15',packing:'Export seaworthy',offer_ref:'OF-20260907-ABC123'
     }
   };
-  let statusCode=200, payload=null;
-  const res={setHeader(){},status(n){statusCode=n;return this},json(x){payload=x;return x}};
+  let res=makeRes();
   await handler(req,res);
-
-  assert.equal(statusCode,202);
-  assert.equal(payload.ok,true);
-  assert.match(payload.request_id,/^TJ-\d{8}-[0-9A-F]{8}$/);
+  assert.equal(res.statusCode,202);
+  assert.equal(res.payload.ok,true);
+  assert.match(res.payload.request_id,/^TJ-\d{8}-[0-9A-F]{8}$/);
   assert.equal(sent.procurement_stage,'trial');
   assert.equal(sent.buyer_gate,'approval');
   assert.equal(sent.decision_ref,'BR-20260907-ABC123');
@@ -34,33 +43,30 @@ async function run(){
   assert.equal(sent.packing,'Export seaworthy');
   assert.equal(sent.offer_ref,'OF-20260907-ABC123');
 
-  const badReq={...req,headers:{origin:'https://untrusted.example'}};
-  let badStatus=200;
-  const badRes={setHeader(){},status(n){badStatus=n;return this},json(x){return x}};
-  await handler(badReq,badRes);
-  assert.equal(badStatus,403);
+  res=makeRes();
+  await handler({...req,headers:{origin:'https://untrusted.example'}},res);
+  assert.equal(res.statusCode,403);
 
-  // No production route: API must fail closed so the browser can invoke the email fallback.
+  const oldWebhook=process.env.RFQ_WEBHOOK_URL;
   delete process.env.RFQ_WEBHOOK_URL;
-  let routeStatus=200, routePayload=null;
-  const routeRes={setHeader(){},status(n){routeStatus=n;return this},json(x){routePayload=x;return x}};
-  await handler(req,routeRes);
-  assert.equal(routeStatus,503);
-  assert.equal(routePayload.error,'rfq_route_not_configured');
-  process.env.RFQ_WEBHOOK_URL='https://example.invalid/hook';
+  res=makeRes();
+  await handler(req,res);
+  assert.equal(res.statusCode,503);
+  assert.equal(res.payload.error,'rfq_route_not_configured');
+  process.env.RFQ_WEBHOOK_URL=oldWebhook;
 
-  // Lightweight per-instance rate gate: the ninth request from one forwarded IP is rejected.
-  let limitedStatus=0;
-  for(let i=0;i<9;i++){
-    let currentStatus=200;
-    const rateReq={...req,headers:{origin:'https://exoticalloycn.com','x-forwarded-for':'203.0.113.25'}};
-    const rateRes={setHeader(){},status(n){currentStatus=n;return this},json(x){return x}};
-    await handler(rateReq,rateRes);
-    limitedStatus=currentStatus;
+  for(let i=1;i<=9;i++){
+    res=makeRes();
+    await handler({...req,headers:{origin:'https://exoticalloycn.com','x-forwarded-for':'198.51.100.24'}},res);
+    if(i<=8) assert.equal(res.statusCode,202);
+    else {
+      assert.equal(res.statusCode,429);
+      assert.equal(res.payload.error,'rate_limited');
+      assert.ok(Number(res.headers['Retry-After'])>0);
+    }
   }
-  assert.equal(limitedStatus,429);
 
-  console.log('PASS: RFQ V25 payload, origin gate, fail-closed fallback path and rate gate validated.');
+  console.log('PASS: RFQ payload, origin gate, fail-closed route and rate gate validated.');
 }
 
 run().catch(err=>{ console.error(err); process.exit(1); });

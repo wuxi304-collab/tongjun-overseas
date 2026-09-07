@@ -5,6 +5,7 @@ const htmlFiles=fs.readdirSync(root).filter(f=>f.endsWith('.html')).sort();
 const sitemap=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');
 const sitemapRoutes=new Set([...sitemap.matchAll(/<loc>https:\/\/exoticalloycn\.com([^<]*)<\/loc>/g)].map(m=>m[1]||'/'));
 const failures=[];
+const warn=[];
 const routeFor=f=>f==='index.html'?'/':'/'+f.replace(/\.html$/,'');
 const targetExists=href=>{
   if(!href.startsWith('/')||href.startsWith('//')) return true;
@@ -57,5 +58,6 @@ if(!String(headerPairs.find(x=>x.key==='Cache-Control')?.value||'').includes('ma
 const api=fs.readFileSync(path.join(root,'api','rfq.js'),'utf8');
 if(!api.includes('RATE_MAX')) failures.push('api/rfq.js: rate gate missing');
 if(!api.includes("rfq_route_not_configured")) failures.push('api/rfq.js: fail-closed route guard missing');
+
 if(failures.length){ console.error('FAIL: launch audit'); failures.forEach(x=>console.error(' - '+x)); process.exit(1); }
 console.log(`PASS: launch audit (${htmlFiles.length} HTML; SEO, sitemap, JSON-LD, CTA routes, legal links, RFQ fallback).`);
