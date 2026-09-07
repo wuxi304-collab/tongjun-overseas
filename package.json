@@ -3,6 +3,6 @@
   "private": true,
   "version": "21.0.0",
   "scripts": {
-    "check": "node --check api/rfq.js && node --check assets/site.js && node scripts/validate-site.js"
+    "check": "node --check api/rfq.js && node --check assets/site.js && node scripts/validate-site.js && node scripts/test-rfq.js"
   }
 }
