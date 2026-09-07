@@ -4,9 +4,9 @@ Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.
 
 ## Current release
 
-**V22 — Qualified Offer System** (2026-09-07)
+**V23 — Visual Decision Hierarchy** (2026-09-07)
 
-V22 carries the buyer decision architecture into a qualified commercial handoff: material identity, supply route, evidence scope, logistics basis and commercial assumptions remain visible as separate quotation controls. V21 buyer gates and all earlier source-role / evidence boundaries remain intact.
+V23 keeps the V22 qualified-offer logic intact but tightens the buyer-facing visual hierarchy: the homepage, Quality, Technical RFQ and flagship controlled references now expose the same release gates with lower visual density and better mobile scanning.
 
 ### Public architecture
 
@@ -49,4 +49,4 @@ The source release contains internal operating material and governance documents
 
 ## Release governance
 
-Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V22.md` before material changes.
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V23.md` before material changes.
