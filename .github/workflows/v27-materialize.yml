@@ -1,0 +1,56 @@
+name: V27 text materializer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.sync/v27/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout bootstrap tree
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild and verify V27 text archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=/tmp/exoticalloy-v27-text.tar.xz
+          : > "$out"
+          cat .sync/v27/part00.bin >> "$out"
+          cat .sync/v27/part01.bin >> "$out"
+          cat .sync/v27/part02.bin >> "$out"
+          cat .sync/v27/part03.bin >> "$out"
+          cat .sync/v27/part04.bin >> "$out"
+          cat .sync/v27/part05.bin >> "$out"
+          for f in .sync/v27/p06s*.hex; do xxd -r -p "$f" >> "$out"; done
+          cat .sync/v27/part07.bin >> "$out"
+          cat .sync/v27/part08.bin >> "$out"
+          for f in .sync/v27/p09s*.hex; do xxd -r -p "$f" >> "$out"; done
+          for f in .sync/v27/p10s*.hex; do xxd -r -p "$f" >> "$out"; done
+          echo "b609fb2535524db31efa6e6510bc61943915e7e015a7d248e7cd3dfe788bd4ff  $out" | sha256sum -c -
+          tar -xJf "$out" -C .
+          node --check api/rfq.js
+          node --check assets/site.js
+          npm run verify:text-source
+
+      - name: Commit materialized text source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Tongjun V27 Sync"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No text-source changes to commit."
+            exit 0
+          fi
+          git commit -m "sync: materialize V27 text canonical source"
+          git push origin HEAD:main
