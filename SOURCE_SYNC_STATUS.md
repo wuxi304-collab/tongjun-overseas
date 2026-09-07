@@ -1,36 +1,24 @@
-# Source Sync Status — V25
+# Source Sync Status — V26
 
-Date: 2026-09-07
+Date: 2026-09-07  
 Target: `wuxi304-collab/tongjun-overseas` (private)
 
 ## Current truth
 
-The validated **local V25 source artifact** is the complete release.
+The complete validated V26 artifact remains the release authority. The connected GitHub repository now carries V26 governance, buyer-critical source, deployment controls and the executable launch audit, but production completeness still requires a fresh-checkout proof against the full artifact.
 
-The connected GitHub `main` branch is still a partial source mirror. It contains governance, API / RFQ regression assets and selected source files, but the remote tree has not yet been proven equivalent to the validated V25 public tree.
+## Canonical mirror gate
 
-Therefore GitHub `main` must **not** be treated as production-deployable yet.
+1. Mirror all 50 public HTML pages.
+2. Mirror `assets/site.css`, `assets/site.js`, favicon and every referenced public image.
+3. Mirror `api/rfq.js`, `scripts/validate-site.js`, `scripts/test-rfq.js` and `scripts/audit-launch.js`.
+4. Mirror sitemap, robots, manifest, `llms.txt`, security.txt and deployment manifests.
+5. Keep internal operating and source-provenance material excluded from the public deployment package.
+6. Run `npm run check` from a fresh GitHub checkout.
+7. Run a clean-route crawl across all indexable canonical routes.
+8. Compare remote file inventory / hashes against the validated V26 artifact.
+9. Only then mark GitHub `main` production-deployable.
 
-## V25 priority mirror
+## Deployment boundary
 
-The highest-value source set is:
-
-- `index.html`, `quality.html`, `rfq.html`
-- `assets/site.css`, `assets/site.js`
-- `api/rfq.js`
-- `scripts/validate-site.js`, `scripts/test-rfq.js`
-- `technical-data.html`, Document Center and flagship controlled references
-- `privacy.html`, `terms.html`, `404.html`
-- `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `llms.txt`, `.well-known/security.txt`
-- `vercel.json`, `.vercelignore`, `package.json`
-- V25 release / health / governance documents
-
-## Production-completion gate
-
-1. Mirror every public HTML page.
-2. Mirror shared CSS / JS, favicon and every referenced public image.
-3. Mirror sitemap, robots, manifest, security.txt and deployment assets.
-4. Run `npm run check` from a fresh GitHub checkout.
-5. Run the clean-route crawl from that checkout.
-6. Compare the remote tree / hashes with the validated V25 source artifact.
-7. Only then mark GitHub `main` as production-deployable.
+V26 does not assert a Vercel production binding or successful live-domain deployment. `RFQ_WEBHOOK_URL` remains required for server-side RFQ delivery; browser-level production QA remains an external gate.
