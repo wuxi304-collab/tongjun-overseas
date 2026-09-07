@@ -1,38 +1,48 @@
 # 同钧出海 / Tongjun Overseas
 
-Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.com` international special-metals platform.
+Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.com` international high-performance-materials platform.
 
 ## Current release
 
-**V15 — Controlled Technical Document System**
+**V16 — High-Performance Materials Editorial Refinement** (2026-09-07)
 
-Current public architecture includes:
+V16 keeps the V15 controlled technical-document system and sharpens the public corporate layer around engineering-led sourcing, source-role clarity and evidence-backed qualification.
 
-- ATI-inspired industrial enterprise visual system
-- Materials + Products / Markets / Capabilities / Resources information architecture
-- Alloy Finder
-- Product Forms
-- Technical Data Center
+### Public architecture
+
+- Materials + Product Forms + Markets + Capabilities + Resources
+- Alloy Finder and Technical Data Center
 - Material Compare
-- Standards by Product Form Matrix
-- Controlled Document Center
-- Technical RFQ / Problem Order / Supply Route tools
+- Standards-by-Product-Form Matrix
+- Controlled Document Center with stable technical document IDs / revisions
+- Supply Route Builder
+- Structured Technical RFQ
+- Application routes for precision strip, nickel alloys, Invar, heavy plate, titanium and zirconium
 
-## Brand
+## Positioning
 
-**TONGJUN SPECIAL METALS**  
 **Special Metals. Precisely Sourced.**
 
-Positioning: Special Metals Sourcing, Mill Qualification & Non-standard Material Development from China.
+Tongjun Special Metals is presented as an **engineering-led sourcing and qualification desk**. Manufacturing, stockholding, processing and sourcing roles must remain explicit and separate.
 
-Legal entity: Tongjun Metal Technology (Wuxi) Co., Ltd.
+Legal entity: **Tongjun Metal Technology (Wuxi) Co., Ltd.**
 
-## Public / private boundary
+## Design discipline
 
-The repository is private. Production deployment must follow `.vercelignore`: only public HTML, assets, API and deployment manifests are uploaded. Internal operating files under `/ops` and internal Markdown governance/source files must not be deployed publicly.
+Industrial, technical and restrained: full-bleed real-material photography, square geometry, graphite/deep navy structure, industrial blue and restrained orange accents. Internal benchmark references are private and must never appear in public-facing copy.
 
-## Release status
+## Validation
 
-V15 validation: `npm run check` → PASS (50 HTML files).
+```bash
+npm run check
+```
 
-The complete V5→V15 local Git history is preserved in the release bundle maintained separately from this repository snapshot.
+Current validation target: **50 HTML files**, clean routes, canonical metadata, image references and deployment assets.
+
+## Production boundary
+
+The repository contains internal operating material under `/ops`. Public deployment is controlled by `.vercelignore`; internal sales/account material and governance Markdown files must not be included in the production upload.
+
+## Release governance
+
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V16.md` before material changes.
