@@ -4,9 +4,9 @@ Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.
 
 ## Current release
 
-**V25 — Launch Gate & Production Hardening** (2026-09-07)
+**V26 — Canonical Source Mirror Convergence** (2026-09-07)
 
-V25 freezes the major information architecture and focuses on launch risk: metadata quality, structured data, legal navigation, RFQ resilience, mutable-asset caching, security headers, controlled-document revision consistency and clean-route crawl validation.
+V26 keeps the validated V25 public behavior frozen and moves repository governance toward a canonical source mirror. The public site logic is unchanged; the release focuses on synchronizing the buyer-critical source tree, validation assets and deployment metadata without weakening the production-completion gate.
 
 ### Public architecture
 
@@ -36,7 +36,7 @@ Legal entity: **Tongjun Metal Technology (Wuxi) Co., Ltd.**
 npm run check
 ```
 
-V25 validation covers:
+V26 retains the V25 launch validation baseline:
 
 - 50 HTML files
 - exact sitemap ↔ indexable canonical parity
@@ -56,4 +56,4 @@ The source release contains internal operating material and governance documents
 
 ## Release governance
 
-Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md`, `SOURCE_SYNC_STATUS.md` and `RELEASE_V25.md` before material changes.
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md`, `SOURCE_SYNC_STATUS.md` and `RELEASE_V26.md` before material changes.
