@@ -4,9 +4,9 @@ Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.
 
 ## Current release
 
-**V18 — Source-Role & Chain-of-Custody System** (2026-09-07)
+**V19 — Evidence Architecture & Buyer Acceptance System** (2026-09-07)
 
-V18 adds an explicit source-role and chain-of-custody layer on top of the challenge-to-evidence workflow: manufacture, custody, processing, evidence and buyer approval stay visible as separate responsibilities.
+V19 turns traceability from a quality-page topic into a site-wide decision architecture. The procurement sequence is now explicit: **Perform → Make → Accept**, supported by **Claim → Evidence → Acceptance** and the existing Requirement → Route → Evidence → Trial / Scale workflow.
 
 ### Public architecture
 
@@ -17,7 +17,8 @@ V18 adds an explicit source-role and chain-of-custody layer on top of the challe
 - Controlled Document Center with stable technical document IDs / revisions
 - Supply Route Builder
 - Structured Technical RFQ + evidence-package planning
-- Quality + Traceability with source-role ledger and chain-of-custody model
+- Quality + Traceability with source-role ledger, chain-of-custody model and evidence-package matrix
+- Procurement Evidence Maps on flagship Alloy 625 / 718 / C-276 / 36Ni-Fe references
 - Application routes for precision strip, nickel alloys, Invar, heavy plate, titanium and zirconium
 
 ## Positioning
@@ -46,4 +47,4 @@ The source release contains internal operating material and governance documents
 
 ## Release governance
 
-Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V18.md` before material changes.
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V19.md` before material changes.
