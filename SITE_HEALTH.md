@@ -1,9 +1,9 @@
-# SITE HEALTH — V25
+# SITE HEALTH — V26
 
 Date: 2026-09-07
 
-- Release: V25 — Launch Gate & Production Hardening
-- Package version: 25.0.0
+- Release: V26 — Canonical Source Mirror Convergence
+- Package version: 26.0.0
 - `npm run check`: PASS
 - HTML pages: 50
 - Indexable canonical routes: 46
@@ -23,6 +23,6 @@ Date: 2026-09-07
 - GitHub target: `wuxi304-collab/tongjun-overseas`
 - Screenshot-level browser QA: NOT completed; local navigation is blocked by the execution environment
 
-## V25 launch note
+## V26 source-mirror note
 
-The site is structurally ready for a controlled production deployment, but production is not declared ready until DNS, Vercel ownership, RFQ webhook delivery, branded mail and a live-domain browser crawl are all closed.
+The validated public behavior remains the V25 launch baseline. V26 advances GitHub source convergence but does not declare production readiness until the remote tree is complete, Vercel ownership is established, RFQ webhook delivery is verified, branded mail is closed and a live-domain browser crawl passes.
