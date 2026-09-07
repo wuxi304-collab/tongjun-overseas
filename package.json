@@ -1,7 +1,7 @@
 {
   "name": "exoticalloycn-site",
   "private": true,
-  "version": "20.0.0",
+  "version": "21.0.0",
   "scripts": {
     "check": "node --check api/rfq.js && node --check assets/site.js && node scripts/validate-site.js"
   }
