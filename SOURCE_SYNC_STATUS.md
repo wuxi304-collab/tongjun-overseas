@@ -1,33 +1,36 @@
-# Source Sync Status — V23
+# Source Sync Status — V25
 
 Date: 2026-09-07
 Target: `wuxi304-collab/tongjun-overseas` (private)
 
-## Remote objective
+## Current truth
 
-GitHub `main` is being converted from a partial source mirror into the canonical production source. V23 keeps the same completion rule: the branch is not production-deployable until every required public page, shared asset and validation file is mirrored and passes from a fresh checkout.
+The validated **local V25 source artifact** is the complete release.
 
-## V23 priority sync set
+The connected GitHub `main` branch is still a partial source mirror. It contains governance, API / RFQ regression assets and selected source files, but the remote tree has not yet been proven equivalent to the validated V25 public tree.
 
-- `index.html` — compact buyer-release hero and decision dock
-- `quality.html` — Claim → Record → Link → Release evidence console
-- `rfq.html` — five-block buyer input hierarchy and mobile RFQ refinement
-- `technical-alloy-625.html` / `718` / `c276` / `technical-invar-36.html` — four-gate decision snapshot
-- `assets/site.css` — V23 visual hierarchy and mobile rules
-- `assets/site.js` — existing buyer / offer-state logic unchanged in V23
-- `api/rfq.js` — V22 schema retained
-- `scripts/validate-site.js` + `scripts/test-rfq.js`
-- release / health / governance documents
+Therefore GitHub `main` must **not** be treated as production-deployable yet.
 
-## Completion boundary
+## V25 priority mirror
 
-Priority-file presence is not equivalent to a complete production tree. Required WebP images, favicon, sitemap, robots, manifest, remaining public HTML and deployment assets must also be mirrored.
+The highest-value source set is:
 
-## Full-sync completion gate
+- `index.html`, `quality.html`, `rfq.html`
+- `assets/site.css`, `assets/site.js`
+- `api/rfq.js`
+- `scripts/validate-site.js`, `scripts/test-rfq.js`
+- `technical-data.html`, Document Center and flagship controlled references
+- `privacy.html`, `terms.html`, `404.html`
+- `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `llms.txt`, `.well-known/security.txt`
+- `vercel.json`, `.vercelignore`, `package.json`
+- V25 release / health / governance documents
 
-1. Mirror all public HTML.
+## Production-completion gate
+
+1. Mirror every public HTML page.
 2. Mirror shared CSS / JS, favicon and every referenced public image.
-3. Mirror validation scripts and deployment manifests.
-4. Run `npm run check` from the GitHub checkout.
-5. Compare the resulting tree against the validated V23 source release.
-6. Only then mark GitHub `main` as production-deployable.
+3. Mirror sitemap, robots, manifest, security.txt and deployment assets.
+4. Run `npm run check` from a fresh GitHub checkout.
+5. Run the clean-route crawl from that checkout.
+6. Compare the remote tree / hashes with the validated V25 source artifact.
+7. Only then mark GitHub `main` as production-deployable.
