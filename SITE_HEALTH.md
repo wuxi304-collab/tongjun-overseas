@@ -3,7 +3,7 @@
 Date: 2026-09-07
 
 - Release: V21 — Buyer Decision Interface
-- Validation: `npm run check` PASS (50 HTML files)
+- Validation: `npm run check` PASS (50 HTML files + RFQ V21 regression test)
 - Public technical sheets: 6 controlled references
 - Flagship references with Buyer Decision Snapshot: 4
 - Flagship revision state: 625 / 718 / C-276 / 36Ni-Fe → REV 03
