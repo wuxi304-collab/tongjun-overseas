@@ -1,6 +1,9 @@
 const crypto = require('crypto');
 
 const MAX_BODY_CHARS = 24000;
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_MAX = 8;
+const rateBuckets = new Map();
 const LIMITS = {
   name:120, company:180, email:240, country:120, grade:180, standard:180, form:120,
   size:240, condition:240, qty:180, certificate:300, origin:300, approval:300, procurement_stage:120, buyer_gate:120, incoterm:80, destination:240, delivery_target:80, packing:500, application:2500,
@@ -12,6 +15,34 @@ const LIMITS = {
 function norm(value, max){
   return String(value ?? '').replace(/\u0000/g,'').trim().slice(0,max);
 }
+
+function clientKey(req){
+  const raw=req.headers['x-forwarded-for'] || '';
+  return String(raw).split(',')[0].trim().slice(0,80);
+}
+function withinRateLimit(req,res){
+  const key=clientKey(req);
+  if(!key) return true; // local tests / non-Vercel execution
+  const now=Date.now();
+  let bucket=rateBuckets.get(key);
+  if(!bucket || now-bucket.started>=RATE_WINDOW_MS){
+    bucket={started:now,count:0};
+    rateBuckets.set(key,bucket);
+  }
+  bucket.count+=1;
+  const remaining=Math.max(0,RATE_MAX-bucket.count);
+  res.setHeader('X-RateLimit-Limit',String(RATE_MAX));
+  res.setHeader('X-RateLimit-Remaining',String(remaining));
+  if(rateBuckets.size>500){
+    for(const [k,v] of rateBuckets) if(now-v.started>=RATE_WINDOW_MS) rateBuckets.delete(k);
+  }
+  if(bucket.count>RATE_MAX){
+    res.setHeader('Retry-After',String(Math.ceil((RATE_WINDOW_MS-(now-bucket.started))/1000)));
+    return false;
+  }
+  return true;
+}
+
 function allowedOrigin(req){
   const origin = req.headers.origin;
   if (!origin) return true;
@@ -37,6 +68,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ok:false,error:'method_not_allowed'});
   }
   if (!allowedOrigin(req)) return res.status(403).json({ok:false,error:'origin_not_allowed'});
+  if (!withinRateLimit(req,res)) return res.status(429).json({ok:false,error:'rate_limited'});
   const raw = req.body || {};
   if (JSON.stringify(raw).length > MAX_BODY_CHARS) return res.status(413).json({ok:false,error:'payload_too_large'});
   const b={};
