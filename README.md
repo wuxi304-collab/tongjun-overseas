@@ -4,9 +4,9 @@ Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.
 
 ## Current release
 
-**V19 — Evidence Architecture & Buyer Acceptance System** (2026-09-07)
+**V20 — Corporate Role & Credibility Layer** (2026-09-07)
 
-V19 turns traceability from a quality-page topic into a site-wide decision architecture. The procurement sequence is now explicit: **Perform → Make → Accept**, supported by **Claim → Evidence → Acceptance** and the existing Requirement → Route → Evidence → Trial / Scale workflow.
+V20 consolidates the site around a corporate responsibility model: Tongjun coordinates the qualified route and evidence plan, manufacturing sources own manufacturing evidence, and the buyer retains final approval authority. The V19 evidence architecture and V18 chain-of-custody system remain intact.
 
 ### Public architecture
 
@@ -47,4 +47,4 @@ The source release contains internal operating material and governance documents
 
 ## Release governance
 
-Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V19.md` before material changes.
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V20.md` before material changes.
