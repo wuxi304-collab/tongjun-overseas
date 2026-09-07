@@ -1,0 +1,15 @@
+# Public deployment allowlist. Internal sales/ops material stays in the private repository only.
+/*
+!api/
+!api/**
+!assets/
+!assets/**
+!.well-known/
+!.well-known/**
+!vercel.json
+!package.json
+!manifest.webmanifest
+!robots.txt
+!sitemap.xml
+!llms.txt
+!*.html
