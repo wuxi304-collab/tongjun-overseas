@@ -1,0 +1,5 @@
+Contact: mailto:ask2205@outlook.com
+Preferred-Languages: en, zh
+Canonical: https://exoticalloycn.com/.well-known/security.txt
+Policy: https://exoticalloycn.com/privacy
+Expires: 2027-09-06T00:00:00.000Z
