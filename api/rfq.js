@@ -3,10 +3,10 @@ const crypto = require('crypto');
 const MAX_BODY_CHARS = 24000;
 const LIMITS = {
   name:120, company:180, email:240, country:120, grade:180, standard:180, form:120,
-  size:240, condition:240, qty:180, certificate:300, origin:300, approval:300, application:2500,
+  size:240, condition:240, qty:180, certificate:300, origin:300, approval:300, procurement_stage:120, buyer_gate:120, application:2500,
   notes:3500, source:300, product:180, utm_source:180, utm_medium:180,
   utm_campaign:240, utm_content:240, ac:80, persona:120, wedge:180,
-  first_landing:300, first_referrer:180, first_seen:80, route_ref:80, subject:300, structured_body:8000, evidence_package:3500, website:240
+  first_landing:300, first_referrer:180, first_seen:80, route_ref:80, decision_ref:80, subject:300, structured_body:8000, evidence_package:3500, website:240
 };
 
 function norm(value, max){
