@@ -1,22 +1,22 @@
-# Source Sync Status — V22
+# Source Sync Status — V23
 
 Date: 2026-09-07
 Target: `wuxi304-collab/tongjun-overseas` (private)
 
 ## Remote objective
 
-GitHub `main` is being converted from a governance-only repository into the canonical source mirror of the validated site. V22 adds a commercial-hand-off layer, but the same production-completion rule remains: the remote branch is not production-deployable until every required public page and asset is mirrored and validated from a fresh checkout.
+GitHub `main` is being converted from a partial source mirror into the canonical production source. V23 keeps the same completion rule: the branch is not production-deployable until every required public page, shared asset and validation file is mirrored and passes from a fresh checkout.
 
-## V22 priority sync set
+## V23 priority sync set
 
-- `index.html` — buyer decision + qualified offer system
-- `quality.html` — evidence / acceptance + evidence-to-offer boundary
-- `rfq.html` — buyer review + qualified offer readiness
-- `assets/site.js` — decision, evidence and offer-state logic
-- `assets/site.css` — V21/V22 interface styles
-- `api/rfq.js` — V22 logistics / offer-reference payload
+- `index.html` — compact buyer-release hero and decision dock
+- `quality.html` — Claim → Record → Link → Release evidence console
+- `rfq.html` — five-block buyer input hierarchy and mobile RFQ refinement
+- `technical-alloy-625.html` / `718` / `c276` / `technical-invar-36.html` — four-gate decision snapshot
+- `assets/site.css` — V23 visual hierarchy and mobile rules
+- `assets/site.js` — existing buyer / offer-state logic unchanged in V23
+- `api/rfq.js` — V22 schema retained
 - `scripts/validate-site.js` + `scripts/test-rfq.js`
-- `document-center.html` + four flagship technical references
 - release / health / governance documents
 
 ## Completion boundary
@@ -29,5 +29,5 @@ Priority-file presence is not equivalent to a complete production tree. Required
 2. Mirror shared CSS / JS, favicon and every referenced public image.
 3. Mirror validation scripts and deployment manifests.
 4. Run `npm run check` from the GitHub checkout.
-5. Compare the resulting tree against the validated V22 source release.
+5. Compare the resulting tree against the validated V23 source release.
 6. Only then mark GitHub `main` as production-deployable.
