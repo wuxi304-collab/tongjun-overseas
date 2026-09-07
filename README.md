@@ -4,9 +4,9 @@ Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.
 
 ## Current release
 
-**V21 — Buyer Decision Interface** (2026-09-07)
+**V22 — Qualified Offer System** (2026-09-07)
 
-V21 turns the existing evidence architecture into a buyer-facing decision system. The site now makes four procurement gates visible: **Service Fit → Manufacturability → Evidence Readiness → Buyer Acceptance**, while preserving the V18 source-role / chain-of-custody model, V19 evidence architecture and V20 corporate responsibility boundary.
+V22 carries the buyer decision architecture into a qualified commercial handoff: material identity, supply route, evidence scope, logistics basis and commercial assumptions remain visible as separate quotation controls. V21 buyer gates and all earlier source-role / evidence boundaries remain intact.
 
 ### Public architecture
 
@@ -16,8 +16,9 @@ V21 turns the existing evidence architecture into a buyer-facing decision system
 - Standards-by-Product-Form Matrix
 - Controlled Document Center with stable technical document IDs / revisions
 - Supply Route Builder
-- Structured Technical RFQ + evidence-package planning
+- Structured Technical RFQ + evidence-package and qualified-offer planning
 - Live Buyer Review State: Perform → Make → Accept → Release
+- Qualified Offer Readiness: technical basis + evidence boundary + logistics basis + visible commercial assumptions
 - Quality + Traceability with source-role ledger, chain-of-custody model, evidence-package matrix and buyer acceptance matrix
 - Buyer Decision Snapshots on flagship Alloy 625 / 718 / C-276 / 36Ni-Fe references
 - Application routes for precision strip, nickel alloys, Invar, heavy plate, titanium and zirconium
@@ -48,4 +49,4 @@ The source release contains internal operating material and governance documents
 
 ## Release governance
 
-Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V21.md` before material changes.
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V22.md` before material changes.
