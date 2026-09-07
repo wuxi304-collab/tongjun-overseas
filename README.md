@@ -4,9 +4,9 @@ Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.
 
 ## Current release
 
-**V23 — Visual Decision Hierarchy** (2026-09-07)
+**V25 — Launch Gate & Production Hardening** (2026-09-07)
 
-V23 keeps the V22 qualified-offer logic intact but tightens the buyer-facing visual hierarchy: the homepage, Quality, Technical RFQ and flagship controlled references now expose the same release gates with lower visual density and better mobile scanning.
+V25 freezes the major information architecture and focuses on launch risk: metadata quality, structured data, legal navigation, RFQ resilience, mutable-asset caching, security headers, controlled-document revision consistency and clean-route crawl validation.
 
 ### Public architecture
 
@@ -15,25 +15,20 @@ V23 keeps the V22 qualified-offer logic intact but tightens the buyer-facing vis
 - Material Compare
 - Standards-by-Product-Form Matrix
 - Controlled Document Center with stable technical document IDs / revisions
-- Supply Route Builder
+- Supply Route Builder + Problem Order Desk
 - Structured Technical RFQ + evidence-package and qualified-offer planning
-- Live Buyer Review State: Perform → Make → Accept → Release
-- Qualified Offer Readiness: technical basis + evidence boundary + logistics basis + visible commercial assumptions
-- Quality + Traceability with source-role ledger, chain-of-custody model, evidence-package matrix and buyer acceptance matrix
+- Buyer Review State: Perform → Make → Accept → Release
+- Qualified Offer Readiness: technical basis + evidence boundary + logistics basis + commercial assumptions
+- Quality + Traceability with source roles, chain of custody, evidence matrix and buyer acceptance controls
 - Buyer Decision Snapshots on flagship Alloy 625 / 718 / C-276 / 36Ni-Fe references
-- Application routes for precision strip, nickel alloys, Invar, heavy plate, titanium and zirconium
 
 ## Positioning
 
 **Special Metals. Precisely Sourced.**
 
-Tongjun Special Metals is presented as an **engineering-led sourcing and qualification desk**. Manufacturing, stockholding, processing and sourcing roles remain explicit and separate.
+Tongjun Special Metals is an **engineering-led sourcing and qualification desk**. Manufacturer, stockholder, processor and Tongjun supply-desk responsibilities remain explicit and separate.
 
 Legal entity: **Tongjun Metal Technology (Wuxi) Co., Ltd.**
-
-## Design discipline
-
-Industrial, technical and restrained: full-bleed real-material photography, square geometry, graphite/deep navy structure, industrial blue and restrained orange accents. Internal benchmark references are private and must never appear in public-facing copy.
 
 ## Validation
 
@@ -41,7 +36,19 @@ Industrial, technical and restrained: full-bleed real-material photography, squa
 npm run check
 ```
 
-Current validation target: **50 HTML files**, clean routes, canonical metadata, image references and deployment assets.
+V25 validation covers:
+
+- 50 HTML files
+- exact sitemap ↔ indexable canonical parity
+- title / meta-description launch ranges
+- Open Graph / Twitter metadata
+- valid JSON-LD on every indexable page
+- Privacy / Terms links in every global footer
+- controlled technical-directory revision parity
+- RFQ payload, origin, fail-closed fallback path and lightweight rate gate
+- deployment cache and security-header rules
+
+A local clean-route crawl also checks all **46 indexable canonical routes**.
 
 ## Production boundary
 
@@ -49,4 +56,4 @@ The source release contains internal operating material and governance documents
 
 ## Release governance
 
-Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V23.md` before material changes.
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md`, `SOURCE_SYNC_STATUS.md` and `RELEASE_V25.md` before material changes.
