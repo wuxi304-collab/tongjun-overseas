@@ -1,0 +1,44 @@
+# Tongjun Special Metals
+
+Website: https://exoticalloycn.com
+Legal entity: Tongjun Metal Technology (Wuxi) Co., Ltd.
+Location: Wuxi, Jiangsu, China
+
+## Positioning
+Engineering-led special-metals sourcing and qualification from China. Manufacturing, stockholding, processing and Tongjun supply-desk responsibilities are declared as separate source roles.
+
+## Technical navigation
+- Technical data center: /technical-data
+- Alloy Finder: /alloys
+- Material families: /materials
+- Product forms: /product-forms
+- Markets: /industries
+- Standards map: /standards
+- Quality and traceability: /quality
+- Technical resources: /resources
+- Structured technical RFQ: /rfq
+
+## Core material routes
+- Precision stainless and special-alloy strip / foil
+- Nickel and corrosion alloys including UNS N06625, N08825 and N10276 routes
+- Invar 36 / 4J36 low-expansion alloy routes
+- Heavy and extra-wide stainless / duplex / nickel-alloy plate
+- Titanium and zirconium project-material routes
+
+## Buyer workflow
+Requirement -> service fit -> manufacturability -> evidence readiness -> buyer release -> qualified offer -> trial / commercial supply.
+
+## Qualification boundary
+Stock, origin, dimensional capability, inspection scope and buyer approval status are confirmed against the RFQ, purchase order and applicable specification before commercial release.
+
+## Flagship technical data
+- Alloy 625 / UNS N06625: /technical-alloy-625
+- Alloy 718 / UNS N07718: /technical-alloy-718
+- Alloy C-276 / UNS N10276: /technical-alloy-c276
+- Alloy 825 / UNS N08825: /technical-alloy-825
+- 36Ni-Fe low-expansion alloy: /technical-invar-36
+- Super Duplex 2507 / UNS S32750: /technical-super-duplex-2507
+
+- Material Compare: https://exoticalloycn.com/material-compare
+- Standards by Product Form: https://exoticalloycn.com/standards-matrix
+- Document Center: https://exoticalloycn.com/document-center
