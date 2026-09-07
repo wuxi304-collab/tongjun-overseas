@@ -4,9 +4,9 @@ Private source repository for **TONGJUN SPECIAL METALS** and the `exoticalloycn.
 
 ## Current release
 
-**V20 — Corporate Role & Credibility Layer** (2026-09-07)
+**V21 — Buyer Decision Interface** (2026-09-07)
 
-V20 consolidates the site around a corporate responsibility model: Tongjun coordinates the qualified route and evidence plan, manufacturing sources own manufacturing evidence, and the buyer retains final approval authority. The V19 evidence architecture and V18 chain-of-custody system remain intact.
+V21 turns the existing evidence architecture into a buyer-facing decision system. The site now makes four procurement gates visible: **Service Fit → Manufacturability → Evidence Readiness → Buyer Acceptance**, while preserving the V18 source-role / chain-of-custody model, V19 evidence architecture and V20 corporate responsibility boundary.
 
 ### Public architecture
 
@@ -17,8 +17,9 @@ V20 consolidates the site around a corporate responsibility model: Tongjun coord
 - Controlled Document Center with stable technical document IDs / revisions
 - Supply Route Builder
 - Structured Technical RFQ + evidence-package planning
-- Quality + Traceability with source-role ledger, chain-of-custody model and evidence-package matrix
-- Procurement Evidence Maps on flagship Alloy 625 / 718 / C-276 / 36Ni-Fe references
+- Live Buyer Review State: Perform → Make → Accept → Release
+- Quality + Traceability with source-role ledger, chain-of-custody model, evidence-package matrix and buyer acceptance matrix
+- Buyer Decision Snapshots on flagship Alloy 625 / 718 / C-276 / 36Ni-Fe references
 - Application routes for precision strip, nickel alloys, Invar, heavy plate, titanium and zirconium
 
 ## Positioning
@@ -47,4 +48,4 @@ The source release contains internal operating material and governance documents
 
 ## Release governance
 
-Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V20.md` before material changes.
+Read `AGENTS.md`, `CRAFT.md`, `SITE_HEALTH.md` and the current `RELEASE_V21.md` before material changes.
