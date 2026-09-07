@@ -1,24 +1,26 @@
-# Source Sync Status — V26
+# Source Sync Status — V27
 
-Date: 2026-09-07  
+Date: 2026-09-08  
 Target: `wuxi304-collab/tongjun-overseas` (private)
 
-## Current truth
+## V27 rule
 
-The complete validated V26 artifact remains the release authority. The connected GitHub repository now carries V26 governance, buyer-critical source, deployment controls and the executable launch audit, but production completeness still requires a fresh-checkout proof against the full artifact.
+The complete local V27 artifact remains the release authority. Remote synchronization is judged by path + Git blob SHA, not by file-name presence.
 
-## Canonical mirror gate
+## Text canonicalization
 
-1. Mirror all 50 public HTML pages.
-2. Mirror `assets/site.css`, `assets/site.js`, favicon and every referenced public image.
-3. Mirror `api/rfq.js`, `scripts/validate-site.js`, `scripts/test-rfq.js` and `scripts/audit-launch.js`.
-4. Mirror sitemap, robots, manifest, `llms.txt`, security.txt and deployment manifests.
-5. Keep internal operating and source-provenance material excluded from the public deployment package.
-6. Run `npm run check` from a fresh GitHub checkout.
-7. Run a clean-route crawl across all indexable canonical routes.
-8. Compare remote file inventory / hashes against the validated V26 artifact.
-9. Only then mark GitHub `main` production-deployable.
+`SOURCE_MANIFEST_V27_TEXT.gitsha1` covers every V27 source file except WebP binaries. The V27 remote operation is intended to make that entire text set byte-identical on GitHub `main`.
 
-## Deployment boundary
+## Remaining binary gate
 
-V26 does not assert a Vercel production binding or successful live-domain deployment. `RFQ_WEBHOOK_URL` remains required for server-side RFQ delivery; browser-level production QA remains an external gate.
+The only permitted remote source gap after V27 text canonicalization is the 15 referenced `assets/images/*.webp` files. GitHub `main` remains **non-production** until those binaries are mirrored and the full tree matches `SOURCE_MANIFEST_V27.gitsha1`.
+
+## Production-completion gate
+
+1. Text manifest parity: materialization in progress; remote verification pending.
+2. Mirror and byte-match all 15 WebP assets.
+3. Verify full remote inventory against the full V27 manifest.
+4. Run `npm run check` and `npm run verify:source` from a fresh GitHub checkout.
+5. Only then mark GitHub `main` production-deployable.
+
+Vercel binding, RFQ webhook delivery, branded mail and browser/device visual QA remain separate gates.
