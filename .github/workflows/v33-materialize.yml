@@ -1,16 +1,16 @@
-name: V33 materialize
+name: V33 canonical publish
 
 on:
   push:
     branches: [v33-upload]
     paths:
-      - '.sync/v33zst/READY'
+      - '.sync/v33-transfer/url.txt'
 
 permissions:
   contents: write
 
 jobs:
-  materialize:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,14 +18,13 @@ jobs:
           ref: v33-upload
           fetch-depth: 0
 
-      - name: Rebuild and verify V33 canonical ZIP
+      - name: Download and prove canonical V33 ZIP
         shell: bash
         run: |
           set -euo pipefail
-          test -f .sync/v33zst/READY
-          test "$(find .sync/v33zst -maxdepth 1 -type f -name 'part*.b64' | wc -l)" = '105'
-          cat .sync/v33zst/part*.b64 | base64 -d > /tmp/v33.zip.zst
-          zstd -q -d -f /tmp/v33.zip.zst -o /tmp/v33.zip
+          URL="$(cat .sync/v33-transfer/url.txt)"
+          test -n "$URL"
+          curl -fL --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 180 "$URL" -o /tmp/v33.zip
           test "$(wc -c < /tmp/v33.zip)" = '1356200'
           echo '2099310f2d3756955d9a85161d2212bca0de9e1101cd3d7eba4d9cf4c3728494  /tmp/v33.zip' | sha256sum -c -
           unzip -tq /tmp/v33.zip
@@ -35,6 +34,7 @@ jobs:
           test -d /tmp/v33-out/exoticalloycn-v33
           test "$(find /tmp/v33-out/exoticalloycn-v33 -type f | wc -l)" = '157'
           test ! -e /tmp/v33-out/exoticalloycn-v33/.sync
+          test ! -e /tmp/v33-out/exoticalloycn-v33/.github
           test -f /tmp/v33-out/exoticalloycn-v33/index.html
           test -d /tmp/v33-out/exoticalloycn-v33/assets
           test -d /tmp/v33-out/exoticalloycn-v33/scripts
@@ -43,8 +43,9 @@ jobs:
           test -f /tmp/v33-out/exoticalloycn-v33/manifest.webmanifest
           test -f /tmp/v33-out/exoticalloycn-v33/sitemap.xml
           test -f /tmp/v33-out/exoticalloycn-v33/robots.txt
+          (cd /tmp/v33-out/exoticalloycn-v33 && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > /tmp/v33-canonical.manifest)
 
-      - name: Validate canonical source before materialization
+      - name: Validate canonical V33 before touching repository source
         shell: bash
         run: |
           set -euo pipefail
@@ -55,29 +56,50 @@ jobs:
           grep -q 'data-final-release="v33"' index.html
           test -z "$(find . -type f \( -name '*.b64' -o -name '*.hex' -o -name '*.bin' -o -name READY \) -print -quit)"
 
-      - name: Materialize canonical V33 into staging branch
+      - name: Materialize exact V33 tree into staging branch
         shell: bash
         run: |
           set -euo pipefail
-          rsync -a --delete \
-            --exclude='.git/' \
-            --exclude='.github/workflows/v33-materialize.yml' \
-            /tmp/v33-out/exoticalloycn-v33/ ./
-          rm -rf .sync
+          rsync -a --delete --exclude='.git/' /tmp/v33-out/exoticalloycn-v33/ ./
+          test ! -e .sync
+          test ! -e .github
+          test "$(find . -type f -not -path './.git/*' | wc -l)" = '157'
           npm run check
-          test "$(node -p "require('./package.json').version")" = '33.0.0'
-          test "$(find . -type f -not -path './.git/*' -not -path './.github/workflows/v33-materialize.yml' | wc -l)" = '157'
-
-      - name: Commit materialized V33 source to v33-upload only
-        shell: bash
-        run: |
-          set -euo pipefail
+          (find . -type f -not -path './.git/*' -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > /tmp/v33-staging.manifest)
+          cmp /tmp/v33-canonical.manifest /tmp/v33-staging.manifest
           git config user.name 'tongjun-release-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add -A
-          if git diff --cached --quiet; then
-            echo 'No materialized changes to commit.'
-            exit 0
-          fi
           git commit -m 'site: materialize verified V33 canonical source'
           git push origin HEAD:v33-upload
+          echo "STAGING_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "SOURCE_TREE=$(git rev-parse HEAD^{tree})" >> "$GITHUB_ENV"
+
+      - name: Publish verified V33 tree to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          MAIN_PARENT="$(git rev-parse origin/main)"
+          MAIN_COMMIT="$(printf '%s\n' 'site: publish verified V33 canonical source' | git commit-tree "$SOURCE_TREE" -p "$MAIN_PARENT")"
+          git push origin "$MAIN_COMMIT:refs/heads/main"
+          echo "MAIN_COMMIT=$MAIN_COMMIT" >> "$GITHUB_ENV"
+
+      - name: Final fresh-checkout verification from GitHub main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$MAIN_COMMIT"
+          rm -rf /tmp/main-check
+          git worktree add --detach /tmp/main-check origin/main
+          cd /tmp/main-check
+          test "$(find . -type f -not -path './.git/*' | wc -l)" = '157'
+          test ! -e .sync
+          test ! -e .github
+          test "$(node -p "require('./package.json').version")" = '33.0.0'
+          npm run check
+          find . -type f -not -path './.git/*' -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > /tmp/v33-main.manifest
+          cmp /tmp/v33-canonical.manifest /tmp/v33-main.manifest
+          echo "FINAL_MAIN_SHA=$MAIN_COMMIT"
+          echo 'V33_CANONICAL_PUBLISH=PASS'
