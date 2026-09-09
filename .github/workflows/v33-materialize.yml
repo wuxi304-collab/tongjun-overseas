@@ -5,7 +5,6 @@ on:
     branches: [v33-upload]
     paths:
       - '.sync/v33zip/READY'
-      - '.github/workflows/v33-materialize.yml'
 
 permissions:
   contents: write
@@ -23,7 +22,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f .sync/v33zip/READY
-          test "$(find .sync/v33zip -maxdepth 1 -type f -name 'part*.b64' | wc -l)" = '37'
+          test "$(find .sync/v33zip -maxdepth 1 -type f -name 'part*.b64' | wc -l)" = '91'
           cat .sync/v33zip/part*.b64 | base64 -d > /tmp/v33.zip
           test "$(wc -c < /tmp/v33.zip)" = '1356200'
           echo '2099310f2d3756955d9a85161d2212bca0de9e1101cd3d7eba4d9cf4c3728494  /tmp/v33.zip' | sha256sum -c -
