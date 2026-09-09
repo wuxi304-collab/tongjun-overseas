@@ -1,0 +1,28 @@
+name: V33 localfile bridge probe
+
+on:
+  push:
+    branches: [v33-upload]
+    paths:
+      - '.github/workflows/v33-localfile-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe transfer file
+        shell: bash
+        run: |
+          set -euxo pipefail
+          for u in \
+            'https://tongjun-v33-localfile-probe-s30408s-projects.vercel.app/probe.txt' \
+            'https://tongjun-v33-localfile-probe-cq5ak1oj1-s30408s-projects.vercel.app/probe.txt'; do
+            echo "URL=$u"
+            curl -L --max-time 20 -sS -D - "$u" -o /tmp/probe || true
+            echo '--- body ---'
+            cat /tmp/probe || true
+            echo
+          done
