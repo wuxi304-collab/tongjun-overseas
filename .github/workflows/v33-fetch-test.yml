@@ -1,0 +1,40 @@
+name: V33 transfer bridge test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/v33-fetch-test.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe V33 archive bridge
+        shell: bash
+        run: |
+          set -euxo pipefail
+          expected='5d67053a7da3c5237e9ad8afc84ab05bf948b1afe1daa436789e1d9db75ac1fb'
+          urls=(
+            'https://tongjun-v33-transfer-probe-q0gspz0jt-s30408s-projects.vercel.app/v33-canonical-source.tar.gz'
+            'https://tongjun-v33-transfer-probe-s30408s-projects.vercel.app/v33-canonical-source.tar.gz'
+            'https://tongjun-v33-transfer-probe-q0gspz0jt-s30408s-projects.vercel.app/'
+            'https://tongjun-v33-transfer-probe-s30408s-projects.vercel.app/'
+          )
+          ok=0
+          for u in "${urls[@]}"; do
+            rm -f /tmp/v33.bin
+            code=$(curl -L --max-time 30 -sS -o /tmp/v33.bin -w '%{http_code}' "$u" || true)
+            size=$(wc -c </tmp/v33.bin 2>/dev/null || echo 0)
+            sha=$(sha256sum /tmp/v33.bin 2>/dev/null | awk '{print $1}' || true)
+            echo "URL=$u HTTP=$code SIZE=$size SHA=$sha"
+            if [[ "$code" == "200" && "$sha" == "$expected" ]]; then
+              echo "V33_BRIDGE_OK=$u"
+              ok=1
+              break
+            fi
+          done
+          test "$ok" = 1
