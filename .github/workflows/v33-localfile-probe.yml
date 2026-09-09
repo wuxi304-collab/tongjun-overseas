@@ -1,4 +1,4 @@
-name: V33 localfile bridge probe
+name: V33 live asset hash probe
 
 on:
   push:
@@ -13,16 +13,44 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe transfer file
+      - name: Verify live static assets against canonical V33 Git blob IDs
         shell: bash
         run: |
-          set -euxo pipefail
-          for u in \
-            'https://tongjun-v33-localfile-probe-s30408s-projects.vercel.app/probe.txt' \
-            'https://tongjun-v33-localfile-probe-cq5ak1oj1-s30408s-projects.vercel.app/probe.txt'; do
-            echo "URL=$u"
-            curl -L --max-time 20 -sS -D - "$u" -o /tmp/probe || true
-            echo '--- body ---'
-            cat /tmp/probe || true
-            echo
+          set -euo pipefail
+          cat > /tmp/assets.tsv <<'EOF'
+          assets/images/about-engineering.webp 15e92ed11aa44bd378631009d715738421f11779
+          assets/images/heavy-plate.webp a4f046b3f00dad2c5470a9466e6703802408141a
+          assets/images/hero-special-metals.webp cc747cccd4eeee28cc1b726ba184e4aa491d59e5
+          assets/images/invar-lng.webp 8c53b9f8d32b1285eeca1f24eafd076353e26b26
+          assets/images/invar-tooling.webp 154761ced0e5fbf4cc220ca1949340a90d229526
+          assets/images/logistics-stock.webp 10b74313dfb80254ba8e7fddc3f001314162dbb7
+          assets/images/nickel-alloys.webp 9b38104d4880bfba109030b09708058598d5d659
+          assets/images/og-cover.webp 995a99276809d1e896ea8a6aff509c9996b6fe37
+          assets/images/precision-strip.webp 6dfeee46ce68ea413e1762c89ada8cdd72674cd9
+          assets/images/quality-inspection.webp f6a8e14c3a9cce9c9672aebe88b88903dffb85ce
+          assets/images/resources-metal.webp 8d891b2dc1a76b918a0c5130a8c9d47de9cf9457
+          assets/images/standards-rfq.webp fa4174de2071b8d4c27aafd61d92af3c58197e8f
+          assets/images/supply-route.webp 10b74313dfb80254ba8e7fddc3f001314162dbb7
+          assets/images/titanium-zirconium.webp eadb0edee67793cbb296d4ead74f2ae1fa69db5b
+          assets/images/traceability-pmi.webp c7267494da54ddffdbd7a896db2b58864b0e34d4
+          assets/logo-mark.webp 63f361557eadc808d5573c1fea08524b94c53829
+          EOF
+          for host in exoticalloycn.com www.exoticalloycn.com; do
+            echo "HOST=$host"
+            ok=0; total=0
+            while read -r path expect; do
+              total=$((total+1))
+              out="/tmp/$(basename "$path")"
+              if curl -fLsS --max-time 20 "https://$host/$path" -o "$out"; then
+                got=$(git hash-object "$out")
+                if [ "$got" = "$expect" ]; then
+                  ok=$((ok+1)); echo "MATCH $path $got"
+                else
+                  echo "MISMATCH $path got=$got expect=$expect size=$(wc -c < "$out")"
+                fi
+              else
+                echo "FETCH_FAIL $path"
+              fi
+            done < /tmp/assets.tsv
+            echo "RESULT host=$host matches=$ok/$total"
           done
