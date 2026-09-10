@@ -1,0 +1,58 @@
+name: V34 recovered full-source materializer
+
+on:
+  push:
+    branches: [v34-recovered-full]
+    paths:
+      - '.sync/v34-recovered/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout staging branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild recovered V34 archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          b64=/tmp/v34-recovered-full.tar.xz.b64
+          out=/tmp/v34-recovered-full.tar.xz
+          : > "$b64"
+          for f in .sync/v34-recovered/part-*.b64; do cat "$f" >> "$b64"; done
+          base64 -d "$b64" > "$out"
+          echo "6bd16b3344bb4eb8a7462a1bac3208fbdc1db520c53898ab39d557e9a4abf761  $out" | sha256sum -c -
+          rm -rf /tmp/v34-materialized
+          mkdir -p /tmp/v34-materialized
+          tar -xJf "$out" -C /tmp/v34-materialized
+
+      - name: Materialize complete recovered source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.sync/' \
+            /tmp/v34-materialized/ ./
+          npm run check
+
+      - name: Commit materialized V34 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Tongjun V34 Recovery"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No recovered source changes to commit."
+            exit 0
+          fi
+          git commit -m "sync: materialize recovered V34 full source"
+          git push origin HEAD:v34-recovered-full
