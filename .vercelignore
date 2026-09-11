@@ -2,6 +2,8 @@
 /*
 !api/
 !api/**
+!lib/
+!lib/**
 !assets/
 !assets/**
 !.well-known/
