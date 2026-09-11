@@ -4,7 +4,7 @@ on:
   push:
     branches: [v33-materialized-recovery]
     paths:
-      - '.sync/v33/READY3'
+      - '.sync/v33/READY4'
 
 permissions:
   contents: write
@@ -21,14 +21,20 @@ jobs:
         run: |
           set -euo pipefail
           cat .sync/v33/chunk*.b64 | tr -d '\r\n\t ' > /tmp/v33.clean.b64
-          echo "base64 chars: $(wc -c < /tmp/v33.clean.b64)"
-          rem=$(( $(wc -c < /tmp/v33.clean.b64) % 4 ))
-          echo "base64 modulo: $rem"
-          test "$rem" -eq 0
+          chars=$(wc -c < /tmp/v33.clean.b64)
+          echo "base64 chars: $chars"
           if LC_ALL=C grep -q '[^A-Za-z0-9+/=]' /tmp/v33.clean.b64; then
             echo 'Invalid non-base64 characters remain after whitespace normalization.'
             exit 1
           fi
+          rem=$(( chars % 4 ))
+          echo "base64 modulo before padding: $rem"
+          case "$rem" in
+            0) ;;
+            2) printf '==' >> /tmp/v33.clean.b64 ;;
+            3) printf '=' >> /tmp/v33.clean.b64 ;;
+            *) echo 'Invalid Base64 length modulo 4 = 1'; exit 1 ;;
+          esac
           base64 -d /tmp/v33.clean.b64 > /tmp/v33.tar.gz
           file /tmp/v33.tar.gz
           sha256sum /tmp/v33.tar.gz
