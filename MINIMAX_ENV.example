@@ -1,0 +1,11 @@
+# Configure these in Vercel Project Settings → Environment Variables.
+# Never commit a real key.
+MINIMAX_API_KEY=
+MINIMAX_MODEL=MiniMax-M3
+MINIMAX_API_URL=https://api.minimax.io/v1/chat/completions
+# Optional comma-separated same-origin allowlist override:
+AGENT_ALLOWED_ORIGINS=https://exoticalloycn.com,https://www.exoticalloycn.com
+
+# Optional live commercial pricing adapter. If absent, Quote Agent never invents price.
+QUOTE_PRICE_FEED_URL=
+QUOTE_PRICE_FEED_TOKEN=
