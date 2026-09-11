@@ -4,7 +4,7 @@ on:
   push:
     branches: [v33-materialized-recovery]
     paths:
-      - '.sync/v33/READY2'
+      - '.sync/v33/READY3'
 
 permissions:
   contents: write
@@ -20,13 +20,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          : > /tmp/v33.tar.gz
-          for f in .sync/v33/chunk*.b64; do
-            base64 -d "$f" >> /tmp/v33.tar.gz
-          done
+          cat .sync/v33/chunk*.b64 | tr -d '\r\n\t ' > /tmp/v33.clean.b64
+          echo "base64 chars: $(wc -c < /tmp/v33.clean.b64)"
+          rem=$(( $(wc -c < /tmp/v33.clean.b64) % 4 ))
+          echo "base64 modulo: $rem"
+          test "$rem" -eq 0
+          if LC_ALL=C grep -q '[^A-Za-z0-9+/=]' /tmp/v33.clean.b64; then
+            echo 'Invalid non-base64 characters remain after whitespace normalization.'
+            exit 1
+          fi
+          base64 -d /tmp/v33.clean.b64 > /tmp/v33.tar.gz
           file /tmp/v33.tar.gz
           sha256sum /tmp/v33.tar.gz
           tar -tzf /tmp/v33.tar.gz > /tmp/v33.inventory
+          echo "archive files: $(wc -l < /tmp/v33.inventory)"
           head -40 /tmp/v33.inventory
           rm -rf /tmp/v33-src
           mkdir -p /tmp/v33-src
@@ -39,6 +46,7 @@ jobs:
           if [ "$(find "$src" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 1 ] && [ ! -f "$src/package.json" ]; then
             src="$(find "$src" -mindepth 1 -maxdepth 1 -type d | head -1)"
           fi
+          test -f "$src/package.json"
           rsync -a --delete --exclude='.git/' --exclude='.github/' --exclude='.sync/' "$src"/ ./
           npm run check
       - name: Commit recovered V33 source
