@@ -1,10 +1,9 @@
 {
   "name": "exoticalloycn-site",
   "private": true,
-  "version": "27.0.0",
+  "version": "34.0.0",
   "scripts": {
-    "check": "node --check api/rfq.js && node --check assets/site.js && node scripts/validate-site.js && node scripts/test-rfq.js && node scripts/audit-launch.js",
-    "verify:source": "node scripts/verify-source-manifest.js",
-    "verify:text-source": "node scripts/verify-text-manifest.js"
+    "check": "node --check api/rfq.js && node --check assets/site.js && node scripts/validate-site.js && node scripts/test-rfq.js && node scripts/audit-launch.js && node scripts/audit-prelaunch-v34.js && node scripts/audit-accessibility-v34.js && node scripts/audit-performance-v34.js && node scripts/test-agents.js && node scripts/audit-agent-launch.js",
+    "audit:prelaunch": "node scripts/audit-prelaunch-v34.js"
   }
 }
