@@ -4,7 +4,7 @@ on:
   push:
     branches: [v33-materialized-recovery]
     paths:
-      - '.sync/v33/READY'
+      - '.sync/v33/READY2'
 
 permissions:
   contents: write
@@ -20,8 +20,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .sync/v33/chunk*.b64 > /tmp/v33.tar.gz.b64
-          base64 -d /tmp/v33.tar.gz.b64 > /tmp/v33.tar.gz
+          : > /tmp/v33.tar.gz
+          for f in .sync/v33/chunk*.b64; do
+            base64 -d "$f" >> /tmp/v33.tar.gz
+          done
           file /tmp/v33.tar.gz
           sha256sum /tmp/v33.tar.gz
           tar -tzf /tmp/v33.tar.gz > /tmp/v33.inventory
