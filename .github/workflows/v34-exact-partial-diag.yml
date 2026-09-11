@@ -1,0 +1,62 @@
+name: V34.137 exact partial archive diagnostic
+
+on:
+  push:
+    branches: [v34.137-exact-archive]
+    paths:
+      - '.github/workflows/v34-exact-partial-diag.yml'
+      - '.sync/v34.137-final/**'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode available archive prefix
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .sync/v34.137-final/piece-00{00..19}.b64 > /tmp/prefix.b64
+          base64 -d /tmp/prefix.b64 > /tmp/prefix.xz
+          set +e
+          xz -dc /tmp/prefix.xz > /tmp/prefix.tar 2>/tmp/xz.err
+          rc=$?
+          set -e
+          echo "xz_rc=$rc"
+          echo "prefix_b64_chars=$(wc -c < /tmp/prefix.b64)"
+          echo "prefix_xz_bytes=$(wc -c < /tmp/prefix.xz)"
+          echo "partial_tar_bytes=$(wc -c < /tmp/prefix.tar)"
+          cat /tmp/xz.err || true
+      - name: Inspect tar headers
+        shell: python
+        run: |
+          from pathlib import Path
+          import os
+          p=Path('/tmp/prefix.tar').read_bytes()
+          print('bytes', len(p))
+          off=0
+          n=0
+          while off+512 <= len(p) and n < 40:
+              h=p[off:off+512]
+              if h == b'\0'*512:
+                  print('ZERO',off); break
+              def field(a,b): return h[a:b].split(b'\0',1)[0].decode('utf-8','replace')
+              name=field(0,100)
+              mode=field(100,108)
+              uid=field(108,116)
+              gid=field(116,124)
+              size_s=field(124,136).strip() or '0'
+              mtime=field(136,148)
+              typeflag=field(156,157)
+              uname=field(265,297)
+              gname=field(297,329)
+              prefix=field(345,500)
+              try: size=int(size_s,8)
+              except: size=0
+              full=(prefix+'/'+name if prefix else name)
+              print(f'{n:02d} off={off} name={full!r} mode={mode!r} uid={uid!r} gid={gid!r} size={size} mtime={mtime!r} type={typeflag!r} uname={uname!r} gname={gname!r}')
+              off += 512 + ((size+511)//512)*512
+              n += 1
