@@ -4,7 +4,7 @@ on:
   push:
     branches: [v34.137-full-source]
     paths:
-      - '.sync/v34.137-launch2/READY'
+      - '.sync/v34.137-launch3/READY'
 
 permissions:
   contents: write
@@ -25,9 +25,9 @@ jobs:
           b64=/tmp/exoticalloycn-v34.137-launch.tar.xz.b64
           out=/tmp/exoticalloycn-v34.137-launch.tar.xz
           : > "$b64"
-          for f in .sync/v34.137-launch2/part-*.b64; do cat "$f" >> "$b64"; done
+          for f in .sync/v34.137-launch3/pack-*.b64; do cat "$f" >> "$b64"; done
           base64 -d "$b64" > "$out"
-          echo "60fd1d7aec0c43003eb005364868e12b6478c854bfbfb7b1486f2677ca82ba03  $out" | sha256sum -c -
+          echo "5005c9f23a916787351ee95bfed2449fab8e4e452b46ae208d1542da5448cacb  $out" | sha256sum -c -
           rm -rf /tmp/v34.137-materialized
           mkdir -p /tmp/v34.137-materialized
           tar -xJf "$out" -C /tmp/v34.137-materialized
