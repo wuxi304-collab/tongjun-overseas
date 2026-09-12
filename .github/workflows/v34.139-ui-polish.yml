@@ -33,8 +33,10 @@ jobs:
           node --check assets/polish.js
           python - <<'PY'
           from pathlib import Path
+          import re
           css1='<link rel="stylesheet" href="/assets/polish.css">'
           css2='<link rel="stylesheet" href="/assets/polish-v34.139.css">'
+          css3='<link rel="stylesheet" href="/assets/polish-v34.139-fix.css">'
           js='<script defer src="/assets/polish.js"></script>'
           files=sorted(Path('.').glob('*.html'))
           if len(files)<50:
@@ -45,21 +47,32 @@ jobs:
               if '</head>' not in s:
                   raise SystemExit(f'missing </head>: {f}')
               original=s
-              if css1 not in s:
-                  s=s.replace('</head>',css1+'</head>',1)
-              if css2 not in s:
-                  s=s.replace('</head>',css2+'</head>',1)
-              if js not in s:
-                  s=s.replace('</head>',js+'</head>',1)
+              for token in (css1,css2,css3,js):
+                  if token not in s:
+                      s=s.replace('</head>',token+'</head>',1)
+              m=re.search(r'<body([^>]*)>',s,re.I)
+              if not m:
+                  raise SystemExit(f'missing body: {f}')
+              attrs=m.group(1)
+              if 'brand-v34' not in attrs:
+                  cm=re.search(r'class=("|\')([^"\']*)(\1)',attrs,re.I)
+                  if cm:
+                      classes=(cm.group(2)+' brand-v34').strip()
+                      attrs=attrs[:cm.start()]+f'class={cm.group(1)}{classes}{cm.group(1)}'+attrs[cm.end():]
+                  else:
+                      attrs=attrs+' class="brand-v34"'
+                  s=s[:m.start()]+f'<body{attrs}>'+s[m.end():]
               if s!=original:
                   f.write_text(s)
                   changed+=1
           print(f'polish assets attached to {changed} of {len(files)} HTML files')
           for f in files:
               s=f.read_text()
-              for token in (css1,css2,js):
+              for token in (css1,css2,css3,js):
                   if s.count(token)!=1:
                       raise SystemExit(f'bad polish asset count in {f}: {token}')
+              if 'brand-v34' not in re.search(r'<body([^>]*)>',s,re.I).group(1):
+                  raise SystemExit(f'brand class missing: {f}')
           PY
 
       - name: Commit isolated overlay integration
@@ -73,5 +86,5 @@ jobs:
             echo 'No HTML changes required.'
             exit 0
           fi
-          git commit -m 'design: integrate V34.139 typography and motion overlay'
+          git commit -m 'design: integrate V34.139.1 typography and motion overlay'
           git push origin HEAD:v34.139-ui-polish
