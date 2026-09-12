@@ -1,0 +1,47 @@
+name: V34.137 source rebuild v2 materialize
+
+on:
+  push:
+    branches: [v34.137-exact-archive]
+    paths:
+      - '.sync/v34.137-source-rebuild-v2/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Reassemble and verify archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find .sync/v34.137-source-rebuild-v2 -maxdepth 1 -name 'chunk-*.b64' | wc -l)" -eq 72
+          cat $(find .sync/v34.137-source-rebuild-v2 -maxdepth 1 -name 'chunk-*.b64' | sort) > /tmp/site.b64
+          test "$(wc -c < /tmp/site.b64)" -eq 1282044
+          base64 -d /tmp/site.b64 > /tmp/site.tar.xz
+          echo '29e6dca34628d050550b03b9fe8aecc1790182d5a9ff7ee650fdff22c0ffdcb0  /tmp/site.tar.xz' | sha256sum -c -
+          rm -rf /tmp/site-src
+          mkdir -p /tmp/site-src
+          tar -xJf /tmp/site.tar.xz -C /tmp/site-src
+          test "$(find /tmp/site-src -type f | wc -l)" -eq 162
+      - name: Validate reconstructed source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/site-src
+          npm run check
+      - name: Replace branch source and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete --exclude='.git/' --exclude='.github/' --exclude='.sync/' /tmp/site-src/ ./
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'release: materialize validated V34.137 reconstructed source' || exit 0
+          git push
