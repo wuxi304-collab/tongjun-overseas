@@ -26,6 +26,7 @@ body.brand-v34{
   letter-spacing:-.006em;
 }
 body.brand-v34 ::selection{background:#173f61;color:#fff}
+body.brand-v34 :where(strong,b){font-family:var(--tj-font-ui);font-weight:650}
 body.brand-v34 :where(h1,h2,h3,.brand-wordmark b,.mega-intro strong,.flagship-id b,.decision-spine-head h2,.decision-spine-grid strong,.prefooter h2){
   font-family:var(--tj-font-display);
   font-kerning:normal;
@@ -189,3 +190,13 @@ body.brand-v34 :where(.hero .buttonrow,.hero-proofbar,.tech-hero .buttonrow){ani
 body.brand-v34 :where(.hero-media,.hero-visual,.tech-media){animation:tj-firstfold-media 920ms var(--tj-ease) 120ms both}
 @keyframes tj-firstfold-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes tj-firstfold-media{from{opacity:0;transform:translateY(10px) scale(.992)}to{opacity:1;transform:none}}
+
+/* Same-origin page transitions: subtle continuity between technical pages. */
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:tj-page-out 170ms ease both}
+::view-transition-new(root){animation:tj-page-in 300ms var(--tj-ease) both}
+@keyframes tj-page-out{to{opacity:.16}}
+@keyframes tj-page-in{from{opacity:.05;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.01ms!important}
+}
