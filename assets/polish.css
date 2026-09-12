@@ -91,7 +91,7 @@ body.brand-v34 :where(.cta,.route-btn,.rfq-btn,.mobile-rfq,.textlink){
 body.brand-v34 .cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(8,31,48,.13)}
 body.brand-v34 .cta span{display:inline-block;transition:transform var(--tj-med) var(--tj-ease)}
 body.brand-v34 .cta:hover span{transform:translate(2px,-2px)}
-body.brand-v34 .textlink{background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-size:0 1px;background-position:0 100%}
+body.brand-v34 .textlink{background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-size:0 1px;background-position:0 100%;transition:color var(--tj-fast) ease,transform var(--tj-med) var(--tj-ease),background-size var(--tj-med) var(--tj-ease)}
 body.brand-v34 .textlink:hover{background-size:100% 1px}
 
 /* Card and information surfaces. */
