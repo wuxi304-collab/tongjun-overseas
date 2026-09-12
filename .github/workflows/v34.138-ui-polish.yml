@@ -1,0 +1,69 @@
+name: V34.138 UI polish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v34.138-ui-polish
+    paths:
+      - '.sync/v34.138-ui-polish/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-polish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout isolated polish branch
+        uses: actions/checkout@v4
+        with:
+          ref: v34.138-ui-polish
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Attach polish layer to every public HTML page
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          tag='<link rel="stylesheet" href="/assets/polish.css">'
+          files=sorted(Path('.').glob('*.html'))
+          if len(files)!=51:
+              raise SystemExit(f'expected 51 HTML files, found {len(files)}')
+          changed=0
+          for f in files:
+              s=f.read_text()
+              if tag in s:
+                  continue
+              if '</head>' not in s:
+                  raise SystemExit(f'missing </head>: {f}')
+              f.write_text(s.replace('</head>',tag+'</head>',1))
+              changed+=1
+          print(f'polish stylesheet attached to {changed} HTML files')
+          for f in files:
+              if tag not in f.read_text():
+                  raise SystemExit(f'polish stylesheet not linked: {f}')
+          PY
+
+      - name: Validate full V34 release surface
+        run: npm run check
+
+      - name: Commit validated typography and motion integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.html'
+          if git diff --cached --quiet; then
+            echo 'No HTML changes required.'
+            exit 0
+          fi
+          git commit -m 'design: integrate V34.138 typography and motion across 51 pages'
+          git push origin HEAD:v34.138-ui-polish
