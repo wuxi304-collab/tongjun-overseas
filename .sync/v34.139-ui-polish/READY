@@ -1,0 +1,4 @@
+V34.139 UI polish overlay integration
+base=v34.138-ui-polish
+scope=typography,motion,section-spy,sticky-navigation,technical-data,rfq,mobile
+production=untouched
