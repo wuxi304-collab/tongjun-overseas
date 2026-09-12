@@ -29,8 +29,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(find .sync/v34.137-source-final-v4 -maxdepth 1 -name 'chunk-*.b64' | wc -l)" -eq 142
-          cat .sync/v34.137-source-final-v4/chunk-*.b64 > /tmp/v34.137-source-final-v4.b64
+          test "$(find .sync/v34.137-source-final-v4 -maxdepth 1 -name 'seg-*.b64' | wc -l)" -eq 320
+          cat .sync/v34.137-source-final-v4/seg-*.b64 > /tmp/v34.137-source-final-v4.b64
           test "$(wc -c < /tmp/v34.137-source-final-v4.b64)" -eq 1277152
           base64 -d /tmp/v34.137-source-final-v4.b64 > /tmp/v34.137-source-final-v4.tar.xz
           test "$(wc -c < /tmp/v34.137-source-final-v4.tar.xz)" -eq 957864
