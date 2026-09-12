@@ -1,0 +1,77 @@
+from pathlib import Path
+
+css_path = Path('assets/polish.css')
+js_path = Path('assets/polish.js')
+css = css_path.read_text()
+js = js_path.read_text()
+
+css_patch = r'''
+
+/* V34.142 — page-level review pass
+   Final-stage hierarchy, long-page orientation and RFQ/technical usability refinement. */
+:root{--tj-content-measure:72ch;--tj-copy-measure:62ch;--tj-header-progress:0%}
+body.brand-v34 :where(.sec-head>p,.prose>p,.callout>p,.prefooter p){max-width:var(--tj-content-measure)}
+body.brand-v34 :where(.pagehero p,.tech-hero p,.v29-core-copy>p,.lead){max-width:var(--tj-copy-measure)}
+body.brand-v34 :where(.sec-head h2,.feature h2,.prefooter h2){line-height:1.045}
+body.brand-v34 :where(.pagehero h1,.tech-hero h1,.v29-core-copy h1){max-width:20ch;line-height:.98}
+body.brand-v34 .breadcrumb{font-size:11px;letter-spacing:.025em}
+body.brand-v34 .site-header.nav::after{content:"";position:absolute;left:0;bottom:-1px;width:var(--tj-header-progress,0%);height:1px;background:linear-gradient(90deg,#0d5ea8,#d97722);transform-origin:left center;pointer-events:none;z-index:70}
+body.brand-v34 .site-header.nav.is-scrolled{background:rgba(255,255,255,.965);backdrop-filter:blur(18px) saturate(1.1)}
+body.brand-v34 .navlinks>a[aria-current="page"],body.brand-v34 .mega-panel a[aria-current="page"]{color:#0d5ea8}
+body.brand-v34 .mega-panel a[aria-current="page"]{background:#eef4f8;padding-left:4px}
+body.brand-v34 .section-nav-inner a[aria-current="location"],body.brand-v34 .section-nav-inner a[aria-current="page"]{color:#0d5ea8;border-color:#0d5ea8}
+body.brand-v34 .mega-panel{border-top:2px solid #0d5ea8;box-shadow:0 22px 54px rgba(7,25,38,.13)}
+body.brand-v34 .mega-panel>div:not(.mega-intro){padding-top:2px}
+body.brand-v34 .mega-heading,body.brand-v34 .mega-panel h4{margin-bottom:9px;color:#6e7d87;font-size:10px;letter-spacing:.12em}
+body.brand-v34 .mega-panel a{line-height:1.35}
+body.brand-v34 .stat strong{font-size:clamp(23px,2vw,30px);line-height:1}
+body.brand-v34 .stat span{line-height:1.52}
+body.brand-v34 :where(.hero-decision-dock,.v34-qualification-rail-grid,.decision-spine-grid){font-variant-numeric:tabular-nums}
+body.brand-v34 :where(.hero-decision-dock small,.v34-qualification-rail-grid small,.decision-spine-grid small){letter-spacing:.1em}
+body.brand-v34 .tds-directory{border-top:1px solid var(--tj-border)}
+body.brand-v34 .tds-row{box-shadow:none!important;border-radius:0;border-left:0;border-right:0;transition:background-color var(--tj-fast) ease,border-color var(--tj-fast) ease,transform var(--tj-med) var(--tj-ease)}
+body.brand-v34 .tds-row:hover,body.brand-v34 .tds-row:focus-visible{background:#f6f9fb;transform:none}
+body.brand-v34 .tds-row h2{line-height:1.03}
+body.brand-v34 .tds-docid{font-family:var(--tj-font-mono);letter-spacing:.055em}
+body.brand-v34 :where(.data-table,.tech-table) td{font-variant-numeric:tabular-nums lining-nums}
+body.brand-v34 :where(.data-table,.tech-table) tbody tr:nth-child(even){background:rgba(15,66,101,.018)}
+body.brand-v34 :where(.data-table,.tech-table) tbody tr:hover{background:rgba(13,94,168,.05)}
+body.brand-v34 .rfq-group-label{margin-top:18px;padding-top:22px;border-top:1px solid #cfd8de}
+body.brand-v34 .rfq-group-label>span{font-family:var(--tj-font-mono);font-size:11px;letter-spacing:.08em;color:#0d5ea8}
+body.brand-v34 .rfq-group-label>p{margin:.35rem 0 0;color:#687782;max-width:68ch}
+body.brand-v34 .field label{font-weight:650;letter-spacing:.005em}
+body.brand-v34 .field :where(input,select,textarea){border-radius:3px;background:#fff}
+body.brand-v34 .field :where(input,select,textarea):hover{border-color:#9fadb6}
+body.brand-v34 .field :where(input,select,textarea):focus{border-color:#0d5ea8;background:#fff;box-shadow:0 0 0 3px rgba(13,94,168,.1)}
+body.brand-v34 :where(.rfq-readiness,.buyer-review,.evidence-preview,.offer-readiness){border-radius:4px;box-shadow:none}
+body.brand-v34 .rfq-actions{align-items:center}
+body.brand-v34 .rfq-actions .cta{min-width:190px;justify-content:center}
+body.brand-v34 .footgrid{row-gap:34px}
+body.brand-v34 .footer-brand p{max-width:38ch;line-height:1.58}
+body.brand-v34 .footer a{padding-block:1px}
+@media(max-width:860px){body.brand-v34 .utilitybar{display:none}body.brand-v34 .pagehero,body.brand-v34 .landinghero,body.brand-v34 .articlehero,body.brand-v34 .tech-hero{padding-top:54px;padding-bottom:42px}body.brand-v34 .v29-core-hero-grid{gap:26px}body.brand-v34 .v29-core-copy .buttonrow{margin-top:22px}body.brand-v34 .section-nav{top:68px}body.brand-v34 .section-nav-inner{gap:18px;padding-inline:14px}body.brand-v34 .section-nav-inner a{white-space:nowrap;min-height:42px;display:inline-flex;align-items:center}body.brand-v34 .tds-row{padding-block:22px}body.brand-v34 .tds-row>strong{margin-top:8px}body.brand-v34 .rfq-group-label{margin-top:12px;padding-top:18px}body.brand-v34 .v34-mobile-rfq-progress{box-shadow:0 -12px 32px rgba(7,25,38,.09)}}
+@media(max-width:620px){body.brand-v34 :where(.pagehero h1,.tech-hero h1,.v29-core-copy h1){max-width:15ch}body.brand-v34 .pagehero .buttonrow,body.brand-v34 .v29-core-copy .buttonrow{display:grid;grid-template-columns:1fr;gap:9px}body.brand-v34 .pagehero .buttonrow .cta,body.brand-v34 .v29-core-copy .buttonrow .cta{width:100%;justify-content:center}body.brand-v34 .rfq-actions{display:grid;grid-template-columns:1fr;gap:9px}body.brand-v34 .rfq-actions :where(.cta,.btn-secondary){width:100%;min-height:46px;justify-content:center}body.brand-v34 .footer .legal{gap:10px}}
+@media(prefers-reduced-motion:reduce){body.brand-v34 .site-header.nav::after{transition:none!important}}
+'''
+
+js_patch = r'''
+
+/* V34.142 — orientation and navigation state */
+(() => {
+  'use strict';
+  const d=document,b=d.body;
+  if(!b || !b.classList.contains('brand-v34')) return;
+  const raw=location.pathname.replace(/^\/+|\/+$/g,'');
+  b.dataset.page=(raw||'home').replace(/\.html$/,'').replace(/[^a-z0-9-]/gi,'-').toLowerCase();
+  const normalize=p=>{try{const u=new URL(p,location.href);let x=u.pathname.replace(/\/index\.html$/,'/').replace(/\.html$/,'').replace(/\/$/,'');return x||'/'}catch{return ''}};
+  const here=normalize(location.href);
+  d.querySelectorAll('.navlinks a[href],.mega-panel a[href],.section-nav a[href]').forEach(a=>{const href=a.getAttribute('href')||'';if(!href||href.startsWith('#')||/^(mailto:|tel:)/i.test(href))return;if(normalize(a.href)===here)a.setAttribute('aria-current','page')});
+  const header=d.querySelector('.site-header.nav');
+  if(header){let raf=0;const update=()=>{raf=0;const root=d.documentElement,max=Math.max(1,root.scrollHeight-innerHeight),pct=Math.max(0,Math.min(100,(scrollY/max)*100));header.style.setProperty('--tj-header-progress',pct.toFixed(2)+'%')};const queue=()=>{if(!raf)raf=requestAnimationFrame(update)};update();addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue,{passive:true})}
+})();
+'''
+
+if 'V34.142 — page-level review pass' not in css:
+    css_path.write_text(css + css_patch)
+if 'V34.142 — orientation and navigation state' not in js:
+    js_path.write_text(js + js_patch)
