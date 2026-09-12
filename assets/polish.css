@@ -1,0 +1,191 @@
+/* V34.138 — typography, motion and interaction refinement
+   Keeps the V34 information architecture intact while sharpening the industrial B2B visual system. */
+
+:root{
+  --tj-font-ui:Inter,"Segoe UI Variable Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --tj-font-display:"Bahnschrift","DIN Alternate","Arial Narrow",Inter,"Segoe UI Variable Display","Helvetica Neue",Arial,sans-serif;
+  --tj-font-mono:"IBM Plex Mono","Cascadia Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --tj-ease:cubic-bezier(.22,1,.36,1);
+  --tj-ease-soft:cubic-bezier(.25,.46,.45,.94);
+  --tj-fast:180ms;
+  --tj-med:360ms;
+  --tj-slow:720ms;
+  --tj-ring:0 0 0 3px rgba(13,94,168,.14);
+  --tj-hairline:rgba(12,32,47,.12);
+}
+
+html{scroll-padding-top:104px}
+body.brand-v34{
+  font-family:var(--tj-font-ui);
+  font-optical-sizing:auto;
+  font-kerning:normal;
+  font-synthesis:none;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  letter-spacing:-.006em;
+}
+body.brand-v34 ::selection{background:#173f61;color:#fff}
+body.brand-v34 :where(h1,h2,h3,.brand-wordmark b,.mega-intro strong,.flagship-id b,.decision-spine-head h2,.decision-spine-grid strong,.prefooter h2){
+  font-family:var(--tj-font-display);
+  font-kerning:normal;
+  font-synthesis:none;
+  text-wrap:balance;
+}
+body.brand-v34 :where(p,li,.lead,.note){text-wrap:pretty}
+body.brand-v34 :where(.spec,.mono,.tech-table,.data-table,.decision-spine-grid small,.decision-spine-grid span,.flagship-id span){
+  font-family:var(--tj-font-mono);
+  font-variant-numeric:tabular-nums lining-nums;
+}
+body.brand-v34 :where(h1,.hero h1,.pagehero h1,.tech-hero h1){font-weight:620;letter-spacing:-.038em}
+body.brand-v34 :where(h2,.sec-head h2,.feature h2,.prefooter h2){font-weight:610;letter-spacing:-.032em}
+body.brand-v34 :where(h3,.card h3,.cap h3,.article h3){font-weight:610;letter-spacing:-.018em}
+body.brand-v34 .eyebrow{font-family:var(--tj-font-ui);font-weight:720;letter-spacing:.135em}
+body.brand-v34 .utility-inner{font-family:var(--tj-font-ui);font-weight:640;letter-spacing:.105em}
+
+/* Header: quieter chrome, clearer hierarchy, less abrupt menu behavior. */
+body.brand-v34 .site-header.nav{
+  transition:background-color var(--tj-med) var(--tj-ease-soft),border-color var(--tj-med) var(--tj-ease-soft),box-shadow var(--tj-med) var(--tj-ease-soft),backdrop-filter var(--tj-med) var(--tj-ease-soft);
+}
+body.brand-v34 .brand-wordmark b{font-weight:660;letter-spacing:.11em}
+body.brand-v34 .brand-wordmark small{font-family:var(--tj-font-ui);font-weight:580;letter-spacing:.145em}
+body.brand-v34 .brand-mark-img{transition:transform var(--tj-med) var(--tj-ease),filter var(--tj-med) var(--tj-ease)}
+body.brand-v34 .brand:hover .brand-mark-img{transform:translateY(-1px) scale(1.025)}
+body.brand-v34 .navtoggle,
+body.brand-v34 .navlinks>a{
+  font-family:var(--tj-font-ui);
+  font-weight:610;
+  letter-spacing:.002em;
+  position:relative;
+  transition:color var(--tj-fast) ease,background-color var(--tj-fast) ease,border-color var(--tj-fast) ease;
+}
+body.brand-v34 .navlinks>a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:16px;
+  height:1px;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:right center;
+  opacity:.55;
+  transition:transform var(--tj-med) var(--tj-ease);
+}
+body.brand-v34 .navlinks>a:hover::after,
+body.brand-v34 .navlinks>a[aria-current="page"]::after{transform:scaleX(1);transform-origin:left center}
+body.brand-v34 .navtoggle>span{transition:transform var(--tj-med) var(--tj-ease)}
+body.brand-v34 .mega-panel{
+  transform-origin:top center;
+  animation:tj-mega-in var(--tj-med) var(--tj-ease) both;
+}
+body.brand-v34 .mega-panel a{transition:color var(--tj-fast) ease,background-color var(--tj-fast) ease,padding-left var(--tj-med) var(--tj-ease)}
+body.brand-v34 .mega-panel a:hover{padding-left:4px}
+body.brand-v34 .mega-intro strong{font-weight:610;letter-spacing:-.025em;line-height:1.02}
+@keyframes tj-mega-in{from{opacity:0;transform:translateY(-8px) scaleY(.985)}to{opacity:1;transform:none}}
+
+/* CTA language: short travel and restrained elevation instead of generic hover scaling. */
+body.brand-v34 :where(.cta,.route-btn,.rfq-btn,.mobile-rfq,.textlink){
+  transition:transform var(--tj-med) var(--tj-ease),background-color var(--tj-fast) ease,color var(--tj-fast) ease,border-color var(--tj-fast) ease,box-shadow var(--tj-med) var(--tj-ease);
+}
+body.brand-v34 .cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(8,31,48,.13)}
+body.brand-v34 .cta span{display:inline-block;transition:transform var(--tj-med) var(--tj-ease)}
+body.brand-v34 .cta:hover span{transform:translate(2px,-2px)}
+body.brand-v34 .textlink{background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-size:0 1px;background-position:0 100%}
+body.brand-v34 .textlink:hover{background-size:100% 1px}
+
+/* Card and information surfaces. */
+body.brand-v34 :where(.card,.cap,.article,.route,.product-tile,.flagship-grid>a,.resource-directory>a,.resource-list>a,.decision-spine-grid>div,.v34-qualification-rail-grid>div){
+  transition:transform var(--tj-med) var(--tj-ease),box-shadow var(--tj-med) var(--tj-ease),background-color var(--tj-fast) ease,border-color var(--tj-fast) ease,color var(--tj-fast) ease;
+}
+body.brand-v34 :where(.card,.cap,.article,.product-tile,.flagship-grid>a,.resource-directory>a):hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 34px rgba(9,28,42,.075);
+}
+body.brand-v34 .decision-spine-grid>div:hover{transform:translateY(-2px);position:relative;z-index:2;box-shadow:0 12px 28px rgba(9,28,42,.08)}
+body.brand-v34 .flagship-id b{font-weight:610;letter-spacing:-.022em}
+body.brand-v34 .decision-spine-head h2{font-weight:610;letter-spacing:-.03em}
+body.brand-v34 .decision-spine-grid strong{font-weight:600;letter-spacing:-.012em}
+body.brand-v34 .prefooter h2{font-weight:610;letter-spacing:-.028em}
+body.brand-v34 :where(.product-tile img,.form-card img,.tech-media img,.resource-card img,.hero-media img){
+  transition:transform 900ms var(--tj-ease),filter 500ms var(--tj-ease-soft);
+}
+body.brand-v34 :where(.product-tile,.form-card,.tech-media,.resource-card,.hero-media):hover img{transform:scale(1.018)}
+
+/* Forms, technical tables and keyboard behavior. */
+body.brand-v34 :where(input,select,textarea,button,a){-webkit-tap-highlight-color:transparent}
+body.brand-v34 :where(input,select,textarea){font-family:var(--tj-font-ui);transition:border-color var(--tj-fast) ease,box-shadow var(--tj-fast) ease,background-color var(--tj-fast) ease}
+body.brand-v34 :where(input,select,textarea):focus{box-shadow:var(--tj-ring)}
+body.brand-v34 :where(a,button,input,select,textarea,summary):focus-visible{outline:2px solid #0d5ea8;outline-offset:3px}
+body.brand-v34 :where(.data-table,.tech-table) th{font-family:var(--tj-font-ui);font-weight:680;letter-spacing:.065em}
+body.brand-v34 :where(.data-table,.tech-table) tbody tr{transition:background-color var(--tj-fast) ease}
+body.brand-v34 :where(.data-table,.tech-table) tbody tr:hover{background:rgba(13,94,168,.035)}
+body.brand-v34 .standards-scroll{scrollbar-width:thin;scrollbar-color:#aebbc5 #eef2f4}
+
+/* Footer gets the same typographic discipline as the buyer-facing body. */
+body.brand-v34 .footer h4{font-family:var(--tj-font-ui);font-weight:650;letter-spacing:.09em}
+body.brand-v34 .footer a{transition:color var(--tj-fast) ease,transform var(--tj-med) var(--tj-ease)}
+body.brand-v34 .footer a:hover{color:#fff;transform:translateX(2px)}
+
+/* Scroll-linked entrance motion is progressive enhancement only. */
+@supports (animation-timeline:view()){
+  body.brand-v34 :where(.sec-head,.decision-spine-head,.decision-spine-grid,.decision-spine-offer,.flagship-grid,.rfqbox,.prefooter-grid,.v34-qualification-rail-grid,.capgrid,.articles,.industries,.feature,.twocol){
+    animation-name:tj-enter;
+    animation-duration:1ms;
+    animation-fill-mode:both;
+    animation-timing-function:linear;
+    animation-timeline:view();
+    animation-range:entry 8% cover 28%;
+  }
+  @keyframes tj-enter{from{opacity:.12;transform:translateY(18px)}to{opacity:1;transform:none}}
+}
+
+/* Header elevation follows page travel where scroll-linked animation is available. */
+@supports (animation-timeline:scroll()){
+  body.brand-v34 .site-header.nav{
+    animation:tj-header-elevate linear both;
+    animation-timeline:scroll(root block);
+    animation-range:0 90px;
+  }
+  @keyframes tj-header-elevate{
+    from{box-shadow:0 1px 0 rgba(6,22,34,.03)}
+    to{box-shadow:0 10px 30px rgba(6,22,34,.09)}
+  }
+}
+
+/* Small-screen refinement: preserve hierarchy, reduce jumpiness, keep hit areas deliberate. */
+@media(max-width:860px){
+  html{scroll-padding-top:72px}
+  body.brand-v34{letter-spacing:-.004em}
+  body.brand-v34 .mobile-menu.open{animation:tj-mobile-menu var(--tj-med) var(--tj-ease) both}
+  body.brand-v34 .mobile-menu a,
+  body.brand-v34 .mobile-menu summary{font-family:var(--tj-font-ui)}
+  body.brand-v34 .mobile-menu a{transition:background-color var(--tj-fast) ease,color var(--tj-fast) ease,padding-left var(--tj-med) var(--tj-ease)}
+  body.brand-v34 .mobile-menu a:active{padding-left:4px}
+  body.brand-v34 :where(.cta,.route-btn,.rfq-btn,.mobile-rfq){min-height:44px}
+  @keyframes tj-mobile-menu{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+}
+@media(max-width:700px){
+  body.brand-v34 :where(.hero h1,.pagehero h1,.tech-hero h1){letter-spacing:-.032em}
+  body.brand-v34 :where(.hero .lead,.pagehero p,.tech-hero p){line-height:1.58}
+  body.brand-v34 :where(.card,.cap,.article,.product-tile,.flagship-grid>a,.decision-spine-grid>div):hover{transform:none;box-shadow:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  body.brand-v34 *,body.brand-v34 *::before,body.brand-v34 *::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+  }
+}
+
+/* First-fold choreography: one restrained sequence, then the page settles. */
+body.brand-v34 :where(.hero .eyebrow,.pagehero .breadcrumb,.tech-hero .breadcrumb){animation:tj-firstfold-in 620ms var(--tj-ease) 40ms both}
+body.brand-v34 :where(.hero h1,.pagehero h1,.tech-hero h1){animation:tj-firstfold-in 760ms var(--tj-ease) 90ms both}
+body.brand-v34 :where(.hero .lead,.pagehero p,.tech-hero p){animation:tj-firstfold-in 760ms var(--tj-ease) 150ms both}
+body.brand-v34 :where(.hero .buttonrow,.hero-proofbar,.tech-hero .buttonrow){animation:tj-firstfold-in 780ms var(--tj-ease) 220ms both}
+body.brand-v34 :where(.hero-media,.hero-visual,.tech-media){animation:tj-firstfold-media 920ms var(--tj-ease) 120ms both}
+@keyframes tj-firstfold-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes tj-firstfold-media{from{opacity:0;transform:translateY(10px) scale(.992)}to{opacity:1;transform:none}}
