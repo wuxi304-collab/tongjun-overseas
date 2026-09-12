@@ -1,4 +1,5 @@
 V34.138 UI polish integration requested 2026-09-12
+attempt=2
 scope=typography,motion,transitions,focus,mobile
 base=v34.137-full-source
 production=untouched
