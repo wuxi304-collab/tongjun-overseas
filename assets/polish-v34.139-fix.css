@@ -1,0 +1,7 @@
+/* V34.139.1 — avoid double-driving the same properties when JS enhancement is active. */
+body.brand-v34.tj-motion-enabled .site-header.nav{animation:none!important}
+body.brand-v34.tj-motion-enabled :where(
+  .sec-head,.decision-spine-head,.decision-spine-grid,.decision-spine-offer,
+  .flagship-grid,.rfqbox,.prefooter-grid,.v34-qualification-rail-grid,
+  .capgrid,.articles,.industries,.feature,.twocol
+){animation-name:none!important}
