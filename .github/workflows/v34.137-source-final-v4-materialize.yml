@@ -1,0 +1,57 @@
+name: V34.137 source final v4 materialize
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v34.137-source-final-v4
+    paths:
+      - '.sync/v34.137-source-final-v4/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout staging source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reassemble and verify archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find .sync/v34.137-source-final-v4 -maxdepth 1 -name 'chunk-*.b64' | wc -l)" -eq 142
+          cat .sync/v34.137-source-final-v4/chunk-*.b64 > /tmp/v34.137-source-final-v4.b64
+          test "$(wc -c < /tmp/v34.137-source-final-v4.b64)" -eq 1277152
+          base64 -d /tmp/v34.137-source-final-v4.b64 > /tmp/v34.137-source-final-v4.tar.xz
+          test "$(wc -c < /tmp/v34.137-source-final-v4.tar.xz)" -eq 957864
+          echo "4678a8a1733b13dbbce24eccf2855036ad994a861aab007bd23caecee336358f  /tmp/v34.137-source-final-v4.tar.xz" | sha256sum -c -
+          tar -tJf /tmp/v34.137-source-final-v4.tar.xz >/dev/null
+
+      - name: Materialize isolated release branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -B v34.137-materialized-final-v4
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          tar -xJf /tmp/v34.137-source-final-v4.tar.xz -C .
+          test "$(find . -type f ! -path './.git/*' | wc -l)" -eq 162
+          npm run check
+          grep -F 'Technical data for sourcing decisions.' technical-data.html
+          grep -F 'Invar 36: LNG strip vs tooling plate' resource-invar-lng-vs-tooling.html
+          grep -F 'Titanium + zirconium for corrosive service.' titanium-heat-exchangers.html
+          grep -F 'standards-scroll' standards.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'release: materialize validated V34.137-equivalent source v4'
+          git push origin HEAD:v34.137-materialized-final-v4 --force
