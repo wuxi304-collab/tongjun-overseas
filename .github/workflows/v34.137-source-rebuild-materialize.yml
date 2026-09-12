@@ -1,0 +1,58 @@
+name: V34.137 validated source rebuild materializer
+
+on:
+  push:
+    branches: [v34.137-exact-archive]
+    paths:
+      - '.sync/v34.137-source-rebuild/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild and verify source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          b64=/tmp/v34.137-source-rebuild.b64
+          archive=/tmp/v34.137-source-rebuild.tar.xz
+          cat .sync/v34.137-source-rebuild/chunk-*.b64 > "$b64"
+          test "$(wc -c < "$b64")" = "1277072"
+          base64 -d "$b64" > "$archive"
+          echo "7c466274a9ac85f937bf1445ac7d69c17c7b9ba17aa69044bed027aefe89b266  $archive" | sha256sum -c -
+          rm -rf /tmp/v34.137-materialized
+          mkdir -p /tmp/v34.137-materialized
+          tar -xJf "$archive" -C /tmp/v34.137-materialized
+          test "$(find /tmp/v34.137-materialized -type f | wc -l)" = "162"
+
+      - name: Materialize source and run release gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.sync/' \
+            /tmp/v34.137-materialized/ ./
+          npm run check
+
+      - name: Commit validated source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Tongjun V34.137 Recovery"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No source changes to commit."
+            exit 0
+          fi
+          git commit -m "sync: materialize validated V34.137 reconstructed source"
+          git push origin HEAD:v34.137-exact-archive
