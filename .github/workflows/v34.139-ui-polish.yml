@@ -1,0 +1,77 @@
+name: V34.139 UI polish overlay
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v34.139-ui-polish
+    paths:
+      - '.sync/v34.139-ui-polish/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-polish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout isolated polish branch
+        uses: actions/checkout@v4
+        with:
+          ref: v34.139-ui-polish
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Attach layered polish assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/polish.js
+          python - <<'PY'
+          from pathlib import Path
+          css1='<link rel="stylesheet" href="/assets/polish.css">'
+          css2='<link rel="stylesheet" href="/assets/polish-v34.139.css">'
+          js='<script defer src="/assets/polish.js"></script>'
+          files=sorted(Path('.').glob('*.html'))
+          if len(files)<50:
+              raise SystemExit(f'expected at least 50 HTML files, found {len(files)}')
+          changed=0
+          for f in files:
+              s=f.read_text()
+              if '</head>' not in s:
+                  raise SystemExit(f'missing </head>: {f}')
+              original=s
+              if css1 not in s:
+                  s=s.replace('</head>',css1+'</head>',1)
+              if css2 not in s:
+                  s=s.replace('</head>',css2+'</head>',1)
+              if js not in s:
+                  s=s.replace('</head>',js+'</head>',1)
+              if s!=original:
+                  f.write_text(s)
+                  changed+=1
+          print(f'polish assets attached to {changed} of {len(files)} HTML files')
+          for f in files:
+              s=f.read_text()
+              for token in (css1,css2,js):
+                  if s.count(token)!=1:
+                      raise SystemExit(f'bad polish asset count in {f}: {token}')
+          PY
+
+      - name: Commit isolated overlay integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.html'
+          if git diff --cached --quiet; then
+            echo 'No HTML changes required.'
+            exit 0
+          fi
+          git commit -m 'design: integrate V34.139 typography and motion overlay'
+          git push origin HEAD:v34.139-ui-polish
