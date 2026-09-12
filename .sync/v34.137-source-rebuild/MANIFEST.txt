@@ -1,0 +1,9 @@
+V34.137 reconstructed source recovery archive
+files=162
+archive_sha256=7c466274a9ac85f937bf1445ac7d69c17c7b9ba17aa69044bed027aefe89b266
+archive_bytes=957804
+base64_chars=1277072
+chunks=71
+chunk_size=18000
+last_chunk_size=17072
+validation=npm run check PASS
