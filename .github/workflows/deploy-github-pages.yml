@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: mobile Tongjun logo visibility fix
+# refresh: logo-safe full-site V34.152 convergence
 
 on:
   workflow_dispatch:
@@ -64,19 +64,22 @@ jobs:
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
 
-      - name: Validate full-site brand shell
+      - name: Validate full-site brand convergence
         run: |
           set -euo pipefail
-          for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html; do
+          for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html nickel-alloys.html precision-strip.html heavy-plate.html; do
             test -f "_site/$f"
             grep -q 'brand-v34.152.css' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
           done
-          test -f _site/assets/tongjun-logo.svg
-          grep -q 'flex:0 0 58px' _site/assets/brand-v34.152.css
+          grep -q 'Never show the fabricated portrait/student mark' _site/assets/brand-v34.152.css
+          grep -q 'TONGJUN METALS' _site/assets/brand-v34.152.css
+          grep -q 'pagehero' _site/assets/brand-v34.152.css
+          grep -q 'section-nav' _site/assets/brand-v34.152.css
+          grep -q 'specpanel' _site/assets/brand-v34.152.css
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: brand shell, mobile logo lockup and RFQ workflow validated.'
+          echo 'PASS: logo-safe brand shell, inner-page convergence and RFQ workflow validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
