@@ -1,4 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
+# refresh: traced Tongjun reference mark + full-site brand shell
 
 on:
   workflow_dispatch:
