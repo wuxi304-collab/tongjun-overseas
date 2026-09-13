@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R6 hard-rendered Columbus logo + hero + generated industrial module imagery
+# refresh: R7 stable Columbus lockup + port hero + generated industrial module imagery
 
 on:
   workflow_dispatch:
@@ -37,8 +37,12 @@ jobs:
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
           done
-          test -s assets/brand-v34.152-r6.css
-          echo 'PASS: recovered + generated source image assets validated.'
+          for svg in columbus-logo-r7 hero-port-r7; do
+            test -s "assets/images/$svg.svg"
+            grep -q '<svg' "assets/images/$svg.svg"
+          done
+          test -s assets/brand-v34.152-r7.css
+          echo 'PASS: R7 brand assets and module imagery validated.'
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
       - name: Build Pages mirror
@@ -81,27 +85,25 @@ jobs:
             grep -q 'brand-v34.152-r2.css' "_site/$f"
             grep -q 'brand-v34.152-r4.css' "_site/$f"
             grep -q 'brand-v34.152-r5.css' "_site/$f"
-            grep -q 'brand-v34.152-r6.css?v=20260913-r6' "_site/$f"
+            grep -q 'brand-v34.152-r6.css' "_site/$f"
+            grep -q 'brand-v34.152-r7.css?v=20260914-r7' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
             grep -q 'tj-logo-img' "_site/$f"
-            grep -q 'columbus-logo-v2.webp?v=20260913-r6' "_site/$f"
+            grep -q 'columbus-logo-r7.svg?v=20260914-r7' "_site/$f"
           done
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2; do
-            p="_site/assets/images/$img.webp"
-            test -s "$p"
-            file "$p" | grep -qi 'Web/P'
+          for svg in columbus-logo-r7 hero-port-r7; do
+            test -s "_site/assets/images/$svg.svg"
+            grep -q '<svg' "_site/assets/images/$svg.svg"
           done
           grep -q 'hero-bg-r6' _site/index.html
-          grep -q 'hero-port-v2.webp?v=20260913-r6' _site/index.html
+          grep -q 'hero-port-r7.svg?v=20260914-r7' _site/index.html
           grep -q 'materials-warehouse-v2.webp' _site/materials.html
           grep -q 'quality-lab-v2.webp' _site/quality.html
           grep -q 'engineering-discussion-v2.webp' _site/about.html
           grep -q 'engineering-review-v2.webp' _site/rfq.html
-          grep -q 'tj-logo-img' _site/assets/brand-v34.152-r6.css
-          ! grep -q '同钧' _site/assets/brand-v34.152.css
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: R6 real-image brand layer, generated visuals and RFQ workflow validated.'
+          echo 'PASS: R7 hard-rendered brand layer, module imagery and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
