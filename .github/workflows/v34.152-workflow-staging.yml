@@ -23,7 +23,11 @@ jobs:
         with:
           node-version: '24'
       - name: Apply deterministic V34.152 staging delta
-        run: python scripts/apply-v34-152.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/apply-v34-152.py
+          python scripts/refine-v34-152-release.py
       - name: Validate V34.152 delta only
         shell: bash
         run: |
@@ -35,6 +39,7 @@ jobs:
           node <<'NODE'
           const fs=require('fs');
           const html=fs.readFileSync('rfq.html','utf8');
+          const js=fs.readFileSync('assets/polish.js','utf8');
           const required=[
             'technicalReviewControl','quote_assumptions','deviation_status','deviation_register',
             'alternate_route_permission','certificate_responsibility','inspection_responsibility',
@@ -50,12 +55,18 @@ jobs:
           const ids=[...html.matchAll(/\sid=["']([^"']+)["']/g)].map(m=>m[1]);
           const dup=[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))];
           if(dup.length) throw new Error(`duplicate RFQ ids: ${dup.join(', ')}`);
-          console.log('PASS: RFQ control presence + unique IDs.');
+          const semantics=[
+            'const hardReady=technical&&assumptions&&alternate&&evidenceAssigned&&deviations',
+            "certOwner==='to-be-agreed'||inspectionOwner==='to-be-agreed'",
+            "legacyState.textContent=status==='QUALIFIED BASIS'?'Qualified basis':status==='QUALIFIED WITH CONDITIONS'?'Conditional':'Not released'"
+          ];
+          for(const token of semantics){if(!js.includes(token))throw new Error(`release semantic missing: ${token}`)}
+          console.log('PASS: RFQ controls, unique IDs and release-authority semantics.');
           NODE
           grep -q 'quote_assumptions:2500' api/rfq.js
           grep -q 'Release Status:' assets/site.js
           grep -q 'V34.152 STAGING' assets/polish.css
-          grep -q 'QUALIFIED WITH CONDITIONS' assets/polish.js
+          grep -q 'V34.152 R2' assets/polish.js
           echo 'PASS: V34.152 staging delta validated. Full site / asset gates remain reserved for authoritative V34.151 source.'
       - name: Commit validated staging delta
         shell: bash
@@ -68,5 +79,5 @@ jobs:
             echo 'No V34.152 staging changes required.'
             exit 0
           fi
-          git commit -m 'feat: stage V34.152 RFQ technical-review qualified-offer chain'
+          git commit -m 'fix: align V34.152 qualified-offer release authority'
           git push origin HEAD:v34.152-workflow-staging
