@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: recover canonical industrial images from preserved binary sync archive
+# refresh: publish restored supplied V34 industrial images from staging branch
 
 on:
   workflow_dispatch:
@@ -28,22 +28,15 @@ jobs:
           fetch-depth: 1
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Recover preserved industrial image assets
+      - name: Validate restored source image assets
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p assets/images /tmp/tj-v27-bin/full
-          cat .sync/v27-bin/chunk00.b64 .sync/v27-bin/chunk01.b64 .sync/v27-bin/chunk02.b64 .sync/v27-bin/chunk03.b64 .sync/v27-bin/chunk04.b64 .sync/v27-bin/chunk05.b64 \
-            | tr -cd 'A-Za-z0-9+/=' \
-            | base64 --decode > /tmp/tj-v27-bin/archive.tar.xz
-          xz -t /tmp/tj-v27-bin/archive.tar.xz
-          tar -xJf /tmp/tj-v27-bin/archive.tar.xz -C /tmp/tj-v27-bin/full
-          find /tmp/tj-v27-bin/full -type f -path '*/assets/images/*.webp' -print
-          while IFS= read -r f; do cp "$f" assets/images/; done < <(find /tmp/tj-v27-bin/full -type f -path '*/assets/images/*.webp')
           for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi; do
             test -s "assets/images/$img.webp"
+            head -c 4 "assets/images/$img.webp" | grep -q RIFF
           done
-          echo 'PASS: preserved industrial image set recovered into assets/images.'
+          echo 'PASS: 13 supplied V34 WebP assets exist in staging source.'
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
       - name: Build Pages mirror
@@ -90,10 +83,11 @@ jobs:
           grep -q 'hero h1{color:#fff' _site/assets/brand-v34.152-r2.css
           for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi; do
             test -s "_site/assets/images/$img.webp"
+            head -c 4 "_site/assets/images/$img.webp" | grep -q RIFF
           done
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: recovered images, R2 hierarchy, sitewide shell and RFQ workflow validated.'
+          echo 'PASS: restored images, sitewide shell and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
