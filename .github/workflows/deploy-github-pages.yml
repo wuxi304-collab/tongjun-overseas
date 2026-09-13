@@ -20,10 +20,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout latest recoverable site staging
+      - name: Checkout visual-recovery staging
         uses: actions/checkout@v6
         with:
-          ref: v34.152-workflow-staging
+          ref: v34.152-pages-visual-rebuild
           fetch-depth: 1
 
       - name: Configure Pages
@@ -32,7 +32,7 @@ jobs:
         with:
           enablement: true
 
-      - name: Build temporary Pages mirror
+      - name: Build GitHub Pages mirror
         shell: bash
         env:
           BASE_PATH: /tongjun-overseas
@@ -62,8 +62,7 @@ jobs:
             dest=out/rel
             dest.parent.mkdir(parents=True,exist_ok=True)
             if p.suffix.lower() in {'.html','.css','.js','.json','.xml','.txt','.webmanifest','.svg'}:
-              try:
-                text=p.read_text(encoding='utf-8')
+              try: text=p.read_text(encoding='utf-8')
               except UnicodeDecodeError:
                 shutil.copy2(p,dest); continue
               text=re.sub(r'(["\'])/(?!/)', lambda m: m.group(1)+base+'/', text)
@@ -84,34 +83,19 @@ jobs:
           for name in sorted(refs):
             target=imgdir/name
             if target.exists(): continue
-            seed=sum(map(ord,name))
-            rng=random.Random(seed)
-            w,h=(1600,1000)
-            im=Image.new('RGB',(w,h),(18,31,40))
-            px=im.load()
+            seed=sum(map(ord,name)); rng=random.Random(seed)
+            w,h=(1600,1000); im=Image.new('RGB',(w,h),(18,31,40)); px=im.load()
             for y in range(h):
-              t=y/(h-1)
-              basec=(20+int(20*t),34+int(27*t),43+int(31*t))
+              t=y/(h-1); basec=(20+int(20*t),34+int(27*t),43+int(31*t))
               for x in range(w):
-                n=rng.randrange(-7,8)
-                px[x,y]=tuple(max(0,min(255,c+n)) for c in basec)
-            im=im.filter(ImageFilter.GaussianBlur(0.45))
-            d=ImageDraw.Draw(im,'RGBA')
+                n=rng.randrange(-7,8); px[x,y]=tuple(max(0,min(255,c+n)) for c in basec)
+            im=im.filter(ImageFilter.GaussianBlur(0.45)); d=ImageDraw.Draw(im,'RGBA')
             for i in range(18):
-              x=int((i/17)*w)+rng.randint(-35,35)
-              d.line((x,0,x-230,h),fill=(205,220,228,22),width=rng.randint(1,4))
-            d.rectangle((0,int(h*.76),w,h),fill=(7,18,25,105))
-            im.save(target,'WEBP',quality=84,method=6)
+              x=int((i/17)*w)+rng.randint(-35,35); d.line((x,0,x-230,h),fill=(205,220,228,22),width=rng.randint(1,4))
+            d.rectangle((0,int(h*.76),w,h),fill=(7,18,25,105)); im.save(target,'WEBP',quality=84,method=6)
 
           (out/'.nojekyll').write_text('',encoding='utf-8')
-          banner='''<div style="position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#102836;color:#dce8ee;border-top:1px solid rgba(255,255,255,.16);padding:8px 14px;text-align:center;font:11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.02em">Temporary GitHub Pages mirror · latest recoverable staging · official domain filing in progress</div>'''
-          for p in out.rglob('*.html'):
-            text=p.read_text(encoding='utf-8')
-            if 'Temporary GitHub Pages mirror' not in text and '</body>' in text:
-              text=text.replace('</body>',banner+'</body>',1)
-              p.write_text(text,encoding='utf-8')
-
-          print(f'Pages mirror built at {out} with {len(refs)} image references covered.')
+          print(f'Pages mirror built at {out} with {len(refs)} fallback image references covered.')
           PY
 
       - name: Sanity-check Pages artifact
@@ -121,11 +105,11 @@ jobs:
           test -f _site/index.html
           test -f _site/assets/site.css
           test -f _site/assets/site.js
-          test -f _site/assets/polish.css
-          test -f _site/assets/polish.js
-          grep -q '/tongjun-overseas/assets/site.css' _site/index.html
-          grep -q 'latest recoverable staging' _site/index.html
-          echo 'PASS: temporary Pages mirror paths validated.'
+          grep -q 'From Material' _site/index.html
+          grep -q 'TONGJUN' _site/index.html
+          grep -q 'Request a Quote' _site/index.html
+          grep -q '/tongjun-overseas/rfq' _site/index.html
+          echo 'PASS: visual-recovery homepage and Pages paths validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
