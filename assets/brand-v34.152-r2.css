@@ -1,0 +1,32 @@
+/* V34.152 R2 — editorial hierarchy + missing-image fail-safe */
+body.brand-v34 .hero{background:#071a37!important;min-height:620px!important}
+body.brand-v34 .hero:before{opacity:.25!important}
+body.brand-v34 .hero h1{color:#fff!important;text-shadow:none!important}
+body.brand-v34 .hero .lead{color:#c7d3df!important;max-width:720px}
+body.brand-v34 .hero .eyebrow{color:#e8a24a!important}
+body.brand-v34 .hero-positioning{color:#d8e1ea!important;background:rgba(2,14,29,.58)!important;border-left-color:#e8a24a!important}
+body.brand-v34 .hero-positioning b{color:#fff!important}
+body.brand-v34 .hero .cta{background:#fff!important;color:#071a37!important;border-color:#fff!important}
+body.brand-v34 .hero .cta.ghost{background:transparent!important;color:#fff!important;border-color:#91a3b5!important}
+body.brand-v34 .hero-photo{min-height:480px!important;background:linear-gradient(135deg,#0b2139,#18334d)!important;position:relative!important;overflow:hidden!important}
+body.brand-v34 .hero-photo:after{content:"MATERIAL · PROCESS · LOGISTICS";position:absolute;right:24px;bottom:20px;color:#8fa4b8;font:700 10px/1 Inter,system-ui,sans-serif;letter-spacing:.18em}
+body.brand-v34 .hero-photo img{width:100%!important;height:100%!important;min-height:480px!important;object-fit:cover!important;position:relative;z-index:2}
+body.brand-v34 .hero-decision-dock{margin-top:34px!important}
+body.brand-v34 .hero-decision-dock>div{background:rgba(5,20,37,.82)!important;border-color:#31485e!important;color:#fff!important}
+body.brand-v34 .hero-decision-dock span{color:#9fb1c2!important}
+body.brand-v34 .hero-proofline{color:#9fb1c2!important}
+body.brand-v34 .statband{border-top:0!important}
+body.brand-v34 .stats .stat{min-height:112px!important}
+body.brand-v34 .product-media,body.brand-v34 .visual-frame,body.brand-v34 .v29-core-media{background:linear-gradient(135deg,#e9eef2,#cfd8df)!important;overflow:hidden!important}
+body.brand-v34 .product-media img,body.brand-v34 .visual-frame img,body.brand-v34 .v29-core-media img{width:100%!important;height:100%!important;object-fit:cover!important}
+body.brand-v34 img[src*="/assets/images/"]{background:linear-gradient(135deg,#e8edf1,#cbd5dd)}
+body.brand-v34 .pagehero h1,body.brand-v34 .landinghero h1,body.brand-v34 .articlehero h1,body.brand-v34 .tech-hero h1{font-size:clamp(48px,5.2vw,78px)!important}
+body.brand-v34 .pagehero .eyebrow,body.brand-v34 .landinghero .eyebrow,body.brand-v34 .articlehero .eyebrow,body.brand-v34 .tech-hero .eyebrow{color:#315a83!important}
+body.brand-v34 .v29-core-hero{background:#fff!important;color:#071a37!important}
+body.brand-v34 .v29-core-copy h1{color:#071a37!important}
+body.brand-v34 .v29-core-copy p{color:#58677a!important}
+body.brand-v34 .performance-rail{background:#0b1826!important}
+body.brand-v34 .performance-grid strong,body.brand-v34 .performance-grid b{color:#fff!important}
+body.brand-v34 .performance-grid span{color:#9fb0c0!important}
+@media(min-width:901px){body.brand-v34 .hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(420px,.98fr)!important;gap:48px!important}body.brand-v34 .hero-grid>div:first-child{padding:64px 0!important}}
+@media(max-width:900px){body.brand-v34 .hero{min-height:auto!important}body.brand-v34 .hero-grid{grid-template-columns:1fr!important}body.brand-v34 .hero-grid>div:first-child{padding:58px 0 24px!important}body.brand-v34 .hero-photo{min-height:260px!important}body.brand-v34 .hero-photo img{min-height:260px!important}body.brand-v34 .hero-decision-dock{overflow-x:auto!important}}
