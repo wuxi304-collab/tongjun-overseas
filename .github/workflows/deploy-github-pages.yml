@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: restore supplied V34 industrial image archive before build
+# refresh: recover canonical industrial images from preserved binary sync archive
 
 on:
   workflow_dispatch:
@@ -28,18 +28,20 @@ jobs:
           fetch-depth: 1
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Restore supplied V34 image assets
+      - name: Recover preserved industrial image assets
         shell: bash
         run: |
           set -euo pipefail
-          test -s .sync/v34-image-recovery.b64
-          mkdir -p assets/images /tmp/tj-image-recovery
-          base64 --decode .sync/v34-image-recovery.b64 > /tmp/tj-image-recovery/images.zip
-          unzip -qo /tmp/tj-image-recovery/images.zip -d assets/images
+          mkdir -p assets/images /tmp/tj-v27-bin
+          cat .sync/v27-bin/chunk*.b64 | tr -d '\r\n' | base64 --decode > /tmp/tj-v27-bin/archive.tar.xz
+          mkdir -p /tmp/tj-v27-bin/full
+          tar -xJf /tmp/tj-v27-bin/archive.tar.xz -C /tmp/tj-v27-bin/full
+          find /tmp/tj-v27-bin/full -type f -path '*/assets/images/*.webp' -print
+          while IFS= read -r f; do cp "$f" assets/images/; done < <(find /tmp/tj-v27-bin/full -type f -path '*/assets/images/*.webp')
           for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi; do
             test -s "assets/images/$img.webp"
           done
-          echo 'PASS: supplied V34 image archive restored into assets/images.'
+          echo 'PASS: preserved industrial image set recovered into assets/images.'
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
       - name: Build Pages mirror
@@ -89,7 +91,7 @@ jobs:
           done
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: restored V34 images, R2 hierarchy, sitewide shell and RFQ workflow validated.'
+          echo 'PASS: recovered images, R2 hierarchy, sitewide shell and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
