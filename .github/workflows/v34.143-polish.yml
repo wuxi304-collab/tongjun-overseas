@@ -1,0 +1,43 @@
+name: V34.143 buyer-path polish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v34.143-ui-polish
+    paths:
+      - '.sync/v34.143-ui-polish/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-polish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v34.143-ui-polish
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Apply V34.143 buyer-path refinements
+        run: python scripts/apply-v34-143.py
+      - name: Validate JavaScript
+        run: node --check assets/polish.js
+      - name: Confirm expected polish markers
+        run: |
+          grep -q 'V34.143 — buyer-path visual convergence' assets/polish.css
+          grep -q 'V34.143 — compact navigation continuity' assets/polish.js
+      - name: Commit V34.143 integration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/polish.css assets/polish.js
+          if git diff --cached --quiet; then
+            echo 'No polish changes required.'
+            exit 0
+          fi
+          git commit -m 'design: integrate V34.143 buyer-path convergence'
+          git push origin HEAD:v34.143-ui-polish
