@@ -2,4 +2,5 @@ V34.144 conversion-focused visual finish
 base=v34.143-ui-polish
 scope=home,materials,technical-data,supplier-qualification,rfq,mobile
 local_validation=npm run check PASS
+remote_overlay_source=known incomplete legacy branch; overlay validation only
 production=untouched
