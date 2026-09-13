@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: English-only Columbus branding + generated module imagery
+# refresh: R5 English-only Columbus lockup + generated industrial module imagery
 
 on:
   workflow_dispatch:
@@ -32,12 +32,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2; do
             p="assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
           done
-          echo 'PASS: source image assets validated.'
+          echo 'PASS: recovered + generated source image assets validated.'
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
       - name: Build Pages mirror
@@ -79,19 +79,24 @@ jobs:
             grep -q 'brand-v34.152.css' "_site/$f"
             grep -q 'brand-v34.152-r2.css' "_site/$f"
             grep -q 'brand-v34.152-r4.css' "_site/$f"
+            grep -q 'brand-v34.152-r5.css' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
           done
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2; do
             p="_site/assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
           done
-          grep -q 'materials-overview-gen.webp' _site/materials.html
-          grep -q 'columbus-mark.webp' _site/assets/brand-v34.152-r4.css
+          grep -q 'materials-warehouse-v2.webp' _site/materials.html
+          grep -q 'quality-lab-v2.webp' _site/quality.html
+          grep -q 'engineering-discussion-v2.webp' _site/about.html
+          grep -q 'engineering-review-v2.webp' _site/rfq.html
+          grep -q 'columbus-logo-v2.webp' _site/assets/brand-v34.152-r5.css
+          grep -q 'hero-port-v2.webp' _site/assets/brand-v34.152-r5.css
           ! grep -q '同钧' _site/assets/brand-v34.152.css
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: English Columbus brand, generated imagery and RFQ workflow validated.'
+          echo 'PASS: R5 generated visual system, English Columbus brand and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
