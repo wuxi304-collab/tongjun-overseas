@@ -1,26 +1,29 @@
-/* V34.152 R2 — editorial hierarchy + missing-image fail-safe */
-body.brand-v34 .hero{background:#071a37!important;min-height:620px!important}
-body.brand-v34 .hero:before{opacity:.25!important}
-body.brand-v34 .hero h1{color:#fff!important;text-shadow:none!important}
-body.brand-v34 .hero .lead{color:#c7d3df!important;max-width:720px}
-body.brand-v34 .hero .eyebrow{color:#e8a24a!important}
-body.brand-v34 .hero-positioning{color:#d8e1ea!important;background:rgba(2,14,29,.58)!important;border-left-color:#e8a24a!important}
+/* V34.152 R3 — temporary licensed industrial image recovery + visual convergence.
+   The external hero/image fallbacks are temporary preview assets while the original archived binaries are being recovered. */
+:root{--tj-orange:#e99a3d}
+body.brand-v34 .hero{min-height:690px!important;position:relative!important;color:#fff!important;background:#0b1a29 url('https://images.unsplash.com/photo-1774929108070-b60d3879e071?auto=format&fit=crop&fm=jpg&q=82&w=2400') center 48%/cover no-repeat!important;display:flex!important;align-items:flex-end!important}
+body.brand-v34 .hero:before{content:""!important;position:absolute!important;inset:0!important;opacity:1!important;background:linear-gradient(90deg,rgba(5,17,31,.93) 0%,rgba(7,24,42,.84) 42%,rgba(7,24,42,.45) 68%,rgba(7,24,42,.18) 100%)!important;z-index:0!important}
+body.brand-v34 .hero:after{content:""!important;position:absolute!important;left:0!important;bottom:0!important;width:34%!important;height:6px!important;background:var(--tj-orange)!important;z-index:2!important}
+body.brand-v34 .hero-grid{display:block!important;position:relative!important;z-index:1!important;padding:94px 0 74px!important}
+body.brand-v34 .hero-grid>div:first-child{max-width:790px!important;padding:0!important}
+body.brand-v34 .hero-photo{display:none!important}
+body.brand-v34 .hero h1{color:#fff!important;font-family:Georgia,'Times New Roman',serif!important;font-size:clamp(56px,5.7vw,88px)!important;font-weight:500!important;line-height:.98!important;letter-spacing:-.045em!important;margin:0 0 24px!important;text-shadow:0 2px 18px rgba(0,0,0,.18)!important}
+body.brand-v34 .hero .lead{color:#e5ebf0!important;font-size:19px!important;line-height:1.55!important;max-width:720px!important}
+body.brand-v34 .hero .eyebrow{color:#ffb05e!important}
+body.brand-v34 .hero-positioning{max-width:760px!important;color:#e2e9ef!important;background:rgba(3,17,31,.68)!important;border-left:4px solid var(--tj-orange)!important;padding:15px 18px!important;margin-top:24px!important}
 body.brand-v34 .hero-positioning b{color:#fff!important}
 body.brand-v34 .hero .cta{background:#fff!important;color:#071a37!important;border-color:#fff!important}
-body.brand-v34 .hero .cta.ghost{background:transparent!important;color:#fff!important;border-color:#91a3b5!important}
-body.brand-v34 .hero-photo{min-height:480px!important;background:linear-gradient(135deg,#0b2139,#18334d)!important;position:relative!important;overflow:hidden!important}
-body.brand-v34 .hero-photo:after{content:"MATERIAL · PROCESS · LOGISTICS";position:absolute;right:24px;bottom:20px;color:#8fa4b8;font:700 10px/1 Inter,system-ui,sans-serif;letter-spacing:.18em}
-body.brand-v34 .hero-photo img{width:100%!important;height:100%!important;min-height:480px!important;object-fit:cover!important;position:relative;z-index:2}
-body.brand-v34 .hero-decision-dock{margin-top:34px!important}
-body.brand-v34 .hero-decision-dock>div{background:rgba(5,20,37,.82)!important;border-color:#31485e!important;color:#fff!important}
-body.brand-v34 .hero-decision-dock span{color:#9fb1c2!important}
-body.brand-v34 .hero-proofline{color:#9fb1c2!important}
+body.brand-v34 .hero .cta.ghost{background:rgba(4,17,30,.34)!important;color:#fff!important;border-color:rgba(255,255,255,.6)!important}
+body.brand-v34 .hero-decision-dock{margin-top:32px!important;max-width:900px!important;background:rgba(4,18,32,.56)!important;border:1px solid rgba(255,255,255,.23)!important}
+body.brand-v34 .hero-decision-dock>div{background:transparent!important;border-color:rgba(255,255,255,.18)!important;color:#fff!important;min-height:74px!important}
+body.brand-v34 .hero-decision-dock span{color:#becbd6!important}
+body.brand-v34 .hero-proofline{color:#c4d0da!important;max-width:900px!important}
 body.brand-v34 .statband{border-top:0!important}
 body.brand-v34 .stats .stat{min-height:112px!important}
-body.brand-v34 .product-media,body.brand-v34 .visual-frame,body.brand-v34 .v29-core-media{background:linear-gradient(135deg,#e9eef2,#cfd8df)!important;overflow:hidden!important}
-body.brand-v34 .product-media img,body.brand-v34 .visual-frame img,body.brand-v34 .v29-core-media img{width:100%!important;height:100%!important;object-fit:cover!important}
-body.brand-v34 img[src*="/assets/images/"]{background:linear-gradient(135deg,#e8edf1,#cbd5dd)}
-body.brand-v34 .pagehero h1,body.brand-v34 .landinghero h1,body.brand-v34 .articlehero h1,body.brand-v34 .tech-hero h1{font-size:clamp(48px,5.2vw,78px)!important}
+body.brand-v34 .product-media,body.brand-v34 .visual-frame,body.brand-v34 .v29-core-media,body.brand-v34 .route-feature-card{background:linear-gradient(135deg,#e8edf1,#cbd5dd)!important;overflow:hidden!important}
+body.brand-v34 .product-media img,body.brand-v34 .visual-frame img,body.brand-v34 .v29-core-media img,body.brand-v34 .route-feature-card img{width:100%!important;height:100%!important;object-fit:cover!important}
+body.brand-v34 img.tj-image-fallback{filter:saturate(.72) contrast(1.04)!important}
+body.brand-v34 .pagehero h1,body.brand-v34 .landinghero h1,body.brand-v34 .articlehero h1,body.brand-v34 .tech-hero h1{font-size:clamp(48px,5vw,76px)!important}
 body.brand-v34 .pagehero .eyebrow,body.brand-v34 .landinghero .eyebrow,body.brand-v34 .articlehero .eyebrow,body.brand-v34 .tech-hero .eyebrow{color:#315a83!important}
 body.brand-v34 .v29-core-hero{background:#fff!important;color:#071a37!important}
 body.brand-v34 .v29-core-copy h1{color:#071a37!important}
@@ -28,5 +31,14 @@ body.brand-v34 .v29-core-copy p{color:#58677a!important}
 body.brand-v34 .performance-rail{background:#0b1826!important}
 body.brand-v34 .performance-grid strong,body.brand-v34 .performance-grid b{color:#fff!important}
 body.brand-v34 .performance-grid span{color:#9fb0c0!important}
-@media(min-width:901px){body.brand-v34 .hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(420px,.98fr)!important;gap:48px!important}body.brand-v34 .hero-grid>div:first-child{padding:64px 0!important}}
-@media(max-width:900px){body.brand-v34 .hero{min-height:auto!important}body.brand-v34 .hero-grid{grid-template-columns:1fr!important}body.brand-v34 .hero-grid>div:first-child{padding:58px 0 24px!important}body.brand-v34 .hero-photo{min-height:260px!important}body.brand-v34 .hero-photo img{min-height:260px!important}body.brand-v34 .hero-decision-dock{overflow-x:auto!important}}
+/* Remove third-party floating assistants from the public preview; controlled on-page agent desks remain. */
+#dify-chatbot-bubble-button,#dify-chatbot-bubble-window,iframe[src*="dify"],iframe[src*="chatbot"],iframe[src*="coze"],.chatbot-bubble,.floating-chatbot,.floating-assistant{display:none!important;visibility:hidden!important}
+/* Inner pages: same editorial density as homepage, less SaaS-card feel. */
+body.brand-v34 .landing-grid,body.brand-v34 .feature{gap:56px!important}
+body.brand-v34 .sec-head{margin-bottom:36px!important}
+body.brand-v34 .product-editorial-grid{gap:1px!important;background:#d8e0e7!important;border-color:#d8e0e7!important}
+body.brand-v34 .product-copy{padding:25px 26px 28px!important}
+body.brand-v34 .product-copy h3{font-family:Georgia,'Times New Roman',serif!important;font-weight:500!important;color:#071a37!important}
+body.brand-v34 .rfqbox{border-left:5px solid var(--tj-orange)!important}
+@media(max-width:900px){body.brand-v34 .hero{min-height:610px!important;background-position:62% center!important}body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(5,17,31,.94),rgba(5,17,31,.72))!important}body.brand-v34 .hero-grid{padding:62px 0 42px!important}body.brand-v34 .hero h1{font-size:clamp(44px,13vw,66px)!important}body.brand-v34 .hero-decision-dock{overflow-x:auto!important}body.brand-v34 .hero-decision-dock>div{min-width:150px!important}body.brand-v34 .hero-proofline{overflow-x:auto!important}}
+@media(max-width:620px){body.brand-v34 .hero{min-height:560px!important}body.brand-v34 .hero-grid{padding-top:48px!important}body.brand-v34 .hero .lead{font-size:17px!important}body.brand-v34 .hero-positioning{font-size:13px!important}body.brand-v34 .hero-decision-dock{margin-top:24px!important}}
