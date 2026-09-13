@@ -1,0 +1,30 @@
+/* V34.152 R7 — stable image-led first fold and tighter desktop proportions. */
+body.brand-v34 .navin{height:92px!important;min-height:92px!important;grid-template-columns:auto 1fr auto!important}
+body.brand-v34 .navin>.brand{display:flex!important;align-items:center!important;width:330px!important;min-width:330px!important;height:64px!important;padding:0!important;background:none!important;overflow:visible!important}
+body.brand-v34 .tj-logo-img{display:block!important;width:320px!important;height:64px!important;max-width:320px!important;object-fit:contain!important;object-position:left center!important}
+body.brand-v34 .navlinks{justify-content:center!important;gap:28px!important}
+body.brand-v34 .navlinks>a,body.brand-v34 .navtoggle{font-size:13px!important;letter-spacing:.01em!important}
+body.brand-v34 .nav-cta{min-height:50px!important;padding:0 23px!important;font-size:12px!important;letter-spacing:.05em!important}
+body.brand-v34 .hero{position:relative!important;overflow:hidden!important;min-height:690px!important;background:#071a37!important;display:flex!important;align-items:center!important}
+body.brand-v34 .hero-bg-r6{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 52%!important;z-index:0!important;filter:saturate(.88) contrast(1.04)!important}
+body.brand-v34 .hero:before{content:""!important;position:absolute!important;inset:0!important;z-index:1!important;background:linear-gradient(90deg,rgba(4,16,31,.94) 0%,rgba(5,20,39,.84) 34%,rgba(7,26,55,.55) 54%,rgba(7,26,55,.18) 75%,rgba(7,26,55,.04) 100%)!important}
+body.brand-v34 .hero-grid{display:block!important;position:relative!important;z-index:2!important;padding:82px 0 72px!important}
+body.brand-v34 .hero-grid>div:first-child{max-width:735px!important}
+body.brand-v34 .hero h1{font-size:clamp(60px,5.25vw,84px)!important;line-height:.97!important;letter-spacing:-.045em!important;max-width:700px!important;margin-bottom:24px!important}
+body.brand-v34 .hero .lead{font-size:19px!important;line-height:1.56!important;max-width:660px!important}
+body.brand-v34 .hero-positioning{max-width:655px!important;margin-top:24px!important;padding:15px 18px!important;background:rgba(4,17,31,.68)!important}
+body.brand-v34 .hero .buttonrow{margin-top:26px!important;gap:12px!important}
+body.brand-v34 .hero .cta{min-height:50px!important;padding:0 21px!important}
+body.brand-v34 .statband{position:relative!important;z-index:4!important;border-top:1px solid rgba(7,26,55,.08)!important}
+body.brand-v34 .stats .stat{min-height:104px!important;padding-top:25px!important;padding-bottom:23px!important}
+body.brand-v34 .stats .stat strong{font-size:16px!important;letter-spacing:.015em!important}
+body.brand-v34 .stats .stat span{font-size:12px!important;line-height:1.55!important}
+body.brand-v34 .performance-rail{padding:0!important}
+body.brand-v34 .performance-grid{min-height:122px!important}
+body.brand-v34 .performance-lead strong{font-size:20px!important;line-height:1.15!important}
+body.brand-v34 .visual-frame{aspect-ratio:16/7!important;min-height:340px!important}
+body.brand-v34 .visual-frame img{object-fit:cover!important;object-position:center!important;filter:saturate(.86) contrast(1.04)!important}
+body.brand-v34 .pagehero,body.brand-v34 .landinghero,body.brand-v34 .articlehero,body.brand-v34 .tech-hero{padding-top:66px!important;padding-bottom:54px!important}
+body.brand-v34 .section{padding-top:74px!important;padding-bottom:74px!important}
+@media(max-width:1200px){body.brand-v34 .navin>.brand{width:270px!important;min-width:270px!important}body.brand-v34 .tj-logo-img{width:260px!important;max-width:260px!important;height:56px!important}body.brand-v34 .navlinks{gap:19px!important}}
+@media(max-width:900px){body.brand-v34 .navin{height:78px!important;min-height:78px!important}body.brand-v34 .navin>.brand{width:210px!important;min-width:210px!important;height:48px!important}body.brand-v34 .tj-logo-img{width:205px!important;max-width:205px!important;height:46px!important}body.brand-v34 .hero{min-height:610px!important}body.brand-v34 .hero-bg-r6{object-position:69% center!important}body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(4,16,31,.95),rgba(4,16,31,.74))!important}body.brand-v34 .hero-grid{padding:58px 0 46px!important}body.brand-v34 .hero h1{font-size:clamp(46px,12vw,66px)!important}body.brand-v34 .visual-frame{aspect-ratio:16/9!important;min-height:0!important}}
