@@ -32,13 +32,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen; do
             p="assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
           done
-          test -s assets/images/materials-overview-gen.jpg
-          file assets/images/materials-overview-gen.jpg | grep -qi 'JPEG image data'
           echo 'PASS: source image assets validated.'
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
@@ -83,14 +81,12 @@ jobs:
             grep -q 'brand-v34.152-r4.css' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
           done
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen; do
             p="_site/assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
           done
-          test -s _site/assets/images/materials-overview-gen.jpg
-          file _site/assets/images/materials-overview-gen.jpg | grep -qi 'JPEG image data'
-          grep -q 'materials-overview-gen.jpg' _site/materials.html
+          grep -q 'materials-overview-gen.webp' _site/materials.html
           grep -q 'columbus-mark.webp' _site/assets/brand-v34.152-r4.css
           ! grep -q '同钧' _site/assets/brand-v34.152.css
           grep -q 'technical_review_plan' _site/rfq.html
