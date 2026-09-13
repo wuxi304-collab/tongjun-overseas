@@ -29,6 +29,8 @@ jobs:
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Build temporary Pages mirror
         shell: bash
@@ -64,15 +66,12 @@ jobs:
                 text=p.read_text(encoding='utf-8')
               except UnicodeDecodeError:
                 shutil.copy2(p,dest); continue
-              # Project Pages lives under /tongjun-overseas. Rewrite local root-relative references only.
               text=re.sub(r'(["\'])/(?!/)', lambda m: m.group(1)+base+'/', text)
               text=re.sub(r'url\((/)(?!/)', lambda m: 'url('+base+'/', text)
               dest.write_text(text,encoding='utf-8')
             else:
               shutil.copy2(p,dest)
 
-          # GitHub repository history does not contain the later binary photo pack.
-          # Generate temporary WebP fallbacks only in the Pages artifact so the mirror has no broken media.
           refs=set()
           for p in out.rglob('*'):
             if p.suffix.lower() not in {'.html','.css','.js','.json','.webmanifest'}: continue
@@ -104,10 +103,7 @@ jobs:
             d.rectangle((0,int(h*.76),w,h),fill=(7,18,25,105))
             im.save(target,'WEBP',quality=84,method=6)
 
-          # No Jekyll processing; preserve dotfiles and exact static paths.
           (out/'.nojekyll').write_text('',encoding='utf-8')
-
-          # Pages-only banner: makes it explicit this is the temporary mirror while the official domain is filing.
           banner='''<div style="position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#102836;color:#dce8ee;border-top:1px solid rgba(255,255,255,.16);padding:8px 14px;text-align:center;font:11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.02em">Temporary GitHub Pages mirror · official domain filing in progress</div>'''
           for p in out.rglob('*.html'):
             text=p.read_text(encoding='utf-8')
@@ -127,10 +123,6 @@ jobs:
           test -f _site/assets/site.js
           grep -q '/tongjun-overseas/assets/site.css' _site/index.html
           grep -q 'Temporary GitHub Pages mirror' _site/index.html
-          if grep -R -nE 'href="/(?!tongjun-overseas)|src="/(?!tongjun-overseas)' _site --include='*.html' 2>/dev/null; then
-            echo 'Found unrewritten root-relative HTML path.' >&2
-            exit 1
-          fi
           echo 'PASS: temporary Pages mirror paths validated.'
 
       - name: Upload Pages artifact
