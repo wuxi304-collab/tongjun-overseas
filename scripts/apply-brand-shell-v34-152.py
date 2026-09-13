@@ -9,8 +9,8 @@ for p in ROOT.glob('*.html'):
     old=s
     s=s.replace('Tongjun Special Metals','Tongjun Metal Tech')
     if p.name=='materials.html':
-        s=s.replace('/assets/images/resources-metal.webp','/assets/images/materials-overview-gen.jpg')
-        s=s.replace('/assets/images/materials-overview-gen.webp','/assets/images/materials-overview-gen.jpg')
+        s=s.replace('/assets/images/resources-metal.webp','/assets/images/materials-overview-gen.webp')
+        s=s.replace('/assets/images/materials-overview-gen.jpg','/assets/images/materials-overview-gen.webp')
     if 'brand-v34.152.css' not in s:
         s=s.replace('</head>','<link rel="stylesheet" href="/assets/brand-v34.152.css"><script defer src="/assets/brand-v34.152.js"></script></head>')
     if 'brand-v34.152-r2.css' not in s:
