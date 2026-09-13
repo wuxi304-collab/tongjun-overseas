@@ -32,9 +32,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p assets/images /tmp/tj-v27-bin
-          cat .sync/v27-bin/chunk*.b64 | tr -d '\r\n' | base64 --decode > /tmp/tj-v27-bin/archive.tar.xz
-          mkdir -p /tmp/tj-v27-bin/full
+          mkdir -p assets/images /tmp/tj-v27-bin/full
+          : > /tmp/tj-v27-bin/archive.tar.xz
+          for f in $(find .sync/v27-bin -maxdepth 1 -type f -name 'chunk*.b64' | sort -V); do
+            base64 --decode "$f" >> /tmp/tj-v27-bin/archive.tar.xz
+          done
+          xz -t /tmp/tj-v27-bin/archive.tar.xz
           tar -xJf /tmp/tj-v27-bin/archive.tar.xz -C /tmp/tj-v27-bin/full
           find /tmp/tj-v27-bin/full -type f -path '*/assets/images/*.webp' -print
           while IFS= read -r f; do cp "$f" assets/images/; done < <(find /tmp/tj-v27-bin/full -type f -path '*/assets/images/*.webp')
