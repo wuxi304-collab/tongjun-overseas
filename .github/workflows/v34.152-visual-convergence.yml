@@ -1,0 +1,60 @@
+name: V34.152 visual convergence staging
+
+on:
+  push:
+    branches: [v34.152-pages-visual-rebuild]
+    paths:
+      - '.sync/v34.152-visual-convergence/READY'
+      - 'scripts/apply-v34-152-visual-convergence.py'
+      - 'assets/visual-v34.152.css'
+      - '.github/workflows/v34.152-visual-convergence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  converge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout visual staging
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply site-wide visual convergence
+        run: python scripts/apply-v34-152-visual-convergence.py
+
+      - name: Verify shared visual system
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          html=list(Path('.').glob('*.html'))
+          assert html
+          missing=[]
+          for p in html:
+              t=p.read_text(encoding='utf-8')
+              if '/assets/visual-v34.152.css' not in t: missing.append(p.name)
+          assert not missing, missing
+          idx=Path('index.html').read_text(encoding='utf-8')
+          assert '<span class="portrait"' not in idx
+          css=Path('assets/visual-v34.152.css').read_text(encoding='utf-8')
+          for token in ['同钧金属','TONGJUN METALS','pagehero','section-nav','specpanel','footer']:
+              assert token in css, token
+          print(f'PASS: {len(html)} root HTML pages share V34.152 visual layer; fabricated homepage portrait removed.')
+          PY
+
+      - name: Commit converged pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Tongjun V34.152 Visual Sync"
+          git config user.email "actions@users.noreply.github.com"
+          git add '*.html'
+          if git diff --cached --quiet; then
+            echo 'No page changes to commit.'
+            exit 0
+          fi
+          git commit -m 'sync: apply V34.152 visual language across pages'
+          git push origin HEAD:v34.152-pages-visual-rebuild
