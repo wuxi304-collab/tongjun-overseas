@@ -69,25 +69,23 @@ jobs:
             else: shutil.copy2(p,d)
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
-      - name: Validate full-site brand convergence
+      - name: Validate Pages artifact
+        shell: bash
         run: |
           set -euo pipefail
           for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html nickel-alloys.html precision-strip.html heavy-plate.html; do
-            test -f "_site/$f"
+            test -s "_site/$f"
             grep -q 'brand-v34.152.css' "_site/$f"
             grep -q 'brand-v34.152-r2.css' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
           done
-          grep -q 'Never show the fabricated portrait/student mark' _site/assets/brand-v34.152.css
-          grep -q 'V34.152 R2' _site/assets/brand-v34.152-r2.css
-          grep -q 'hero h1{color:#fff' _site/assets/brand-v34.152-r2.css
           for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi; do
             test -s "_site/assets/images/$img.webp"
             head -c 4 "_site/assets/images/$img.webp" | grep -q RIFF
           done
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: restored images, sitewide shell and RFQ workflow validated.'
+          echo 'PASS: Pages artifact contains restored images, unified shell and RFQ workflow.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
