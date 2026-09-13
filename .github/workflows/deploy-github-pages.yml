@@ -20,29 +20,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34 workflow staging
+      - name: Checkout V34.152 brand migration
         uses: actions/checkout@v6
         with:
-          ref: v34.152-workflow-staging
+          ref: v34.152-brand-migration
           fetch-depth: 1
 
       - name: Configure Pages
-        id: pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
-      - name: Build GitHub Pages mirror
+      - name: Apply unified Tongjun brand shell
+        run: python3 scripts/apply-brand-shell-v34-152.py
+
+      - name: Build Pages mirror
         shell: bash
         env:
           BASE_PATH: /tongjun-overseas
         run: |
           set -euo pipefail
-          python -m pip install --quiet pillow
-          python <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           import os,re,shutil
-          from PIL import Image,ImageDraw
           root=Path('.'); out=Path('_site'); base=os.environ.get('BASE_PATH','/tongjun-overseas').rstrip('/')
           if out.exists(): shutil.rmtree(out)
           out.mkdir()
@@ -62,39 +60,21 @@ jobs:
               t=re.sub(r'url\((/)(?!/)',lambda m:'url('+base+'/',t)
               d.write_text(t,encoding='utf-8')
             else: shutil.copy2(p,d)
-          refs=set()
-          for p in out.rglob('*'):
-            if p.suffix.lower() not in {'.html','.css','.js','.json','.webmanifest'}: continue
-            try:t=p.read_text(encoding='utf-8')
-            except:continue
-            refs.update(re.findall(r'(?:'+re.escape(base)+r')?/assets/images/([A-Za-z0-9._-]+\.webp)',t))
-          imgdir=out/'assets'/'images'; imgdir.mkdir(parents=True,exist_ok=True)
-          for name in refs:
-            target=imgdir/name
-            if target.exists(): continue
-            im=Image.new('RGB',(800,500),(20,34,45)); d=ImageDraw.Draw(im)
-            d.rectangle((0,350,800,500),fill=(9,20,28))
-            for x in range(-100,900,85): d.line((x,0,x-130,500),fill=(49,67,79),width=2)
-            im.save(target,'WEBP',quality=72,method=4)
           (out/'.nojekyll').write_text('',encoding='utf-8')
-          print(f'Pages mirror built with {len(refs)} fallback references covered.')
           PY
 
-      - name: Sanity-check Pages artifact
-        shell: bash
+      - name: Validate full-site brand shell
         run: |
           set -euo pipefail
-          test -f _site/index.html
-          test -f _site/assets/site.css
-          test -f _site/assets/site.js
-          test -f _site/assets/polish.css
-          test -f _site/assets/polish.js
-          grep -q 'Special Metals.' _site/index.html
-          grep -q 'Precisely Sourced.' _site/index.html
-          grep -q 'Start Technical Review' _site/index.html
-          grep -q 'BUYER RELEASE LOGIC' _site/index.html
-          grep -q '/tongjun-overseas/rfq' _site/index.html
-          echo 'PASS: V34 homepage identity and Pages paths validated.'
+          for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html; do
+            test -f "_site/$f"
+            grep -q 'brand-v34.152.css' "_site/$f"
+            grep -q 'brand-v34.152.js' "_site/$f"
+          done
+          test -f _site/assets/tongjun-logo.svg
+          grep -q 'technical_review_plan' _site/rfq.html
+          grep -q 'release_checklist' _site/rfq.html
+          echo 'PASS: core pages share Tongjun Metal Tech shell and RFQ workflow remains present.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
