@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: publish restored supplied V34 industrial images from staging branch
+# refresh: English-only Columbus branding + generated module imagery
 
 on:
   workflow_dispatch:
@@ -28,15 +28,15 @@ jobs:
           fetch-depth: 1
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Validate restored source image assets
+      - name: Validate source image assets
         shell: bash
         run: |
           set -euo pipefail
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen; do
             test -s "assets/images/$img.webp"
             head -c 4 "assets/images/$img.webp" | grep -q RIFF
           done
-          echo 'PASS: 13 supplied V34 WebP assets exist in staging source.'
+          echo 'PASS: restored and generated WebP assets exist in staging source.'
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
       - name: Build Pages mirror
@@ -77,15 +77,19 @@ jobs:
             test -s "_site/$f"
             grep -q 'brand-v34.152.css' "_site/$f"
             grep -q 'brand-v34.152-r2.css' "_site/$f"
+            grep -q 'brand-v34.152-r4.css' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
           done
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen; do
             test -s "_site/assets/images/$img.webp"
             head -c 4 "_site/assets/images/$img.webp" | grep -q RIFF
           done
+          grep -q 'materials-overview-gen.webp' _site/materials.html
+          grep -q 'columbus-mark.webp' _site/assets/brand-v34.152-r4.css
+          ! grep -q '同钧' _site/assets/brand-v34.152.css
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: Pages artifact contains restored images, unified shell and RFQ workflow.'
+          echo 'PASS: English Columbus brand, generated imagery and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
