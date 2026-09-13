@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: V34.152 R2 editorial hierarchy and image recovery track
+# refresh: V34.152 R3 photo-led visual recovery preview
 
 on:
   workflow_dispatch:
@@ -70,11 +70,13 @@ jobs:
             grep -q 'brand-v34.152.js' "_site/$f"
           done
           grep -q 'Never show the fabricated portrait/student mark' _site/assets/brand-v34.152.css
-          grep -q 'V34.152 R2' _site/assets/brand-v34.152-r2.css
-          grep -q 'hero h1{color:#fff' _site/assets/brand-v34.152-r2.css
+          grep -q 'V34.152 R3' _site/assets/brand-v34.152-r2.css
+          grep -q 'photo-1774929108070' _site/assets/brand-v34.152-r2.css
+          grep -q 'IMAGE_MAP' _site/assets/brand-v34.152.js
+          grep -q 'removeFloatingBots' _site/assets/brand-v34.152.js
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: R2 hierarchy, sitewide shell and RFQ workflow validated.'
+          echo 'PASS: R3 photo recovery, unified shell and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
