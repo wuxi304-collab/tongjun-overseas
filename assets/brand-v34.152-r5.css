@@ -1,0 +1,20 @@
+/* V34.152 R5 — generated industrial visual system + cleaner first fold. */
+body.brand-v34 .navin>.brand,body.brand-v34 .tj-brand{width:360px!important;min-width:360px!important;height:68px!important;padding:0!important;position:relative!important;font-size:0!important;line-height:1!important;background:url('/assets/images/columbus-logo-v2.webp') left center/contain no-repeat!important;overflow:hidden!important}
+body.brand-v34 .navin>.brand:before,body.brand-v34 .navin>.brand:after,body.brand-v34 .tj-brand:before,body.brand-v34 .tj-brand:after{content:none!important;display:none!important}
+body.brand-v34 .navin>.brand>span,body.brand-v34 .tj-brand>*{display:none!important}
+body.brand-v34 .hero{min-height:720px!important;background:#071a37 url('/assets/images/hero-port-v2.webp') center 52%/cover no-repeat!important;align-items:center!important}
+body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(4,16,31,.95) 0%,rgba(5,21,40,.88) 35%,rgba(7,26,55,.58) 56%,rgba(7,26,55,.18) 78%,rgba(7,26,55,.05) 100%)!important}
+body.brand-v34 .hero-grid{padding:88px 0 72px!important}
+body.brand-v34 .hero-grid>div:first-child{max-width:760px!important}
+body.brand-v34 .hero h1{font-size:clamp(58px,5.5vw,86px)!important;max-width:720px!important}
+body.brand-v34 .hero .lead{max-width:690px!important;font-size:20px!important}
+body.brand-v34 .hero-positioning{max-width:690px!important;background:rgba(4,17,31,.70)!important}
+body.brand-v34 .hero-decision-dock,body.brand-v34 .hero-proofline{display:none!important}
+body.brand-v34 .hero .buttonrow{margin-top:28px!important}
+body.brand-v34 .visual-frame{aspect-ratio:16/7!important;min-height:360px!important}
+body.brand-v34 .visual-frame img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;filter:saturate(.82) contrast(1.03)!important}
+body.brand-v34 .visual-label{font-size:11px!important;letter-spacing:.14em!important;text-transform:uppercase!important}
+body.brand-v34 .pagehero,body.brand-v34 .landinghero,body.brand-v34 .articlehero,body.brand-v34 .tech-hero{padding-top:70px!important;padding-bottom:58px!important}
+body.brand-v34 .section{padding-top:78px!important;padding-bottom:78px!important}
+@media(max-width:1200px){body.brand-v34 .navin>.brand,body.brand-v34 .tj-brand{width:300px!important;min-width:300px!important;height:58px!important}}
+@media(max-width:900px){body.brand-v34 .navin>.brand,body.brand-v34 .tj-brand{width:225px!important;min-width:225px!important;height:50px!important}body.brand-v34 .hero{min-height:650px!important;background-position:68% center!important}body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(4,16,31,.95),rgba(4,16,31,.72))!important}body.brand-v34 .hero-grid{padding:64px 0 52px!important}body.brand-v34 .visual-frame{aspect-ratio:16/9!important;min-height:0!important}}
