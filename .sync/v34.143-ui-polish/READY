@@ -1,0 +1,5 @@
+V34.143 buyer-path convergence
+base=v34.142-ui-polish
+scope=home,materials,nickel,invar,heavy-plate,supplier-qualification,technical-pages,rfq,mobile-section-nav
+local_full_source_check=PASS
+production=untouched
