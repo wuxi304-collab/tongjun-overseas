@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: logo-safe full-site V34.152 convergence
+# refresh: V34.152 R2 editorial hierarchy and image recovery track
 
 on:
   workflow_dispatch:
@@ -26,13 +26,10 @@ jobs:
         with:
           ref: v34.152-brand-migration
           fetch-depth: 1
-
       - name: Configure Pages
         uses: actions/configure-pages@v5
-
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
-
       - name: Build Pages mirror
         shell: bash
         env:
@@ -63,29 +60,25 @@ jobs:
             else: shutil.copy2(p,d)
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
-
       - name: Validate full-site brand convergence
         run: |
           set -euo pipefail
           for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html nickel-alloys.html precision-strip.html heavy-plate.html; do
             test -f "_site/$f"
             grep -q 'brand-v34.152.css' "_site/$f"
+            grep -q 'brand-v34.152-r2.css' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
           done
           grep -q 'Never show the fabricated portrait/student mark' _site/assets/brand-v34.152.css
-          grep -q 'TONGJUN METALS' _site/assets/brand-v34.152.css
-          grep -q 'pagehero' _site/assets/brand-v34.152.css
-          grep -q 'section-nav' _site/assets/brand-v34.152.css
-          grep -q 'specpanel' _site/assets/brand-v34.152.css
+          grep -q 'V34.152 R2' _site/assets/brand-v34.152-r2.css
+          grep -q 'hero h1{color:#fff' _site/assets/brand-v34.152-r2.css
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: logo-safe brand shell, inner-page convergence and RFQ workflow validated.'
-
+          echo 'PASS: R2 hierarchy, sitewide shell and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
