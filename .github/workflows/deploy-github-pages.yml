@@ -33,10 +33,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p assets/images /tmp/tj-v27-bin/full
-          : > /tmp/tj-v27-bin/archive.tar.xz
-          for f in $(find .sync/v27-bin -maxdepth 1 -type f -name 'chunk*.b64' | sort -V); do
-            base64 --decode "$f" >> /tmp/tj-v27-bin/archive.tar.xz
-          done
+          cat .sync/v27-bin/chunk00.b64 .sync/v27-bin/chunk01.b64 .sync/v27-bin/chunk02.b64 .sync/v27-bin/chunk03.b64 .sync/v27-bin/chunk04.b64 .sync/v27-bin/chunk05.b64 \
+            | tr -cd 'A-Za-z0-9+/=' \
+            | base64 --decode > /tmp/tj-v27-bin/archive.tar.xz
           xz -t /tmp/tj-v27-bin/archive.tar.xz
           tar -xJf /tmp/tj-v27-bin/archive.tar.xz -C /tmp/tj-v27-bin/full
           find /tmp/tj-v27-bin/full -type f -path '*/assets/images/*.webp' -print
