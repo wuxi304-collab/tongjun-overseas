@@ -334,3 +334,44 @@ body.brand-v34[data-page="rfq"] .v34-mobile-rfq-progress.ready{border-top-color:
 @media(max-width:860px){body.brand-v34[data-page="home"] .hero-grid{gap:26px}body.brand-v34[data-page="home"] .hero-photo{border-radius:4px;aspect-ratio:16/10;box-shadow:none}body.brand-v34[data-page="home"] .product-editorial-grid{gap:10px}body.brand-v34[data-page="technical-data"] .tds-row{grid-template-columns:1fr}body.brand-v34[data-page="technical-data"] .tds-row>*{min-width:0}body.brand-v34[data-page="rfq"] .rfq-form-stagebar span:after{left:8px;right:8px}}
 @media(max-width:620px){body.brand-v34[data-page="home"] .product-media{aspect-ratio:16/10}body.brand-v34[data-page="home"] .product-copy{padding:17px 16px 18px}body.brand-v34[data-page="rfq"] .v34-mobile-rfq-progress b{font-family:var(--tj-font-ui);font-weight:680}}
 @media(prefers-reduced-motion:reduce){body.brand-v34[data-page="rfq"] .rfq-form-stagebar span:after,body.brand-v34[data-page="home"] .product-media img{transition:none!important}}
+
+
+/* V34.152 STAGING — RFQ → Technical Review → Qualified Offer controls */
+body.brand-v34 .v34-152-review{margin:8px 0 22px;border:1px solid #b9c7cf;background:#f8fafb;color:#142936}
+body.brand-v34 .v34-152-review-head{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);gap:28px;padding:24px 24px 20px;border-bottom:1px solid #ccd6dc;background:#eef3f6}
+body.brand-v34 .v34-152-review-head span,body.brand-v34 .v34-152-control>span,body.brand-v34 .v34-152-deviation-head span,body.brand-v34 .v34-152-release-head span{font-family:var(--tj-font-mono);font-size:10px;letter-spacing:.095em;color:#8d4c1e}
+body.brand-v34 .v34-152-review-head h3{margin:7px 0 0;font-family:var(--tj-font-display);font-size:26px;line-height:1.08;letter-spacing:-.02em;color:#102838}
+body.brand-v34 .v34-152-review-head p{margin:0;color:#5a6d79;line-height:1.55}
+body.brand-v34 .v34-152-review-flow{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #ccd6dc;background:#102836;color:#e9f1f5}
+body.brand-v34 .v34-152-review-flow>div{min-height:164px;padding:20px 18px;border-right:1px solid rgba(255,255,255,.13);display:flex;flex-direction:column}
+body.brand-v34 .v34-152-review-flow>div:last-child{border-right:0}
+body.brand-v34 .v34-152-review-flow small{font-family:var(--tj-font-mono);font-size:10px;letter-spacing:.08em;color:#83aac1}
+body.brand-v34 .v34-152-review-flow b{margin:10px 0 7px;color:#fff;font-family:var(--tj-font-display);font-size:17px}
+body.brand-v34 .v34-152-review-flow p{margin:0;color:#bdcbd3;font-size:12px;line-height:1.5}
+body.brand-v34 .v34-152-review-flow span{margin-top:auto;padding-top:16px;color:#eea15d;font-size:10px;letter-spacing:.035em}
+body.brand-v34 .v34-152-control-grid{display:grid;grid-template-columns:1fr 1fr}
+body.brand-v34 .v34-152-control{padding:20px 22px;border-right:1px solid #d5dde2;border-bottom:1px solid #d5dde2}
+body.brand-v34 .v34-152-control:nth-child(2n){border-right:0}
+body.brand-v34 .v34-152-control label,body.brand-v34 .v34-152-deviation>label{display:block;margin:9px 0 7px;font-weight:700;color:#273e4c}
+body.brand-v34 .v34-152-control p{margin:8px 0 0;color:#73818a;font-size:11px}
+body.brand-v34 .v34-152-control textarea,body.brand-v34 .v34-152-control select,body.brand-v34 .v34-152-deviation textarea,body.brand-v34 .v34-152-deviation select{width:100%;box-sizing:border-box;border:1px solid #b8c5cd;background:#fff;color:#172b37;padding:11px 12px;border-radius:2px;font:inherit}
+body.brand-v34 .v34-152-control textarea,body.brand-v34 .v34-152-deviation textarea{min-height:92px;resize:vertical}
+body.brand-v34 .v34-152-deviation{padding:22px;border-bottom:1px solid #cbd5db;background:#fff}
+body.brand-v34 .v34-152-deviation-head{display:grid;grid-template-columns:1fr minmax(240px,.72fr);gap:20px;align-items:end}
+body.brand-v34 .v34-152-deviation-head b{display:block;margin-top:7px;font-size:16px;color:#17313f}
+body.brand-v34 .v34-152-release{background:#0d2230;color:#eef5f8}
+body.brand-v34 .v34-152-release-head{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:end;padding:22px}
+body.brand-v34 .v34-152-release-head b{display:block;margin-top:7px;font-family:var(--tj-font-display);font-size:22px;color:#fff}
+body.brand-v34 .v34-152-release-head p{margin:0;text-align:right;color:#b8c8d1}
+body.brand-v34 .v34-152-release-grid{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12)}
+body.brand-v34 .v34-152-release-grid>div{padding:16px 12px;border-right:1px solid rgba(255,255,255,.12);min-height:92px}
+body.brand-v34 .v34-152-release-grid>div:last-child{border-right:0}
+body.brand-v34 .v34-152-release-grid small{font-family:var(--tj-font-mono);color:#7096ad}
+body.brand-v34 .v34-152-release-grid b{display:block;margin:7px 0 13px;font-size:12px;color:#e9f1f5}
+body.brand-v34 .v34-152-release-grid span{font-family:var(--tj-font-mono);font-size:9px;letter-spacing:.06em;color:#e4a064}
+body.brand-v34 .v34-152-release-grid>div.is-ready span{color:#9bc9ad}
+body.brand-v34 .v34-152-release-grid>div.is-conditional span{color:#efbc77}
+body.brand-v34 .v34-152-release-rule{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:18px 22px;color:#bccbd3;font-size:12px;line-height:1.55}
+body.brand-v34 .v34-152-release-rule b{color:#eea15d;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:900px){body.brand-v34 .v34-152-review-head,body.brand-v34 .v34-152-deviation-head{grid-template-columns:1fr}body.brand-v34 .v34-152-review-flow{grid-template-columns:1fr 1fr}body.brand-v34 .v34-152-review-flow>div:nth-child(2){border-right:0}body.brand-v34 .v34-152-review-flow>div:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.13)}body.brand-v34 .v34-152-release-grid{grid-template-columns:repeat(3,1fr)}body.brand-v34 .v34-152-release-grid>div:nth-child(3){border-right:0}body.brand-v34 .v34-152-release-grid>div:nth-child(-n+3){border-bottom:1px solid rgba(255,255,255,.12)}body.brand-v34 .v34-152-release-head{grid-template-columns:1fr}body.brand-v34 .v34-152-release-head p{text-align:left}}
+@media(max-width:620px){body.brand-v34 .v34-152-review-head{padding:19px 16px}body.brand-v34 .v34-152-review-head h3{font-size:22px}body.brand-v34 .v34-152-review-flow,body.brand-v34 .v34-152-control-grid{grid-template-columns:1fr}body.brand-v34 .v34-152-review-flow>div{min-height:132px;border-right:0;border-bottom:1px solid rgba(255,255,255,.13)}body.brand-v34 .v34-152-control{border-right:0;padding:18px 16px}body.brand-v34 .v34-152-deviation{padding:18px 16px}body.brand-v34 .v34-152-release-grid{grid-template-columns:1fr 1fr}body.brand-v34 .v34-152-release-grid>div{border-bottom:1px solid rgba(255,255,255,.12)}body.brand-v34 .v34-152-release-grid>div:nth-child(odd){border-right:1px solid rgba(255,255,255,.12)}body.brand-v34 .v34-152-release-grid>div:nth-child(even){border-right:0}body.brand-v34 .v34-152-release-rule{grid-template-columns:1fr;gap:7px;padding:16px}}

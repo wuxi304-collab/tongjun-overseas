@@ -198,7 +198,7 @@
     const routeRef=(sourceHint=>sourceHint==='problem-order'?getStore('tj_problem_ref'):sourceHint==='supply-route'?getStore('tj_route_ref'):(getStore('tj_problem_ref')||getStore('tj_route_ref')))(safe(params.get('source')||getStore('tj_source'),120));
     ensureHidden(form,'route_ref',routeRef);
     if(form.elements.product && params.get('product')) form.elements.product.value=safe(params.get('product'),180);
-    const prefillKeys=['country','grade','standard','form','size','condition','qty','application','certificate','origin','approval','procurement_stage','buyer_gate','incoterm','destination','delivery_target','packing','notes'];
+    const prefillKeys=['country','grade','standard','form','size','condition','qty','application','certificate','origin','approval','procurement_stage','buyer_gate','incoterm','destination','delivery_target','packing','quote_assumptions','alternate_route_permission','certificate_responsibility','inspection_responsibility','deviation_status','deviation_register','notes'];
     prefillKeys.forEach(k=>{ const v=safe(params.get(k),k==='application'||k==='notes'?2500:300); if(v && form.elements[k] && !form.elements[k].value) form.elements[k].value=v; });
     const source=safe(params.get('source')||getStore('tj_source'),120);
     if(form.elements.notes && !form.elements.notes.value){
@@ -388,6 +388,15 @@
         `Buyer Release Gate: ${f.get('buyer_gate')||''}`,
         `Decision Review Reference: ${f.get('decision_ref')||''}`,
         `Qualified Offer Reference: ${f.get('offer_ref')||''}`,
+        `Quote Assumptions: ${f.get('quote_assumptions')||''}`,
+        `Deviation Status: ${f.get('deviation_status')||''}`,
+        `Deviation Register: ${f.get('deviation_register')||''}`,
+        `Alternate Route Permission: ${f.get('alternate_route_permission')||''}`,
+        `Certificate Responsibility: ${f.get('certificate_responsibility')||''}`,
+        `Inspection Responsibility: ${f.get('inspection_responsibility')||''}`,
+        `Release Status: ${f.get('release_status')||''}`,
+        `Release Checklist: ${f.get('release_checklist')||''}`,
+        `Technical Review Plan: ${f.get('technical_review_plan')||''}`,
         `Incoterm: ${f.get('incoterm')||''}`,
         `Named Destination / Port: ${f.get('destination')||''}`,
         `Required Delivery Date: ${f.get('delivery_target')||''}`,

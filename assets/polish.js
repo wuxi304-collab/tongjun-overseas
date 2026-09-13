@@ -162,3 +162,34 @@
   const update=activeName=>{form.querySelectorAll('input,select,textarea').forEach(setFieldState);stages.forEach((names,i)=>{const members=names.map(field).filter(Boolean),requiredMembers=members.filter(x=>x.required),done=requiredMembers.length?requiredMembers.every(valued):members.some(valued),active=activeName&&names.includes(activeName);stageEls[i]?.classList.toggle('is-complete',done);stageEls[i]?.classList.toggle('is-active',!!active);groupEls[i]?.classList.toggle('is-active',!!active)});const complete=required.reduce((n,name)=>n+(valued(field(name))?1:0),0);if(mobileState)mobileState.textContent=`${complete}/${required.length} complete`;const missing=required.filter(name=>!valued(field(name)));if(mobileHint)mobileHint.textContent=missing.length?`Next: ${missing[0].replace(/_/g,' ')}`:(privacy&&!privacy.checked?'Accept privacy to send':'Ready for final review');if(mobile)mobile.classList.toggle('ready',complete===required.length&&(!privacy||privacy.checked))};
   form.addEventListener('focusin',e=>{if(e.target?.name)update(e.target.name)});form.addEventListener('focusout',e=>{if(e.target&&'dataset'in e.target){e.target.dataset.touched='1';setFieldState(e.target)}});form.addEventListener('input',e=>{if(e.target?.name)update(e.target.name)});form.addEventListener('change',e=>{if(e.target?.name)update(e.target.name);else update('')});form.addEventListener('submit',()=>{form.querySelectorAll('[required]').forEach(el=>{el.dataset.touched='1';setFieldState(el)});update('')});update('');
 })();
+
+
+/* V34.152 STAGING — explicit offer-basis release logic */
+(() => {
+  'use strict';
+  const d=document,b=d.body;if(!b||b.dataset.page!=='rfq')return;
+  const form=d.getElementById('rfqForm'),box=d.getElementById('releaseChecklist');if(!form||!box)return;
+  const val=name=>String(form.elements.namedItem(name)?.value||'').trim();
+  const gate=(name,state)=>{const el=box.querySelector(`[data-release-gate="${name}"]`);if(!el)return;el.classList.remove('is-ready','is-open','is-conditional');el.classList.add(state==='READY'?'is-ready':state==='CONDITIONAL'?'is-conditional':'is-open');const s=el.querySelector('span');if(s)s.textContent=state};
+  const update=()=>{
+    const technical=Boolean(val('grade')&&val('size')&&val('qty')&&val('application')&&(val('standard')||val('form')));
+    const assumptions=Boolean(val('quote_assumptions'));
+    const devState=val('deviation_status'),devText=val('deviation_register');
+    const deviations=devState==='none'||devState==='rejected'||((devState==='accepted'||devState==='buyer-decision'||devState==='open')&&Boolean(devText));
+    const devConditional=devState==='open'||devState==='buyer-decision';
+    const alternate=Boolean(val('alternate_route_permission'));
+    const evidence=Boolean(val('certificate_responsibility')&&val('inspection_responsibility'));
+    const logistics=Boolean((val('incoterm')&&val('destination'))||val('delivery_target')||val('packing'));
+    gate('technical',technical?'READY':'OPEN');gate('assumptions',assumptions?'READY':'OPEN');gate('deviations',deviations?(devConditional?'CONDITIONAL':'READY'):'OPEN');gate('alternate',alternate?'READY':'OPEN');gate('evidence',evidence?'READY':'OPEN');gate('logistics',logistics?'READY':'OPEN');
+    const hardReady=technical&&alternate&&evidence&&deviations;
+    const cleanReady=hardReady&&assumptions&&logistics&&!devConditional;
+    const status=cleanReady?'QUALIFIED BASIS':hardReady?'QUALIFIED WITH CONDITIONS':'NOT RELEASED';
+    const statusEl=form.elements.namedItem('release_status');if(statusEl)statusEl.value=status;
+    const stateEl=d.getElementById('qualifiedOfferState');if(stateEl)stateEl.textContent=status;
+    const open=[];if(!technical)open.push('technical basis');if(!assumptions)open.push('quotation assumptions');if(!deviations)open.push('deviation disposition');if(!alternate)open.push('alternate authority');if(!evidence)open.push('certificate / inspection ownership');if(!logistics)open.push('logistics basis');if(devConditional)open.push('buyer-controlled deviation');
+    const reason=d.getElementById('qualifiedOfferReason');if(reason)reason.textContent=cleanReady?'All release controls are explicit. Final capability and approval remain evidence-bound.':hardReady?`Offer may be prepared only with visible conditions: ${open.join(' · ')||'conditional deviation'}.`:`Open release controls: ${open.join(' · ')}.`;
+    const checklist=[`technical=${technical?'READY':'OPEN'}`,`assumptions=${assumptions?'READY':'OPEN'}`,`deviations=${deviations?(devConditional?'CONDITIONAL':'READY'):'OPEN'}`,`alternate=${alternate?'READY':'OPEN'}`,`evidence_ownership=${evidence?'READY':'OPEN'}`,`logistics=${logistics?'READY':'OPEN'}`].join(' | ');
+    const checklistEl=form.elements.namedItem('release_checklist');if(checklistEl)checklistEl.value=checklist;
+  };
+  ['input','change'].forEach(evt=>form.addEventListener(evt,update));update();
+})();

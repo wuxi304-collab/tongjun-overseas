@@ -25,7 +25,10 @@ async function run(){
       name:'Buyer',company:'Example',email:'buyer@example.com',grade:'UNS N06625',
       size:'3 x 1000 x 2000 mm',qty:'2 t',application:'Chemical service',
       procurement_stage:'trial',buyer_gate:'approval',decision_ref:'BR-20260907-ABC123',
-      approval:'Project AVL',incoterm:'CIF',destination:'Hamburg, Germany',delivery_target:'2026-11-15',packing:'Export seaworthy',offer_ref:'OF-20260907-ABC123'
+      approval:'Project AVL',incoterm:'CIF',destination:'Hamburg, Germany',delivery_target:'2026-11-15',packing:'Export seaworthy',offer_ref:'OF-20260907-ABC123',
+      quote_assumptions:'Lead time starts after technical release',deviation_status:'buyer-decision',deviation_register:'DEV-01 | width tolerance | buyer decision',
+      alternate_route_permission:'separate-alternate',certificate_responsibility:'buyer-specifies-source-provides',inspection_responsibility:'third-party-witness',
+      release_status:'QUALIFIED WITH CONDITIONS',release_checklist:'technical=READY | deviations=CONDITIONAL',technical_review_plan:'VERIFY > QUALIFY > ALIGN > OFFER'
     }
   };
   let res=makeRes();
@@ -42,6 +45,15 @@ async function run(){
   assert.equal(sent.delivery_target,'2026-11-15');
   assert.equal(sent.packing,'Export seaworthy');
   assert.equal(sent.offer_ref,'OF-20260907-ABC123');
+  assert.equal(sent.quote_assumptions,'Lead time starts after technical release');
+  assert.equal(sent.deviation_status,'buyer-decision');
+  assert.match(sent.deviation_register,/DEV-01/);
+  assert.equal(sent.alternate_route_permission,'separate-alternate');
+  assert.equal(sent.certificate_responsibility,'buyer-specifies-source-provides');
+  assert.equal(sent.inspection_responsibility,'third-party-witness');
+  assert.equal(sent.release_status,'QUALIFIED WITH CONDITIONS');
+  assert.match(sent.release_checklist,/technical=READY/);
+  assert.equal(sent.technical_review_plan,'VERIFY > QUALIFY > ALIGN > OFFER');
 
   res=makeRes();
   await handler({...req,headers:{origin:'https://untrusted.example'}},res);
