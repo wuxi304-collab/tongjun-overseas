@@ -146,3 +146,19 @@
     setTimeout(centerCurrent,0);
   }
 })();
+
+
+/* V34.144 — RFQ progress semantics */
+(() => {
+  'use strict';
+  const d=document,b=d.body;if(!b||b.dataset.page!=='rfq')return;
+  const form=d.getElementById('rfqForm');if(!form)return;
+  const stages=[['name','company','email','country'],['grade','standard','form','size','condition','qty','application'],['certificate','origin','approval','procurement_stage','buyer_gate'],['incoterm','destination','delivery_target','packing'],['notes']];
+  const required=['name','company','email','grade','size','qty','application'];
+  const stageEls=[...form.querySelectorAll('.rfq-form-stagebar span')],groupEls=[...form.querySelectorAll('.rfq-group-label')];
+  const mobile=d.getElementById('mobileRfqProgress'),mobileState=d.getElementById('mobileRequiredState'),mobileHint=d.getElementById('mobileRequiredHint'),privacy=form.querySelector('.checkline input[type="checkbox"]');
+  const field=name=>form.elements.namedItem(name),valued=el=>el&&(el.type==='checkbox'||el.type==='radio'?el.checked:String(el.value||'').trim().length>0);
+  const setFieldState=el=>{if(!el||!el.closest)return;const wrap=el.closest('.field');if(!wrap)return;wrap.classList.toggle('has-value',!!valued(el));if(el.required)wrap.classList.toggle('has-error',!el.checkValidity()&&el.dataset.touched==='1')};
+  const update=activeName=>{form.querySelectorAll('input,select,textarea').forEach(setFieldState);stages.forEach((names,i)=>{const members=names.map(field).filter(Boolean),requiredMembers=members.filter(x=>x.required),done=requiredMembers.length?requiredMembers.every(valued):members.some(valued),active=activeName&&names.includes(activeName);stageEls[i]?.classList.toggle('is-complete',done);stageEls[i]?.classList.toggle('is-active',!!active);groupEls[i]?.classList.toggle('is-active',!!active)});const complete=required.reduce((n,name)=>n+(valued(field(name))?1:0),0);if(mobileState)mobileState.textContent=`${complete}/${required.length} complete`;const missing=required.filter(name=>!valued(field(name)));if(mobileHint)mobileHint.textContent=missing.length?`Next: ${missing[0].replace(/_/g,' ')}`:(privacy&&!privacy.checked?'Accept privacy to send':'Ready for final review');if(mobile)mobile.classList.toggle('ready',complete===required.length&&(!privacy||privacy.checked))};
+  form.addEventListener('focusin',e=>{if(e.target?.name)update(e.target.name)});form.addEventListener('focusout',e=>{if(e.target&&'dataset'in e.target){e.target.dataset.touched='1';setFieldState(e.target)}});form.addEventListener('input',e=>{if(e.target?.name)update(e.target.name)});form.addEventListener('change',e=>{if(e.target?.name)update(e.target.name);else update('')});form.addEventListener('submit',()=>{form.querySelectorAll('[required]').forEach(el=>{el.dataset.touched='1';setFieldState(el)});update('')});update('');
+})();
