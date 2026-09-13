@@ -1,0 +1,47 @@
+name: V34.144 conversion polish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v34.144-ui-polish
+    paths:
+      - '.sync/v34.144-ui-polish/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-polish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v34.144-ui-polish
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Apply deterministic V34.144 refinements
+        run: python scripts/apply-v34-144.py
+      - name: Validate polish JavaScript and page set
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/polish.js
+          test "$(find . -maxdepth 1 -name '*.html' | wc -l)" -eq 51
+          grep -q 'V34.144 — conversion-focused visual finish' assets/polish.css
+          grep -q 'V34.144 — RFQ progress semantics' assets/polish.js
+      - name: Commit validated V34.144 polish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/polish.css assets/polish.js
+          if git diff --cached --quiet; then
+            echo 'No polish changes required.'
+            exit 0
+          fi
+          git commit -m 'design: integrate V34.144 conversion polish'
+          git push origin HEAD:v34.144-ui-polish
