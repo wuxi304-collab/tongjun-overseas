@@ -121,3 +121,28 @@
     summary.setAttribute('aria-expanded',String(detail.open));
   });
 })();
+
+/* V34.143 — compact navigation continuity */
+(() => {
+  'use strict';
+  const d=document;
+  const b=d.body;
+  if(!b || !b.classList.contains('brand-v34')) return;
+  const nav=d.querySelector('.section-nav-inner');
+  if(nav && 'MutationObserver' in window){
+    const compact=()=>window.matchMedia('(max-width: 860px)').matches;
+    const centerCurrent=()=>{
+      if(!compact()) return;
+      const current=nav.querySelector('a[aria-current="location"],a[aria-current="page"]');
+      if(!current) return;
+      const left=current.offsetLeft-(nav.clientWidth-current.offsetWidth)/2;
+      nav.scrollTo({left:Math.max(0,left),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    };
+    const mo=new MutationObserver(mutations=>{
+      if(mutations.some(m=>m.type==='attributes' && m.attributeName==='aria-current')) centerCurrent();
+    });
+    nav.querySelectorAll('a').forEach(a=>mo.observe(a,{attributes:true,attributeFilter:['aria-current']}));
+    addEventListener('resize',centerCurrent,{passive:true});
+    setTimeout(centerCurrent,0);
+  }
+})();
