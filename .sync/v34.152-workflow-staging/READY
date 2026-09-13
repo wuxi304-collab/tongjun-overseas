@@ -2,4 +2,4 @@ V34.152 workflow staging trigger
 base: v34.144-ui-polish @ 30ee5fdc1fe846e95f08bfd4bb53865b1622fc97
 purpose: validate RFQ -> Technical Review -> Qualified Offer delta only
 status: NOT RELEASED
-attempt: 2 — isolate inherited missing-image gaps from V34.152 delta gates
+attempt: 3 — enforce assumptions hard gate, assigned evidence ownership, legacy offer synchronization
