@@ -20,10 +20,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout latest recoverable site overlay
+      - name: Checkout latest recoverable site staging
         uses: actions/checkout@v6
         with:
-          ref: v34.144-ui-polish
+          ref: v34.152-workflow-staging
           fetch-depth: 1
 
       - name: Configure Pages
@@ -104,7 +104,7 @@ jobs:
             im.save(target,'WEBP',quality=84,method=6)
 
           (out/'.nojekyll').write_text('',encoding='utf-8')
-          banner='''<div style="position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#102836;color:#dce8ee;border-top:1px solid rgba(255,255,255,.16);padding:8px 14px;text-align:center;font:11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.02em">Temporary GitHub Pages mirror · official domain filing in progress</div>'''
+          banner='''<div style="position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#102836;color:#dce8ee;border-top:1px solid rgba(255,255,255,.16);padding:8px 14px;text-align:center;font:11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.02em">Temporary GitHub Pages mirror · latest recoverable staging · official domain filing in progress</div>'''
           for p in out.rglob('*.html'):
             text=p.read_text(encoding='utf-8')
             if 'Temporary GitHub Pages mirror' not in text and '</body>' in text:
@@ -121,8 +121,10 @@ jobs:
           test -f _site/index.html
           test -f _site/assets/site.css
           test -f _site/assets/site.js
+          test -f _site/assets/polish.css
+          test -f _site/assets/polish.js
           grep -q '/tongjun-overseas/assets/site.css' _site/index.html
-          grep -q 'Temporary GitHub Pages mirror' _site/index.html
+          grep -q 'latest recoverable staging' _site/index.html
           echo 'PASS: temporary Pages mirror paths validated.'
 
       - name: Upload Pages artifact
