@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: traced Tongjun reference mark + full-site brand shell
+# refresh: mobile Tongjun logo visibility fix
 
 on:
   workflow_dispatch:
@@ -73,9 +73,10 @@ jobs:
             grep -q 'brand-v34.152.js' "_site/$f"
           done
           test -f _site/assets/tongjun-logo.svg
+          grep -q 'flex:0 0 58px' _site/assets/brand-v34.152.css
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: core pages share Tongjun Metal Tech shell and RFQ workflow remains present.'
+          echo 'PASS: brand shell, mobile logo lockup and RFQ workflow validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
