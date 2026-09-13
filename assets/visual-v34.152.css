@@ -1,0 +1,127 @@
+/* V34.152 VISUAL CONVERGENCE — homepage language propagated site-wide.
+   Important: no invented logo artwork. Until the approved locked asset is mounted,
+   the site uses the approved brand names only. */
+:root{
+  --tj152-navy:#071a37;
+  --tj152-ink:#0b1f3e;
+  --tj152-blue:#163f69;
+  --tj152-line:#d8e0e9;
+  --tj152-muted:#58677a;
+  --tj152-paper:#f5f7f9;
+  --tj152-white:#fff;
+  --tj152-gold:#d3a24b;
+}
+
+/* Shared brand lockup — text only, deliberately not a substitute graphic mark. */
+.brand-lockup,.tj-brand-name{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;color:var(--tj152-navy);line-height:1}
+.brand-lockup strong,.tj-brand-name strong{font-family:Georgia,"Times New Roman",serif;font-size:27px;line-height:1;font-weight:600;letter-spacing:.08em;white-space:nowrap}
+.brand-lockup span,.tj-brand-name span{font-family:Georgia,"Times New Roman",serif;font-size:14px;font-weight:700;letter-spacing:.32em;margin-top:7px;white-space:nowrap}
+.brand-lockup small,.tj-brand-name small{font:600 8px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;color:#748398;margin-top:7px}
+
+/* Homepage: remove the fabricated portrait mark and keep a restrained brand-name lockup. */
+body:not(.brand-v34) .tj-brand .portrait{display:none!important}
+body:not(.brand-v34) .tj-brand .wordmark{display:none!important}
+body:not(.brand-v34) .tj-brand{min-width:260px}
+body:not(.brand-v34) .tj-brand::before{content:"同钧金属";display:block;font-family:Georgia,"Times New Roman",serif;font-size:31px;line-height:1;font-weight:600;letter-spacing:.08em;color:var(--tj152-navy);white-space:nowrap}
+body:not(.brand-v34) .tj-brand::after{content:"TONGJUN METALS   ·   EST. 2026";display:block;margin-top:9px;font:700 11px/1.2 Georgia,"Times New Roman",serif;letter-spacing:.19em;color:var(--tj152-navy);white-space:nowrap}
+
+/* Inner-page header convergence. */
+body.brand-v34 .site-header.nav{position:sticky;top:0;z-index:90;background:#fff;border-bottom:1px solid #e7ecf1;box-shadow:none!important;backdrop-filter:none!important}
+body.brand-v34 .utilitybar{display:none!important}
+body.brand-v34 .navin{height:96px;max-width:1760px;width:min(1760px,calc(100% - 80px));padding:0;gap:34px}
+body.brand-v34 .navin>.brand{min-width:286px;display:block;position:relative;font-size:0!important;letter-spacing:0!important;line-height:1;text-decoration:none}
+body.brand-v34 .navin>.brand .mark{display:none!important}
+body.brand-v34 .navin>.brand>span:last-child{display:none!important}
+body.brand-v34 .navin>.brand::before{content:"同钧金属";display:block;font-family:Georgia,"Times New Roman",serif;font-size:29px;line-height:1;font-weight:600;letter-spacing:.08em;color:var(--tj152-navy);white-space:nowrap}
+body.brand-v34 .navin>.brand::after{content:"TONGJUN METALS   ·   EST. 2026";display:block;margin-top:9px;font:700 10px/1.2 Georgia,"Times New Roman",serif;letter-spacing:.19em;color:var(--tj152-navy);white-space:nowrap}
+body.brand-v34 .mega-nav{margin-left:auto;gap:30px}
+body.brand-v34 .navtoggle,body.brand-v34 .navlinks>a{height:96px;display:flex;align-items:center;padding:0!important;font-size:14px;font-weight:650;color:var(--tj152-navy);border:0;background:transparent}
+body.brand-v34 .navlinks>a::after{bottom:24px}
+body.brand-v34 .nav-cta{border-radius:0!important;background:var(--tj152-navy)!important;border-color:var(--tj152-navy)!important;color:#fff!important;min-height:52px;padding:0 24px!important;box-shadow:none!important}
+body.brand-v34 .nav-cta:hover{transform:none!important;background:#0d2a54!important}
+body.brand-v34 .mega-panel{border-radius:0!important;border-color:var(--tj152-line)!important;box-shadow:0 24px 55px rgba(7,26,55,.12)!important}
+
+/* First-fold language: white space, navy typography, editorial serif headline. */
+body.brand-v34 .pagehero,body.brand-v34 .landinghero,body.brand-v34 .articlehero,body.brand-v34 .tech-hero{background:#fff!important;border-bottom:1px solid var(--tj152-line)!important;padding-top:78px!important;padding-bottom:66px!important}
+body.brand-v34 :where(.pagehero,.landinghero,.articlehero,.tech-hero) .breadcrumb{font:700 10px/1.4 Inter,system-ui,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#6d7d90}
+body.brand-v34 :where(.pagehero,.landinghero,.articlehero,.tech-hero) .eyebrow{color:#315a83;font-size:11px;letter-spacing:.18em}
+body.brand-v34 :where(.pagehero,.landinghero,.articlehero,.tech-hero) h1{font-family:Georgia,"Times New Roman",serif!important;font-weight:500!important;letter-spacing:-.035em!important;line-height:1.02!important;color:var(--tj152-navy)!important;max-width:980px}
+body.brand-v34 :where(.pagehero,.landinghero,.articlehero,.tech-hero) p{color:var(--tj152-muted)!important;font-size:18px;line-height:1.62;max-width:780px}
+body.brand-v34 .landing-grid{align-items:center;gap:64px}
+body.brand-v34 .specpanel{border-radius:0!important;background:var(--tj152-navy)!important;border:1px solid var(--tj152-navy)!important;box-shadow:none!important;padding:34px!important}
+body.brand-v34 .specpanel small{color:#b8cadb!important}
+body.brand-v34 .specpanel strong{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:27px;line-height:1.25}
+body.brand-v34 .specpanel span{color:#d4dee7!important}
+
+/* Buttons and links. */
+body.brand-v34 .cta{border-radius:0!important;min-height:50px;padding:0 22px;background:var(--tj152-navy);border-color:var(--tj152-navy);box-shadow:none!important}
+body.brand-v34 .cta:hover{transform:none!important;background:#0d2a54}
+body.brand-v34 .cta.ghost{background:#fff;color:var(--tj152-navy);border-color:#91a0b0}
+body.brand-v34 .cta.ghost:hover{background:#f6f8fa;border-color:var(--tj152-navy)}
+
+/* Section-nav becomes the same quiet horizontal technical rail used under the home hero. */
+body.brand-v34 .section-nav{background:#f7f9fb!important;border-top:0!important;border-bottom:1px solid var(--tj152-line)!important;box-shadow:none!important}
+body.brand-v34 .section-nav-inner{min-height:58px;gap:0}
+body.brand-v34 .section-nav a{padding:19px 20px!important;border-right:1px solid #e2e7ec;color:#40536b;font-size:12px;font-weight:650}
+body.brand-v34 .section-nav a:first-child{border-left:1px solid #e2e7ec}
+body.brand-v34 .section-nav a:hover,body.brand-v34 .section-nav a[aria-current]{background:var(--tj152-navy);color:#fff}
+
+/* Media, cards, tables and proof surfaces. */
+body.brand-v34 .visual-band{padding:42px 0 0!important;background:#fff!important}
+body.brand-v34 .visual-frame{border-radius:0!important;border:1px solid var(--tj152-line)!important;box-shadow:none!important;aspect-ratio:2.35/1}
+body.brand-v34 .visual-frame img{filter:saturate(.72) contrast(1.03)!important}
+body.brand-v34 .visual-label{border-radius:0!important;background:rgba(7,26,55,.9)!important}
+body.brand-v34 .section{padding:86px 0}
+body.brand-v34 .section.soft{background:#f6f8fa!important}
+body.brand-v34 .sec-head{border-top:1px solid var(--tj152-line);padding-top:28px;margin-bottom:42px}
+body.brand-v34 .sec-head h2,body.brand-v34 .feature h2,body.brand-v34 .rfqbox h2,body.brand-v34 .prefooter h2{font-family:Georgia,"Times New Roman",serif!important;color:var(--tj152-navy);font-weight:500!important;letter-spacing:-.03em!important}
+body.brand-v34 .sec-head p,body.brand-v34 .feature p,body.brand-v34 .cap p,body.brand-v34 .card p,body.brand-v34 .article p{color:var(--tj152-muted)}
+body.brand-v34 :where(.cap,.card,.article,.product-tile,.method-card,.boundary,.route,.seo-link,.faq-item,.rfqbox,.bigspec){border-radius:0!important;box-shadow:none!important}
+body.brand-v34 :where(.cap,.card,.article,.product-tile,.method-card,.boundary,.route,.seo-link,.faq-item){border-color:var(--tj152-line)!important}
+body.brand-v34 :where(.cap,.card,.article,.product-tile,.method-card,.seo-link,.faq-item):hover{transform:none!important;box-shadow:none!important;border-color:#95a7b8!important}
+body.brand-v34 .cap .icon{border-radius:0!important;color:var(--tj152-navy);border-color:#9cabb9}
+body.brand-v34 .bigspec{background:#fff!important;border:1px solid var(--tj152-line)!important}
+body.brand-v34 .bigspec .num{font-family:Georgia,"Times New Roman",serif;color:var(--tj152-navy);font-weight:500}
+body.brand-v34 :where(.data-table,.tech-table) th{background:#eef2f5;color:#314a65}
+body.brand-v34 :where(.data-table,.tech-table) td{border-color:#dce3e9}
+
+/* RFQ / commercial surfaces use one same hierarchy. */
+body.brand-v34 .rfqbox{background:#f5f7f9!important;border:1px solid var(--tj152-line)!important;padding:42px!important}
+body.brand-v34 :where(input,select,textarea){border-radius:0!important}
+
+/* Prefooter and footer converge to the homepage navy system. */
+body.brand-v34 .prefooter{background:#fff!important;border-top:1px solid var(--tj152-line)!important;padding:72px 0!important}
+body.brand-v34 .footer{background:var(--tj152-navy)!important;color:#fff!important;margin-top:0!important;padding-top:58px!important}
+body.brand-v34 .footer .brand{font-size:0!important;display:block!important}
+body.brand-v34 .footer .brand .mark,body.brand-v34 .footer .brand>span:last-child{display:none!important}
+body.brand-v34 .footer .brand::before{content:"同钧金属";display:block;font-family:Georgia,"Times New Roman",serif;font-size:23px;font-weight:600;letter-spacing:.08em;color:#fff}
+body.brand-v34 .footer .brand::after{content:"TONGJUN METALS  ·  EST. 2026";display:block;margin-top:7px;font:700 9px/1.3 Georgia,"Times New Roman",serif;letter-spacing:.18em;color:#c5d1dc}
+body.brand-v34 .footer h4{color:#aebfd0!important}
+body.brand-v34 .footer a{color:#c7d1dc!important}
+body.brand-v34 .footer .legal{border-color:#31445b!important;color:#9fb0c2!important}
+
+@media(max-width:1200px){
+  body.brand-v34 .navin{width:min(100% - 42px,1500px)}
+  body.brand-v34 .mega-nav{gap:18px}
+  body.brand-v34 .navin>.brand{min-width:238px}
+  body.brand-v34 .navin>.brand::before{font-size:25px}
+  body.brand-v34 .navin>.brand::after{font-size:9px;letter-spacing:.15em}
+}
+@media(max-width:980px){
+  body.brand-v34 .navin{height:78px;width:calc(100% - 30px)}
+  body.brand-v34 .navin>.brand{min-width:auto}
+  body.brand-v34 .navin>.brand::before{font-size:22px}
+  body.brand-v34 .navin>.brand::after{font-size:8px;letter-spacing:.12em;margin-top:6px}
+  body.brand-v34 .pagehero,body.brand-v34 .landinghero,body.brand-v34 .articlehero,body.brand-v34 .tech-hero{padding-top:58px!important;padding-bottom:50px!important}
+  body.brand-v34 .landing-grid{gap:32px}
+  body.brand-v34 .visual-frame{aspect-ratio:16/9}
+}
+@media(max-width:700px){
+  body.brand-v34 .section{padding:64px 0}
+  body.brand-v34 .section-nav-inner{overflow:auto;scroll-snap-type:x proximity}
+  body.brand-v34 .section-nav a{white-space:nowrap;scroll-snap-align:start;padding:16px 17px!important}
+  body.brand-v34 .specpanel{padding:24px!important}
+  body.brand-v34 .specpanel strong{font-size:23px}
+  body.brand-v34 .rfqbox{padding:26px!important}
+  body.brand-v34 .footer{padding-top:44px!important}
+}
