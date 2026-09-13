@@ -20,10 +20,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout visual-recovery staging
+      - name: Checkout V34 workflow staging
         uses: actions/checkout@v6
         with:
-          ref: v34.152-pages-visual-rebuild
+          ref: v34.152-workflow-staging
           fetch-depth: 1
 
       - name: Configure Pages
@@ -87,11 +87,14 @@ jobs:
           test -f _site/index.html
           test -f _site/assets/site.css
           test -f _site/assets/site.js
-          grep -q 'From Material' _site/index.html
-          grep -q 'TONGJUN' _site/index.html
-          grep -q 'Request a Quote' _site/index.html
+          test -f _site/assets/polish.css
+          test -f _site/assets/polish.js
+          grep -q 'Special Metals.' _site/index.html
+          grep -q 'Precisely Sourced.' _site/index.html
+          grep -q 'Start Technical Review' _site/index.html
+          grep -q 'BUYER RELEASE LOGIC' _site/index.html
           grep -q '/tongjun-overseas/rfq' _site/index.html
-          echo 'PASS: visual-recovery homepage and Pages paths validated.'
+          echo 'PASS: V34 homepage identity and Pages paths validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
