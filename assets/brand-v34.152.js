@@ -1,33 +1,65 @@
 (()=>{
   const BRAND='TONGJUN METAL TECH';
-  const FALLBACK_PORT='https://images.unsplash.com/photo-1774929108070-b60d3879e071?auto=format&fit=crop&fm=jpg&q=82&w=2200';
-  const FALLBACK_COIL='https://images.unsplash.com/photo-1576473318185-48d76fc03314?auto=format&fit=crop&fm=jpg&q=82&w=1600';
-  const FALLBACK_METAL='https://images.unsplash.com/photo-1728392051874-dadee8a8a7c9?auto=format&fit=crop&fm=jpg&q=82&w=1600';
-  const IMAGE_MAP={
-    'hero-special-metals.webp':FALLBACK_PORT,'logistics-stock.webp':FALLBACK_PORT,'og-cover.webp':FALLBACK_PORT,'og-social.webp':FALLBACK_PORT,
-    'precision-strip.webp':FALLBACK_COIL,'nickel-alloys.webp':FALLBACK_METAL,'heavy-plate.webp':FALLBACK_METAL,
-    'invar-lng.webp':FALLBACK_PORT,'invar-tooling.webp':FALLBACK_METAL,'titanium-zirconium.webp':FALLBACK_METAL,'about-engineering.webp':FALLBACK_METAL
+  const LOCAL={
+    'hero-special-metals.webp':'/assets/images/hero-port-r7.svg?v=20260914-r7',
+    'logistics-stock.webp':'/assets/images/hero-port-r7.svg?v=20260914-r7',
+    'og-social.webp':'/assets/images/og-cover.webp',
+    'precision-strip.webp':'/assets/images/precision-strip.webp',
+    'nickel-alloys.webp':'/assets/images/nickel-alloys.webp',
+    'heavy-plate.webp':'/assets/images/heavy-plate.webp',
+    'invar-lng.webp':'/assets/images/invar-lng.webp',
+    'invar-tooling.webp':'/assets/images/invar-tooling.webp',
+    'titanium-zirconium.webp':'/assets/images/titanium-zirconium.webp',
+    'about-engineering.webp':'/assets/images/engineering-discussion-v2.webp',
+    'quality-inspection.webp':'/assets/images/quality-lab-v2.webp',
+    'traceability-pmi.webp':'/assets/images/quality-lab-v2.webp',
+    'resources-metal.webp':'/assets/images/materials-warehouse-v2.webp',
+    'standards-rfq.webp':'/assets/images/engineering-review-v2.webp'
   };
   function normalizeHeader(){
     const brand=document.querySelector('.site-header .brand');
-    if(brand){brand.setAttribute('aria-label','Tongjun Metal Tech home');const label=brand.querySelector(':scope > span:last-child');if(label)label.textContent=BRAND;}
-    const cta=document.querySelector('.site-header .nav-cta');if(cta)cta.innerHTML='Request a Quote <span>→</span>';
-    const nav=document.querySelector('.site-header .navlinks');if(nav){const direct=[...nav.children];const cap=direct.find(x=>x.matches('a')&&/Capabilities/i.test(x.textContent));if(cap)cap.textContent='Quality';const res=direct.find(x=>x.matches('a')&&/Resources/i.test(x.textContent));if(res)res.textContent='Technical Data';}
+    if(brand){
+      brand.setAttribute('aria-label','Tongjun Metal Tech home');
+      const label=brand.querySelector(':scope > span:last-child');
+      if(label) label.textContent=BRAND;
+    }
+    const cta=document.querySelector('.site-header .nav-cta');
+    if(cta){cta.href='/rfq';cta.innerHTML='Request a Quote <span>→</span>';}
+    const nav=document.querySelector('.site-header .navlinks');
+    if(nav){
+      const direct=[...nav.children];
+      const cap=direct.find(x=>x.matches('a')&&/Capabilities/i.test(x.textContent));
+      if(cap){cap.textContent='Quality';cap.href='/quality';}
+      const res=direct.find(x=>x.matches('a')&&/Resources/i.test(x.textContent));
+      if(res){res.textContent='Technical Data';res.href='/technical-data';}
+    }
   }
-  function normalizeFooter(){document.querySelectorAll('.site-footer .brand,footer .brand').forEach(b=>{const label=b.querySelector(':scope > span:last-child');if(label)label.textContent=BRAND;});}
-  function basename(src){try{return new URL(src,location.href).pathname.split('/').pop()||''}catch{return String(src||'').split('/').pop()||''}}
+  function normalizeFooter(){
+    document.querySelectorAll('.site-footer .brand,footer .brand').forEach(b=>{
+      const label=b.querySelector(':scope > span:last-child');
+      if(label) label.textContent=BRAND;
+    });
+  }
+  function basename(src){
+    try{return new URL(src,location.href).pathname.split('/').pop()||''}
+    catch{return String(src||'').split('/').pop()||''}
+  }
   function applyFallback(img){
-    if(!img||img.dataset.tjFallbackApplied==='1')return;
+    if(!img||img.dataset.tjFallbackApplied==='1') return;
     const key=basename(img.getAttribute('src')||img.currentSrc||'');
-    const fallback=IMAGE_MAP[key];if(!fallback)return;
-    img.dataset.tjFallbackApplied='1';img.classList.add('tj-image-fallback');img.dataset.originalAsset=key;img.referrerPolicy='no-referrer';img.src=fallback;
+    const fallback=LOCAL[key];
+    if(!fallback) return;
+    img.dataset.tjFallbackApplied='1';
+    img.classList.add('tj-image-fallback');
+    img.dataset.originalAsset=key;
+    img.src=fallback;
   }
   function recoverImages(){
     document.querySelectorAll('img').forEach(img=>{
       const raw=img.getAttribute('src')||'';
-      if(!/assets\/images\//.test(raw))return;
+      if(!/assets\/images\//.test(raw)) return;
       img.addEventListener('error',()=>applyFallback(img),{once:true});
-      if(img.complete&&img.naturalWidth===0)applyFallback(img);
+      if(img.complete&&img.naturalWidth===0) applyFallback(img);
     });
   }
   function removeFloatingBots(){
