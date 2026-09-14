@@ -17,7 +17,7 @@ for p in ROOT.glob('*.html'):
     s = s.replace('TONGJUN SPECIAL METALS', 'TONGJUN METAL TECH')
     s = s.replace('TONGJUN METALS · EST. 2026', 'TONGJUN METAL TECH · EST. 2026')
 
-    # Static primary navigation should match the visible labels and destinations.
+    # Static primary navigation must match its visible labels and destinations.
     s = s.replace(
         '<a href="/capabilities">Capabilities</a>\n<a href="/resources">Resources</a>\n<a href="/about">About</a>',
         '<a href="/quality">Quality</a>\n<a href="/technical-data">Technical Data</a>\n<a href="/about">About</a>'
@@ -76,11 +76,21 @@ for p in ROOT.glob('*.html'):
             if m:
                 s = s[:m.end()] + visual + s[m.end():]
 
-    # Stable real-image logo node.
+    # Approved Columbus lockup in the header as a real image node.
     logo_html = '<img class="tj-logo-img" src="/assets/images/columbus-logo-r7.svg?v=20260914-r7" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" />'
     s = re.sub(
         r'(<a[^>]*class="brand"[^>]*>).*?(</a>)',
         lambda m: m.group(1) + logo_html + m.group(2),
+        s,
+        count=1,
+        flags=re.S
+    )
+
+    # Keep the same approved lockup in the footer; no duplicate pseudo-wordmark.
+    footer_logo = '<img class="tj-footer-logo" src="/assets/images/columbus-logo-r7.svg?v=20260914-r7" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" loading="lazy" />'
+    s = re.sub(
+        r'(<div class="footer-brand"><div class="brand"[^>]*>).*?(</div>)',
+        lambda m: '<div class="footer-brand"><div class="brand tj-footer-brand">' + footer_logo + m.group(2),
         s,
         count=1,
         flags=re.S
@@ -101,22 +111,13 @@ for p in ROOT.glob('*.html'):
                 1
             )
 
-    # Brand layers are intentionally cache-versioned while V34.152 remains staging.
-    layers = [
-        ('brand-v34.152.css', '/assets/brand-v34.152.css'),
-        ('brand-v34.152-r2.css', '/assets/brand-v34.152-r2.css'),
-        ('brand-v34.152-r4.css', '/assets/brand-v34.152-r4.css'),
-        ('brand-v34.152-r5.css', '/assets/brand-v34.152-r5.css'),
-        ('brand-v34.152-r6.css', '/assets/brand-v34.152-r6.css?v=20260913-r6'),
-        ('brand-v34.152-r7.css', '/assets/brand-v34.152-r7.css?v=20260914-r7'),
-        ('brand-v34.152-r8.css', '/assets/brand-v34.152-r8.css?v=20260914-r8')
-    ]
-    for marker, href in layers:
-        if marker not in s:
-            s = s.replace('</head>', f'<link rel="stylesheet" href="{href}"></head>')
-
-    if 'brand-v34.152.js' not in s:
-        s = s.replace('</head>', '<script defer src="/assets/brand-v34.152.js?v=20260914-r8"></script></head>')
+    # R9 consolidates all brand layers into one deploy-time stylesheet.
+    s = re.sub(r'<link[^>]+href="/assets/brand-v34\.152[^\"]*"[^>]*>', '', s)
+    s = re.sub(r'<script[^>]+src="/assets/brand-v34\.152\.js[^\"]*"[^>]*></script>', '', s)
+    s = s.replace(
+        '</head>',
+        '<link rel="stylesheet" href="/assets/brand-v34.152-r9.css?v=20260914-r9"><script defer src="/assets/brand-v34.152.js?v=20260914-r9"></script></head>'
+    )
 
     if '<body' in s and 'brand-v34' not in s.split('<body', 1)[1].split('>', 1)[0]:
         s = re.sub(
