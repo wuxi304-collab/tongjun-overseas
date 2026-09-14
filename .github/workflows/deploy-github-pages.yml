@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R8 editorial convergence + stable R7 Columbus brand + module imagery
+# refresh: R8.1 materialized module imagery + English-only brand + corrected navigation
 
 on:
   workflow_dispatch:
@@ -26,13 +26,28 @@ jobs:
         with:
           ref: v34.152-brand-migration
           fetch-depth: 1
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
+      - name: Materialize R8 module imagery
+        shell: bash
+        run: |
+          set -euo pipefail
+          for img in materials-r8 quality-r8; do
+            parts=(.sync/r8-modules/${img}.part*)
+            test -e "${parts[0]}"
+            cat "${parts[@]}" | tr -d '\r\n' | base64 -d > "assets/images/${img}.webp"
+            test -s "assets/images/${img}.webp"
+            file "assets/images/${img}.webp" | grep -qi 'Web/P'
+          done
+          echo 'PASS: R8 material and quality visuals materialized.'
+
       - name: Validate source visual system
         shell: bash
         run: |
           set -euo pipefail
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2 materials-r8 quality-r8; do
             p="assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
@@ -44,9 +59,14 @@ jobs:
           test -s assets/brand-v34.152-r7.css
           test -s assets/brand-v34.152-r8.css
           grep -q 'inner-page editorial convergence' assets/brand-v34.152-r8.css
-          echo 'PASS: R8 editorial layer, R7 brand assets and module imagery validated.'
+          grep -q "cap.href='/quality'" assets/brand-v34.152.js
+          grep -q "res.href='/technical-data'" assets/brand-v34.152.js
+          ! grep -q 'images.unsplash.com' assets/brand-v34.152.js
+          echo 'PASS: R8 visual layer and local-only image recovery validated.'
+
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
+
       - name: Build Pages mirror
         shell: bash
         env:
@@ -74,9 +94,11 @@ jobs:
               t=re.sub(r'(["\'])/(?!/)',lambda m:m.group(1)+base+'/',t)
               t=re.sub(r'url\((/)(?!/)',lambda m:'url('+base+'/',t)
               d.write_text(t,encoding='utf-8')
-            else: shutil.copy2(p,d)
+            else:
+              shutil.copy2(p,d)
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
+
       - name: Validate Pages artifact
         shell: bash
         run: |
@@ -93,15 +115,20 @@ jobs:
             grep -q 'brand-v34.152.js' "_site/$f"
             grep -q 'tj-logo-img' "_site/$f"
             grep -q 'columbus-logo-r7.svg?v=20260914-r7' "_site/$f"
+            ! grep -q 'TONGJUN SPECIAL METALS' "_site/$f"
           done
-          for svg in columbus-logo-r7 hero-port-r7; do
-            test -s "_site/assets/images/$svg.svg"
-            grep -q '<svg' "_site/assets/images/$svg.svg"
+
+          for img in materials-r8 quality-r8; do
+            test -s "_site/assets/images/$img.webp"
+            file "_site/assets/images/$img.webp" | grep -qi 'Web/P'
           done
+
           grep -q 'hero-bg-r6' _site/index.html
           grep -q 'hero-port-r7.svg?v=20260914-r7' _site/index.html
-          grep -q 'materials-warehouse-v2.webp' _site/materials.html
-          grep -q 'quality-lab-v2.webp' _site/quality.html
+          grep -q 'href="/tongjun-overseas/quality">Quality</a>' _site/index.html
+          grep -q 'href="/tongjun-overseas/technical-data">Technical Data</a>' _site/index.html
+          grep -q 'materials-r8.webp?v=20260914-r8' _site/materials.html
+          grep -q 'quality-r8.webp?v=20260914-r8' _site/quality.html
           grep -q 'technical-visual' _site/technical-data.html
           grep -q 'quality-lab-v2.webp' _site/technical-data.html
           grep -q 'engineering-discussion-v2.webp' _site/about.html
@@ -109,11 +136,14 @@ jobs:
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
           ! grep -q '同钧' _site/index.html
-          echo 'PASS: R8 editorial convergence, image-led core pages and RFQ workflow validated.'
+          ! grep -q 'images.unsplash.com' _site/assets/brand-v34.152.js
+          echo 'PASS: R8.1 module imagery, navigation, English brand and RFQ workflow validated.'
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
