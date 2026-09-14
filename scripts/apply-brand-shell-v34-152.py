@@ -5,12 +5,31 @@ ROOT = Path('.')
 SKIP = {'404.html'}
 changed = []
 
+
+def insert_visual(s, marker, src, alt, label):
+    """Insert one deterministic editorial visual after section nav, else after page hero."""
+    if marker in s:
+        return s
+    visual = (
+        f'<section class="visual-band {marker}"><div class="wrap"><div class="visual-frame">'
+        f'<img alt="{alt}" decoding="async" loading="eager" src="{src}" width="1400" height="788"/>'
+        f'<span class="visual-label">{label}</span></div></div></section>'
+    )
+    m = re.search(r'(<nav aria-label="Section navigation".*?</nav>)', s, re.S)
+    if not m:
+        m = re.search(r'(<section class="pagehero[^>]*>.*?</section>)', s, re.S)
+    if m:
+        s = s[:m.end()] + visual + s[m.end():]
+    return s
+
+
 for p in ROOT.glob('*.html'):
     if p.name in SKIP:
         continue
 
     s = p.read_text(encoding='utf-8')
     old = s
+    page_key = p.stem
 
     # English-only brand normalization.
     s = s.replace('Tongjun Special Metals', 'Tongjun Metal Tech')
@@ -51,30 +70,77 @@ for p in ROOT.glob('*.html'):
         s = s.replace('>Quality inspection<', '>Inspection · traceability · release evidence<')
 
     elif p.name == 'technical-data.html':
-        for src in [
-            '/assets/images/resources-metal.webp',
-            '/assets/images/standards-rfq.webp',
-            '/assets/images/quality-inspection.webp'
-        ]:
-            s = s.replace(src, '/assets/images/quality-lab-v2.webp')
-        if 'technical-visual' not in s:
-            visual = '<section class="visual-band technical-visual"><div class="wrap"><div class="visual-frame"><img alt="Metallurgical inspection and controlled technical data review" decoding="async" loading="eager" src="/assets/images/quality-lab-v2.webp" width="1200" height="675"/><span class="visual-label">Technical review · material data · verification</span></div></div></section>'
-            m = re.search(r'(<nav aria-label="Section navigation".*?</nav>)', s, re.S)
-            if m:
-                s = s[:m.end()] + visual + s[m.end():]
+        # Keep the current local laboratory image until the dedicated R10 binary is promoted.
+        s = re.sub(
+            r'(<section class="visual-band technical-visual".*?<img[^>]+src=")[^"]+("[^>]*>)',
+            r'\1/assets/images/quality-lab-v2.webp?v=20260914-r10\2',
+            s,
+            count=1,
+            flags=re.S
+        )
+        s = insert_visual(
+            s,
+            'technical-visual',
+            '/assets/images/quality-lab-v2.webp?v=20260914-r10',
+            'Metallurgical inspection and controlled technical data review',
+            'Technical data · verification · document control'
+        )
 
     elif p.name == 'about.html':
-        s = s.replace('/assets/images/about-engineering.webp', '/assets/images/engineering-discussion-v2.webp')
-        s = s.replace('/assets/images/resources-metal.webp', '/assets/images/engineering-discussion-v2.webp')
+        for src in ['/assets/images/about-engineering.webp', '/assets/images/resources-metal.webp']:
+            s = s.replace(src, '/assets/images/engineering-discussion-v2.webp?v=20260914-r10')
+        s = s.replace('<section class="visual-band">', '<section class="visual-band about-visual">', 1)
+        s = s.replace('>Engineering-led sourcing<', '>Engineering review · sourcing control · route ownership<')
 
     elif p.name == 'rfq.html':
-        s = s.replace('/assets/images/standards-rfq.webp', '/assets/images/engineering-review-v2.webp')
-        s = s.replace('/assets/images/about-engineering.webp', '/assets/images/engineering-review-v2.webp')
-        if 'rfq-visual' not in s:
-            visual = '<section class="visual-band rfq-visual"><div class="wrap"><div class="visual-frame"><img alt="Engineering and sourcing team reviewing a controlled special-metals requirement" decoding="async" loading="eager" src="/assets/images/engineering-review-v2.webp" width="1200" height="675"/><span class="visual-label">Requirement review · route control · buyer release</span></div></div></section>'
-            m = re.search(r'(<section class="pagehero[^>]*>.*?</section>)', s, re.S)
-            if m:
-                s = s[:m.end()] + visual + s[m.end():]
+        for src in ['/assets/images/standards-rfq.webp', '/assets/images/about-engineering.webp']:
+            s = s.replace(src, '/assets/images/engineering-review-v2.webp?v=20260914-r10')
+        s = s.replace('<section class="visual-band">', '<section class="visual-band rfq-visual">', 1)
+        s = insert_visual(
+            s,
+            'rfq-visual',
+            '/assets/images/engineering-review-v2.webp?v=20260914-r10',
+            'Engineering and sourcing team reviewing a controlled special-metals requirement',
+            'Requirement review · route control · buyer release'
+        )
+
+    elif p.name == 'product-forms.html':
+        s = insert_visual(
+            s,
+            'product-forms-visual',
+            '/assets/images/materials-warehouse-v2.webp?v=20260914-r10',
+            'Special-metal product forms staged in an industrial warehouse',
+            'Strip · sheet · plate · bar · forging · components'
+        )
+        # Use engineering imagery only where the page discusses secondary conversion / forging route.
+        s = s.replace('/assets/images/about-engineering.webp', '/assets/images/engineering-discussion-v2.webp?v=20260914-r10')
+
+    elif p.name == 'nickel-alloys.html':
+        s = insert_visual(
+            s,
+            'material-detail-visual nickel-visual',
+            '/assets/images/nickel-alloys.webp?v=20260914-r10',
+            'Nickel alloy flat products and engineered special-metal forms',
+            'Nickel alloys · corrosion service · product-form qualification'
+        )
+
+    elif p.name == 'invar-36.html':
+        s = insert_visual(
+            s,
+            'material-detail-visual invar-visual',
+            '/assets/images/invar-tooling.webp?v=20260914-r10',
+            'Low-expansion alloy material prepared for precision tooling applications',
+            'Low expansion · dimensional stability · application-specific route'
+        )
+
+    elif p.name == 'heavy-plate.html':
+        s = insert_visual(
+            s,
+            'material-detail-visual heavy-plate-visual',
+            '/assets/images/heavy-plate.webp?v=20260914-r10',
+            'Heavy special-metal plate prepared for project supply',
+            'Heavy plate · width capability · heat treatment · inspection'
+        )
 
     # Approved Columbus lockup in the header as a real image node.
     logo_html = '<img class="tj-logo-img" src="/assets/images/columbus-logo-r7.svg?v=20260914-r7" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" />'
@@ -111,22 +177,25 @@ for p in ROOT.glob('*.html'):
                 1
             )
 
-    # R9 consolidates all brand layers into one deploy-time stylesheet.
+    # Page identity hook for deterministic page-level styling.
+    def body_hook(m):
+        attrs = m.group(1)
+        if 'data-page=' not in attrs:
+            attrs += f' data-page="{page_key}"'
+        if 'class=' not in attrs:
+            attrs += ' class="brand-v34"'
+        elif 'brand-v34' not in attrs:
+            attrs = re.sub(r'class="([^"]*)"', r'class="\1 brand-v34"', attrs, count=1)
+        return '<body' + attrs + '>'
+    s = re.sub(r'<body([^>]*)>', body_hook, s, count=1)
+
+    # R10 keeps one deploy-time stylesheet and one brand script in the HTML.
     s = re.sub(r'<link[^>]+href="/assets/brand-v34\.152[^\"]*"[^>]*>', '', s)
     s = re.sub(r'<script[^>]+src="/assets/brand-v34\.152\.js[^\"]*"[^>]*></script>', '', s)
     s = s.replace(
         '</head>',
-        '<link rel="stylesheet" href="/assets/brand-v34.152-r9.css?v=20260914-r9"><script defer src="/assets/brand-v34.152.js?v=20260914-r9"></script></head>'
+        '<link rel="stylesheet" href="/assets/brand-v34.152-r10.css?v=20260914-r10"><script defer src="/assets/brand-v34.152.js?v=20260914-r10"></script></head>'
     )
-
-    if '<body' in s and 'brand-v34' not in s.split('<body', 1)[1].split('>', 1)[0]:
-        s = re.sub(
-            r'<body([^>]*)>',
-            lambda m: '<body' + m.group(1) + ' class="brand-v34">' if 'class=' not in m.group(1)
-            else '<body' + re.sub(r'class="([^"]*)"', r'class="\1 brand-v34"', m.group(1)) + '>',
-            s,
-            count=1
-        )
 
     if s != old:
         p.write_text(s, encoding='utf-8')
