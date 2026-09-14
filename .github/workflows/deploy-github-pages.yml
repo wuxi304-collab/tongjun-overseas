@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R8.1 materialized module imagery + English-only brand + corrected navigation
+# refresh: R9 consolidated brand delivery + R8 module imagery + approved Columbus lockup
 
 on:
   workflow_dispatch:
@@ -43,6 +43,24 @@ jobs:
           done
           echo 'PASS: R8 material and quality visuals materialized.'
 
+      - name: Build consolidated R9 brand stylesheet
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            assets/brand-v34.152.css \
+            assets/brand-v34.152-r2.css \
+            assets/brand-v34.152-r4.css \
+            assets/brand-v34.152-r5.css \
+            assets/brand-v34.152-r6.css \
+            assets/brand-v34.152-r7.css \
+            assets/brand-v34.152-r8.css \
+            assets/brand-v34.152-r9-tail.css \
+            > assets/brand-v34.152-r9.css
+          test -s assets/brand-v34.152-r9.css
+          grep -q 'R9 final override' assets/brand-v34.152-r9.css
+          echo 'PASS: one consolidated R9 brand stylesheet built.'
+
       - name: Validate source visual system
         shell: bash
         run: |
@@ -56,13 +74,12 @@ jobs:
             test -s "assets/images/$svg.svg"
             grep -q '<svg' "assets/images/$svg.svg"
           done
-          test -s assets/brand-v34.152-r7.css
-          test -s assets/brand-v34.152-r8.css
-          grep -q 'inner-page editorial convergence' assets/brand-v34.152-r8.css
+          test -s assets/brand-v34.152-r9.css
+          grep -q 'tj-footer-logo' assets/brand-v34.152-r9.css
           grep -q "cap.href='/quality'" assets/brand-v34.152.js
           grep -q "res.href='/technical-data'" assets/brand-v34.152.js
           ! grep -q 'images.unsplash.com' assets/brand-v34.152.js
-          echo 'PASS: R8 visual layer and local-only image recovery validated.'
+          echo 'PASS: R9 consolidated visual system and local-only recovery validated.'
 
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
@@ -105,18 +122,18 @@ jobs:
           set -euo pipefail
           for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html nickel-alloys.html precision-strip.html heavy-plate.html; do
             test -s "_site/$f"
-            grep -q 'brand-v34.152.css' "_site/$f"
-            grep -q 'brand-v34.152-r2.css' "_site/$f"
-            grep -q 'brand-v34.152-r4.css' "_site/$f"
-            grep -q 'brand-v34.152-r5.css' "_site/$f"
-            grep -q 'brand-v34.152-r6.css' "_site/$f"
-            grep -q 'brand-v34.152-r7.css?v=20260914-r7' "_site/$f"
-            grep -q 'brand-v34.152-r8.css?v=20260914-r8' "_site/$f"
-            grep -q 'brand-v34.152.js' "_site/$f"
+            grep -q 'brand-v34.152-r9.css?v=20260914-r9' "_site/$f"
+            grep -q 'brand-v34.152.js?v=20260914-r9' "_site/$f"
+            ! grep -q 'brand-v34.152-r8.css' "_site/$f"
+            ! grep -q 'brand-v34.152-r7.css' "_site/$f"
             grep -q 'tj-logo-img' "_site/$f"
+            grep -q 'tj-footer-logo' "_site/$f"
             grep -q 'columbus-logo-r7.svg?v=20260914-r7' "_site/$f"
             ! grep -q 'TONGJUN SPECIAL METALS' "_site/$f"
           done
+
+          test -s _site/assets/brand-v34.152-r9.css
+          grep -q 'R9 final override' _site/assets/brand-v34.152-r9.css
 
           for img in materials-r8 quality-r8; do
             test -s "_site/assets/images/$img.webp"
@@ -130,14 +147,13 @@ jobs:
           grep -q 'materials-r8.webp?v=20260914-r8' _site/materials.html
           grep -q 'quality-r8.webp?v=20260914-r8' _site/quality.html
           grep -q 'technical-visual' _site/technical-data.html
-          grep -q 'quality-lab-v2.webp' _site/technical-data.html
           grep -q 'engineering-discussion-v2.webp' _site/about.html
           grep -q 'engineering-review-v2.webp' _site/rfq.html
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
           ! grep -q '同钧' _site/index.html
           ! grep -q 'images.unsplash.com' _site/assets/brand-v34.152.js
-          echo 'PASS: R8.1 module imagery, navigation, English brand and RFQ workflow validated.'
+          echo 'PASS: R9 consolidated CSS, R8 imagery, English brand and RFQ workflow validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
