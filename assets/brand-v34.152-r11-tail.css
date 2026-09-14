@@ -1,1 +1,26 @@
-/* placeholder */
+/* V34.152 R11 final override — precision strip, reactive metals and market-page convergence. */
+body.brand-v34[data-page="precision-strip"] .landing-grid{display:grid!important;grid-template-columns:minmax(0,1.18fr) minmax(330px,.82fr)!important;gap:58px!important;align-items:end!important}
+body.brand-v34[data-page="precision-strip"] .specpanel{min-height:260px!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;padding:36px!important;background:var(--tj-ink)!important}
+body.brand-v34[data-page="precision-strip"] .specpanel small{color:#e99a3d!important;letter-spacing:.14em!important}
+body.brand-v34[data-page="precision-strip"] .specpanel strong{font-size:28px!important;line-height:1.28!important}
+body.brand-v34[data-page="precision-strip"] .v24-landing-scope .capgrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:0!important;border-top:1px solid var(--tj-line)!important;border-left:1px solid var(--tj-line)!important}
+body.brand-v34[data-page="precision-strip"] .v24-landing-scope .cap{min-height:230px!important;padding:28px 28px 30px!important;background:#fff!important;border:0!important;border-right:1px solid var(--tj-line)!important;border-bottom:1px solid var(--tj-line)!important;border-radius:0!important;box-shadow:none!important}
+body.brand-v34[data-page="precision-strip"] .v24-landing-scope .cap .icon{width:auto!important;height:auto!important;margin:0 0 24px!important;padding:0!important;border:0!important;color:var(--tj-warm)!important;font-size:10px!important;font-weight:800!important;letter-spacing:.14em!important}
+body.brand-v34[data-page="precision-strip"] .v24-landing-scope .cap h3{margin:0 0 12px!important;color:var(--tj-ink)!important;font-family:Georgia,"Times New Roman",serif!important;font-size:23px!important;font-weight:500!important;line-height:1.1!important}
+body.brand-v34[data-page="precision-strip"] .v24-landing-scope .cap p{color:#566575!important;font-size:13px!important;line-height:1.65!important}
+body.brand-v34[data-page="precision-strip"] .feature{display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr)!important;gap:58px!important;align-items:stretch!important}
+body.brand-v34[data-page="precision-strip"] .bigspec{display:flex!important;flex-direction:column!important;justify-content:flex-end!important;padding:34px!important;background:#f2f5f7!important;border:1px solid var(--tj-line)!important}
+body.brand-v34[data-page="precision-strip"] .bigspec .num{font-size:68px!important;line-height:.9!important}
+body.brand-v34[data-page="titanium-zirconium"] .pagehero h1{max-width:780px!important}
+body.brand-v34[data-page="titanium-zirconium"] .visual-frame img{object-position:center 54%!important}
+body.brand-v34[data-page="titanium-zirconium"] .twocol{gap:64px!important}
+body.brand-v34[data-page="titanium-zirconium"] .data-table{border-top:3px solid var(--tj-ink)!important}
+body.brand-v34[data-page="industries"] .pagehero,body.brand-v34[data-page$="equipment"] .pagehero,body.brand-v34[data-page$="bellows"] .pagehero,body.brand-v34[data-page$="lng"] .pagehero,body.brand-v34[data-page$="tooling"] .pagehero{background:linear-gradient(135deg,#f7f9fb 0%,#fff 70%)!important}
+body.brand-v34[data-page="industries"] .cardgrid,body.brand-v34[data-page$="equipment"] .cardgrid{gap:0!important;border:1px solid var(--tj-line)!important}
+body.brand-v34[data-page="industries"] .card,body.brand-v34[data-page$="equipment"] .card{border:0!important;border-right:1px solid var(--tj-line)!important;border-bottom:1px solid var(--tj-line)!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
+body.brand-v34[data-page="industries"] .card h3,body.brand-v34[data-page$="equipment"] .card h3{font-family:Georgia,"Times New Roman",serif!important;font-weight:500!important;color:var(--tj-ink)!important}
+body.brand-v34[data-page="technical-data"] .technical-visual .visual-frame img{object-position:center 48%!important}
+body.brand-v34[data-page="about"] .visual-frame img,body.brand-v34[data-page="rfq"] .visual-frame img{object-position:center 46%!important}
+body.brand-v34[data-page="about"] .visual-label,body.brand-v34[data-page="rfq"] .visual-label,body.brand-v34[data-page="technical-data"] .visual-label{font-weight:800!important;letter-spacing:.17em!important}
+@media(max-width:1000px){body.brand-v34[data-page="precision-strip"] .landing-grid{grid-template-columns:1fr!important;gap:30px!important}body.brand-v34[data-page="precision-strip"] .specpanel{min-height:0!important}body.brand-v34[data-page="precision-strip"] .v24-landing-scope .capgrid{grid-template-columns:repeat(2,1fr)!important}body.brand-v34[data-page="precision-strip"] .feature{grid-template-columns:1fr!important}}
+@media(max-width:620px){body.brand-v34[data-page="precision-strip"] .v24-landing-scope .capgrid{grid-template-columns:1fr!important}body.brand-v34[data-page="precision-strip"] .v24-landing-scope .cap{min-height:0!important;padding:24px!important}}
