@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R7 stable Columbus lockup + port hero + generated industrial module imagery
+# refresh: R8 editorial convergence + stable R7 Columbus brand + module imagery
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 1
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Validate source image assets
+      - name: Validate source visual system
         shell: bash
         run: |
           set -euo pipefail
@@ -42,7 +42,9 @@ jobs:
             grep -q '<svg' "assets/images/$svg.svg"
           done
           test -s assets/brand-v34.152-r7.css
-          echo 'PASS: R7 brand assets and module imagery validated.'
+          test -s assets/brand-v34.152-r8.css
+          grep -q 'inner-page editorial convergence' assets/brand-v34.152-r8.css
+          echo 'PASS: R8 editorial layer, R7 brand assets and module imagery validated.'
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
       - name: Build Pages mirror
@@ -87,6 +89,7 @@ jobs:
             grep -q 'brand-v34.152-r5.css' "_site/$f"
             grep -q 'brand-v34.152-r6.css' "_site/$f"
             grep -q 'brand-v34.152-r7.css?v=20260914-r7' "_site/$f"
+            grep -q 'brand-v34.152-r8.css?v=20260914-r8' "_site/$f"
             grep -q 'brand-v34.152.js' "_site/$f"
             grep -q 'tj-logo-img' "_site/$f"
             grep -q 'columbus-logo-r7.svg?v=20260914-r7' "_site/$f"
@@ -99,11 +102,14 @@ jobs:
           grep -q 'hero-port-r7.svg?v=20260914-r7' _site/index.html
           grep -q 'materials-warehouse-v2.webp' _site/materials.html
           grep -q 'quality-lab-v2.webp' _site/quality.html
+          grep -q 'technical-visual' _site/technical-data.html
+          grep -q 'quality-lab-v2.webp' _site/technical-data.html
           grep -q 'engineering-discussion-v2.webp' _site/about.html
           grep -q 'engineering-review-v2.webp' _site/rfq.html
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          echo 'PASS: R7 hard-rendered brand layer, module imagery and RFQ workflow validated.'
+          ! grep -q '同钧' _site/index.html
+          echo 'PASS: R8 editorial convergence, image-led core pages and RFQ workflow validated.'
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
