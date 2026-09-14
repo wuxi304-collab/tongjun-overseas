@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R11 dedicated technical/review imagery + precision-strip/reactive-metals convergence
+# refresh: R11 verified local imagery + precision-strip/reactive-metals convergence
 
 on:
   workflow_dispatch:
@@ -68,7 +68,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2 materials-r8 quality-r8 technical-lab-r11 engineering-review-r11; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2 materials-r8 quality-r8; do
             p="assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
@@ -82,7 +82,7 @@ jobs:
           grep -q "cap.href='/quality'" assets/brand-v34.152.js
           grep -q "res.href='/technical-data'" assets/brand-v34.152.js
           ! grep -q 'images.unsplash.com' assets/brand-v34.152.js
-          echo 'PASS: R11 visual system and local-only imagery validated.'
+          echo 'PASS: R11 visual system and verified local imagery validated.'
 
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
@@ -125,8 +125,8 @@ jobs:
           set -euo pipefail
           for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html nickel-alloys.html invar-36.html precision-strip.html heavy-plate.html titanium-zirconium.html industries.html; do
             test -s "_site/$f"
-            grep -q 'brand-v34.152-r11.css?v=20260914-r11' "_site/$f"
-            grep -q 'brand-v34.152.js?v=20260914-r11' "_site/$f"
+            grep -q 'brand-v34.152-r11.css?v=20260914-r11b' "_site/$f"
+            grep -q 'brand-v34.152.js?v=20260914-r11b' "_site/$f"
             ! grep -q 'brand-v34.152-r10.css' "_site/$f"
             grep -q 'data-page=' "_site/$f"
             grep -q 'tj-logo-img' "_site/$f"
@@ -139,7 +139,7 @@ jobs:
           grep -q 'R11 final override' _site/assets/brand-v34.152-r11.css
           grep -q 'v24-landing-scope' _site/assets/brand-v34.152-r11.css
 
-          for img in materials-r8 quality-r8 technical-lab-r11 engineering-review-r11; do
+          for img in materials-r8 quality-r8 engineering-review-v2 engineering-discussion-v2 precision-strip titanium-zirconium; do
             test -s "_site/assets/images/$img.webp"
             file "_site/assets/images/$img.webp" | grep -qi 'Web/P'
           done
@@ -149,9 +149,9 @@ jobs:
           grep -q 'href="/tongjun-overseas/technical-data">Technical Data</a>' _site/index.html
           grep -q 'materials-r8.webp?v=20260914-r8' _site/materials.html
           grep -q 'quality-r8.webp?v=20260914-r8' _site/quality.html
-          grep -q 'technical-lab-r11.webp?v=20260914-r11' _site/technical-data.html
-          grep -q 'engineering-review-r11.webp?v=20260914-r11' _site/about.html
-          grep -q 'engineering-review-r11.webp?v=20260914-r11' _site/rfq.html
+          grep -q 'quality-r8.webp?v=20260914-r8' _site/technical-data.html
+          grep -q 'engineering-discussion-v2.webp?v=20260914-r11' _site/about.html
+          grep -q 'engineering-review-v2.webp?v=20260914-r11' _site/rfq.html
           grep -q 'page-specific-visual' _site/precision-strip.html
           grep -q 'precision-strip.webp' _site/precision-strip.html
           grep -q 'titanium-zirconium.webp' _site/titanium-zirconium.html
@@ -159,7 +159,7 @@ jobs:
           grep -q 'release_checklist' _site/rfq.html
           ! grep -q '同钧' _site/index.html
           ! grep -q 'images.unsplash.com' _site/assets/brand-v34.152.js
-          echo 'PASS: R11 dedicated imagery, page convergence, English brand and RFQ workflow validated.'
+          echo 'PASS: R11 verified imagery, page convergence, English brand and RFQ workflow validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
