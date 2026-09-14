@@ -1,0 +1,109 @@
+/* V34.152 R10 final override — page-level editorial reconstruction. */
+body.brand-v34[data-page]{--tj-content:1240px;--tj-reading:760px}
+body.brand-v34[data-page] .wrap{max-width:min(var(--tj-content),calc(100% - 56px))}
+body.brand-v34[data-page] .pagehero .wrap{display:grid;grid-template-columns:minmax(0,1fr);align-items:end}
+body.brand-v34[data-page] .pagehero{overflow:hidden}
+body.brand-v34[data-page] .pagehero h1{max-width:860px!important}
+body.brand-v34[data-page] .pagehero p{max-width:760px!important}
+body.brand-v34[data-page] .visual-band{padding:0!important;background:#fff!important}
+body.brand-v34[data-page] .visual-band .wrap{max-width:100%!important;width:100%!important;padding:0!important}
+body.brand-v34[data-page] .visual-frame{border:0!important;box-shadow:none!important;aspect-ratio:auto!important;height:clamp(320px,31vw,500px)!important}
+body.brand-v34[data-page] .visual-frame img{width:100%!important;height:100%!important;object-fit:cover!important;filter:saturate(.82) contrast(1.035)!important}
+body.brand-v34[data-page] .visual-frame:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(5,18,35,.28),transparent 42%,rgba(5,18,35,.05));pointer-events:none}
+body.brand-v34[data-page] .visual-frame:after{height:42%!important;background:linear-gradient(180deg,transparent,rgba(5,18,34,.66))!important}
+body.brand-v34[data-page] .visual-label{left:max(28px,calc((100vw - var(--tj-content))/2 + 28px))!important;bottom:24px!important;padding:0!important;background:transparent!important;border:0!important;font-size:10px!important;letter-spacing:.16em!important}
+body.brand-v34[data-page] .visual-band + .section{padding-top:64px!important}
+
+/* Product forms: remove catalogue-card feeling and use large editorial rows. */
+body.brand-v34[data-page="product-forms"] .form-portfolio{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--tj-line)}
+body.brand-v34[data-page="product-forms"] .form-card{display:grid!important;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr)!important;gap:0!important;align-items:stretch!important;min-height:430px!important;background:#fff!important;border:0!important;border-bottom:1px solid var(--tj-line)!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important}
+body.brand-v34[data-page="product-forms"] .form-card.reverse{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)!important}
+body.brand-v34[data-page="product-forms"] .form-card.reverse>img{order:2}
+body.brand-v34[data-page="product-forms"] .form-card>img{display:block!important;width:100%!important;height:100%!important;min-height:430px!important;object-fit:cover!important;filter:saturate(.82) contrast(1.03)!important}
+body.brand-v34[data-page="product-forms"] .form-card>div{display:flex!important;flex-direction:column!important;justify-content:center!important;padding:52px 58px!important}
+body.brand-v34[data-page="product-forms"] .form-card>div>span:first-child{color:var(--tj-warm)!important;font-size:11px!important;font-weight:800!important;letter-spacing:.14em!important}
+body.brand-v34[data-page="product-forms"] .form-card h2{margin:12px 0 16px!important;color:var(--tj-ink)!important;font-family:Georgia,"Times New Roman",serif!important;font-size:clamp(34px,3vw,46px)!important;font-weight:500!important;letter-spacing:-.03em!important;line-height:1.06!important}
+body.brand-v34[data-page="product-forms"] .form-card p{max-width:660px;color:#516171!important;font-size:15px!important;line-height:1.72!important}
+body.brand-v34[data-page="product-forms"] .form-card dl{display:grid;grid-template-columns:128px 1fr;gap:10px 20px;margin:24px 0 28px;padding-top:20px;border-top:1px solid var(--tj-line)}
+body.brand-v34[data-page="product-forms"] .form-card dt{color:#7a8793;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+body.brand-v34[data-page="product-forms"] .form-card dd{margin:0;color:#2a3b4d;font-size:13px;line-height:1.5}
+body.brand-v34[data-page="product-forms"] .form-card a{align-self:flex-start;color:var(--tj-ink)!important;font-size:12px!important;font-weight:800!important;letter-spacing:.02em!important}
+
+/* Technical Data: denser engineering directory, clearer scanning hierarchy. */
+body.brand-v34[data-page="technical-data"] .tds-directory{border-top:1px solid #bcc7d1!important}
+body.brand-v34[data-page="technical-data"] .tds-row{display:grid!important;grid-template-columns:minmax(300px,1.45fr) minmax(180px,.8fr) minmax(160px,.68fr) auto!important;gap:24px!important;align-items:center!important;min-height:142px!important;padding:26px 28px!important;border:0!important;border-bottom:1px solid var(--tj-line)!important;background:#fff!important}
+body.brand-v34[data-page="technical-data"] .tds-row:hover{background:#f4f7f9!important}
+body.brand-v34[data-page="technical-data"] .tds-row h2{margin:5px 0 2px!important;font-size:30px!important;line-height:1.05!important}
+body.brand-v34[data-page="technical-data"] .tds-row p,body.brand-v34[data-page="technical-data"] .tds-row span{color:#667483!important}
+body.brand-v34[data-page="technical-data"] .tds-row>strong{color:var(--tj-ink)!important;font-size:12px!important;white-space:nowrap}
+body.brand-v34[data-page="technical-data"] .technical-tools-band .wrap{display:grid!important;grid-template-columns:repeat(3,1fr)!important}
+body.brand-v34[data-page="technical-data"] .technical-tools-band .wrap>a{min-height:220px!important;padding:34px!important;border-right:1px solid #29435f!important}
+
+/* About: make responsibility architecture read as industrial governance, not generic cards. */
+body.brand-v34[data-page="about"] .control-layer-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:0!important;border:1px solid var(--tj-line)!important;background:#fff!important}
+body.brand-v34[data-page="about"] .control-layer-grid>div{padding:32px 30px!important;border:0!important;border-right:1px solid var(--tj-line)!important;background:#fff!important;box-shadow:none!important}
+body.brand-v34[data-page="about"] .control-layer-grid>div:last-child{border-right:0!important}
+body.brand-v34[data-page="about"] .control-layer-grid span{color:var(--tj-warm)!important;font-size:10px!important;font-weight:800!important;letter-spacing:.12em!important}
+body.brand-v34[data-page="about"] .control-layer-grid b{display:block;margin:10px 0 18px;color:var(--tj-ink)!important;font-family:Georgia,"Times New Roman",serif;font-size:26px;font-weight:500}
+body.brand-v34[data-page="about"] .control-layer-grid li{margin:8px 0;color:#526170;font-size:13px;line-height:1.45}
+body.brand-v34[data-page="about"] .control-boundary{margin-top:0!important;padding:24px 28px!important;background:var(--tj-ink)!important;color:#fff!important;border:0!important}
+body.brand-v34[data-page="about"] .control-boundary span{color:#ccd6df!important}
+body.brand-v34[data-page="about"] .control-boundary a{color:#fff!important}
+body.brand-v34[data-page="about"] .corporate-identity-ledger{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:0!important;margin-top:42px!important;border:1px solid var(--tj-line)!important}
+body.brand-v34[data-page="about"] .corporate-identity-ledger>div{padding:22px!important;border-right:1px solid var(--tj-line)!important;background:#fff!important}
+body.brand-v34[data-page="about"] .corporate-identity-ledger>div:last-child{border-right:0!important}
+body.brand-v34[data-page="about"] .corporate-identity-ledger span{display:block;color:#7b8793;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+body.brand-v34[data-page="about"] .corporate-identity-ledger b{display:block;margin-top:8px;color:var(--tj-ink);font-size:13px;line-height:1.45}
+
+/* RFQ: separate the technical brief from buyer input and make the form feel like a controlled review. */
+body.brand-v34[data-page="rfq"] .rfqbox.full-rfq{display:grid!important;grid-template-columns:minmax(290px,.72fr) minmax(0,1.45fr)!important;gap:0!important;align-items:start!important;padding:0!important;background:#fff!important;border:1px solid var(--tj-line)!important}
+body.brand-v34[data-page="rfq"] .rfq-intro-column{position:sticky;top:118px;padding:38px 34px!important;background:var(--tj-ink)!important;color:#fff!important;min-height:720px}
+body.brand-v34[data-page="rfq"] .rfq-intro-column h2{color:#fff!important;font-family:Georgia,"Times New Roman",serif!important;font-size:34px!important;font-weight:500!important;line-height:1.08!important}
+body.brand-v34[data-page="rfq"] .rfq-intro-column .note,body.brand-v34[data-page="rfq"] .rfq-intro-column p{color:#c2ced9!important}
+body.brand-v34[data-page="rfq"] .rfq-intro-column .boundary{background:#102846!important;border:1px solid #29435f!important;color:#fff!important}
+body.brand-v34[data-page="rfq"] .rfq-intro-column .rfq-list{padding-left:20px}
+body.brand-v34[data-page="rfq"] .rfq-intro-column .rfq-list li{margin:8px 0;color:#e6edf3}
+body.brand-v34[data-page="rfq"] #rfqForm{padding:38px 42px 44px!important;background:#fff!important}
+body.brand-v34[data-page="rfq"] .rfq-form-header{padding-bottom:24px!important;margin-bottom:28px!important;border-bottom:1px solid var(--tj-line)!important}
+body.brand-v34[data-page="rfq"] .rfq-group-label{margin-top:12px!important;padding:20px 0 8px!important;border-top:1px solid var(--tj-line)!important;background:transparent!important}
+body.brand-v34[data-page="rfq"] .rfq-group-label span{color:var(--tj-warm)!important;font-size:10px!important;font-weight:800!important;letter-spacing:.1em!important}
+body.brand-v34[data-page="rfq"] .field label{color:#405164!important;font-size:11px!important;font-weight:750!important}
+body.brand-v34[data-page="rfq"] :where(input,select,textarea){background:#fff!important;border:1px solid #cbd4dc!important;min-height:48px!important}
+body.brand-v34[data-page="rfq"] :where(input,select,textarea):focus{outline:2px solid rgba(22,63,105,.15)!important;border-color:#56718b!important}
+
+/* Material-detail pages: a common visual rhythm without making every page identical. */
+body.brand-v34[data-page="nickel-alloys"] .visual-frame img{object-position:center 52%!important}
+body.brand-v34[data-page="invar-36"] .visual-frame img{object-position:center 48%!important}
+body.brand-v34[data-page="heavy-plate"] .visual-frame img{object-position:center 56%!important}
+body.brand-v34[data-page="nickel-alloys"] .section:first-of-type,body.brand-v34[data-page="invar-36"] .section:first-of-type,body.brand-v34[data-page="heavy-plate"] .section:first-of-type{padding-top:62px!important}
+
+@media(max-width:1100px){
+ body.brand-v34[data-page="product-forms"] .form-card,body.brand-v34[data-page="product-forms"] .form-card.reverse{grid-template-columns:1fr 1fr!important}
+ body.brand-v34[data-page="product-forms"] .form-card>div{padding:38px 36px!important}
+ body.brand-v34[data-page="about"] .corporate-identity-ledger{grid-template-columns:repeat(2,1fr)!important}
+ body.brand-v34[data-page="about"] .corporate-identity-ledger>div{border-bottom:1px solid var(--tj-line)!important}
+ body.brand-v34[data-page="rfq"] .rfqbox.full-rfq{grid-template-columns:minmax(250px,.65fr) minmax(0,1.35fr)!important}
+ body.brand-v34[data-page="rfq"] #rfqForm{padding:32px!important}
+}
+@media(max-width:900px){
+ body.brand-v34[data-page] .wrap{max-width:calc(100% - 30px)}
+ body.brand-v34[data-page] .visual-frame{height:clamp(240px,58vw,390px)!important}
+ body.brand-v34[data-page] .visual-label{left:20px!important;bottom:18px!important}
+ body.brand-v34[data-page="product-forms"] .form-card,body.brand-v34[data-page="product-forms"] .form-card.reverse{display:flex!important;flex-direction:column!important;min-height:0!important}
+ body.brand-v34[data-page="product-forms"] .form-card.reverse>img{order:0}
+ body.brand-v34[data-page="product-forms"] .form-card>img{min-height:0!important;height:auto!important;aspect-ratio:16/9!important}
+ body.brand-v34[data-page="product-forms"] .form-card>div{padding:30px 22px 36px!important}
+ body.brand-v34[data-page="product-forms"] .form-card dl{grid-template-columns:1fr!important;gap:5px!important}
+ body.brand-v34[data-page="product-forms"] .form-card dd{margin-bottom:10px}
+ body.brand-v34[data-page="technical-data"] .tds-row{grid-template-columns:1fr!important;gap:12px!important;padding:22px 18px!important}
+ body.brand-v34[data-page="technical-data"] .technical-tools-band .wrap{grid-template-columns:1fr!important}
+ body.brand-v34[data-page="technical-data"] .technical-tools-band .wrap>a{min-height:0!important;border-right:0!important;border-bottom:1px solid #29435f!important}
+ body.brand-v34[data-page="about"] .control-layer-grid{grid-template-columns:1fr!important}
+ body.brand-v34[data-page="about"] .control-layer-grid>div{border-right:0!important;border-bottom:1px solid var(--tj-line)!important}
+ body.brand-v34[data-page="about"] .corporate-identity-ledger{grid-template-columns:1fr!important}
+ body.brand-v34[data-page="about"] .corporate-identity-ledger>div{border-right:0!important}
+ body.brand-v34[data-page="rfq"] .rfqbox.full-rfq{display:block!important}
+ body.brand-v34[data-page="rfq"] .rfq-intro-column{position:static!important;min-height:0!important;padding:30px 24px!important}
+ body.brand-v34[data-page="rfq"] #rfqForm{padding:28px 20px 34px!important}
+}
+@media(max-width:560px){body.brand-v34[data-page] .visual-frame{height:250px!important}body.brand-v34[data-page] .pagehero h1{font-size:42px!important}body.brand-v34[data-page="product-forms"] .form-card h2{font-size:34px!important}}
