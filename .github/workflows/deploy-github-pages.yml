@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R10 page-level editorial reconstruction + consolidated brand delivery
+# refresh: R11 dedicated technical/review imagery + precision-strip/reactive-metals convergence
 
 on:
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
           done
           echo 'PASS: R8 material and quality visuals materialized.'
 
-      - name: Build consolidated R10 brand stylesheet
+      - name: Build consolidated R11 brand stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -57,17 +57,18 @@ jobs:
             assets/brand-v34.152-r8.css \
             assets/brand-v34.152-r9-tail.css \
             assets/brand-v34.152-r10-tail.css \
-            > assets/brand-v34.152-r10.css
-          test -s assets/brand-v34.152-r10.css
-          grep -q 'R10 final override' assets/brand-v34.152-r10.css
-          grep -q 'page-level editorial reconstruction' assets/brand-v34.152-r10.css
-          echo 'PASS: one consolidated R10 brand stylesheet built.'
+            assets/brand-v34.152-r11-tail.css \
+            > assets/brand-v34.152-r11.css
+          test -s assets/brand-v34.152-r11.css
+          grep -q 'R11 final override' assets/brand-v34.152-r11.css
+          grep -q 'precision-strip' assets/brand-v34.152-r11.css
+          echo 'PASS: one consolidated R11 brand stylesheet built.'
 
       - name: Validate source visual system
         shell: bash
         run: |
           set -euo pipefail
-          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2 materials-r8 quality-r8; do
+          for img in about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys og-cover precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi columbus-mark materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2 materials-r8 quality-r8 technical-lab-r11 engineering-review-r11; do
             p="assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
@@ -76,12 +77,12 @@ jobs:
             test -s "assets/images/$svg.svg"
             grep -q '<svg' "assets/images/$svg.svg"
           done
-          test -s assets/brand-v34.152-r10.css
-          grep -q 'tj-footer-logo' assets/brand-v34.152-r10.css
+          test -s assets/brand-v34.152-r11.css
+          grep -q 'tj-footer-logo' assets/brand-v34.152-r11.css
           grep -q "cap.href='/quality'" assets/brand-v34.152.js
           grep -q "res.href='/technical-data'" assets/brand-v34.152.js
           ! grep -q 'images.unsplash.com' assets/brand-v34.152.js
-          echo 'PASS: R10 visual system and local-only recovery validated.'
+          echo 'PASS: R11 visual system and local-only imagery validated.'
 
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
@@ -122,11 +123,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html nickel-alloys.html invar-36.html precision-strip.html heavy-plate.html; do
+          for f in index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html nickel-alloys.html invar-36.html precision-strip.html heavy-plate.html titanium-zirconium.html industries.html; do
             test -s "_site/$f"
-            grep -q 'brand-v34.152-r10.css?v=20260914-r10' "_site/$f"
-            grep -q 'brand-v34.152.js?v=20260914-r10' "_site/$f"
-            ! grep -q 'brand-v34.152-r9.css' "_site/$f"
+            grep -q 'brand-v34.152-r11.css?v=20260914-r11' "_site/$f"
+            grep -q 'brand-v34.152.js?v=20260914-r11' "_site/$f"
+            ! grep -q 'brand-v34.152-r10.css' "_site/$f"
             grep -q 'data-page=' "_site/$f"
             grep -q 'tj-logo-img' "_site/$f"
             grep -q 'tj-footer-logo' "_site/$f"
@@ -134,12 +135,11 @@ jobs:
             ! grep -q 'TONGJUN SPECIAL METALS' "_site/$f"
           done
 
-          test -s _site/assets/brand-v34.152-r10.css
-          grep -q 'R10 final override' _site/assets/brand-v34.152-r10.css
-          grep -q 'form-card' _site/assets/brand-v34.152-r10.css
-          grep -q 'rfqbox.full-rfq' _site/assets/brand-v34.152-r10.css
+          test -s _site/assets/brand-v34.152-r11.css
+          grep -q 'R11 final override' _site/assets/brand-v34.152-r11.css
+          grep -q 'v24-landing-scope' _site/assets/brand-v34.152-r11.css
 
-          for img in materials-r8 quality-r8; do
+          for img in materials-r8 quality-r8 technical-lab-r11 engineering-review-r11; do
             test -s "_site/assets/images/$img.webp"
             file "_site/assets/images/$img.webp" | grep -qi 'Web/P'
           done
@@ -149,22 +149,17 @@ jobs:
           grep -q 'href="/tongjun-overseas/technical-data">Technical Data</a>' _site/index.html
           grep -q 'materials-r8.webp?v=20260914-r8' _site/materials.html
           grep -q 'quality-r8.webp?v=20260914-r8' _site/quality.html
-          grep -q 'product-forms-visual' _site/product-forms.html
-          grep -q 'materials-warehouse-v2.webp?v=20260914-r10' _site/product-forms.html
-          grep -q 'technical-visual' _site/technical-data.html
-          grep -q 'quality-lab-v2.webp?v=20260914-r10' _site/technical-data.html
-          grep -q 'about-visual' _site/about.html
-          grep -q 'engineering-discussion-v2.webp?v=20260914-r10' _site/about.html
-          grep -q 'rfq-visual' _site/rfq.html
-          grep -q 'engineering-review-v2.webp?v=20260914-r10' _site/rfq.html
-          grep -q 'nickel-visual' _site/nickel-alloys.html
-          grep -q 'invar-visual' _site/invar-36.html
-          grep -q 'heavy-plate-visual' _site/heavy-plate.html
+          grep -q 'technical-lab-r11.webp?v=20260914-r11' _site/technical-data.html
+          grep -q 'engineering-review-r11.webp?v=20260914-r11' _site/about.html
+          grep -q 'engineering-review-r11.webp?v=20260914-r11' _site/rfq.html
+          grep -q 'page-specific-visual' _site/precision-strip.html
+          grep -q 'precision-strip.webp' _site/precision-strip.html
+          grep -q 'titanium-zirconium.webp' _site/titanium-zirconium.html
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
           ! grep -q '同钧' _site/index.html
           ! grep -q 'images.unsplash.com' _site/assets/brand-v34.152.js
-          echo 'PASS: R10 page reconstruction, English brand, visuals and RFQ workflow validated.'
+          echo 'PASS: R11 dedicated imagery, page convergence, English brand and RFQ workflow validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
