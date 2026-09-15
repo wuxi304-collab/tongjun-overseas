@@ -5,7 +5,7 @@ ROOT = Path('.')
 VERSION = '20260916-r13-1-safe'
 MARK = f'/assets/tongjun-logo.svg?v={VERSION}'
 STYLESHEET = f'/assets/brand-v34.152-r13-1.css?v={VERSION}'
-HERO = f'/assets/images/logistics-stock.webp?v=20260915-r12fix2'
+HERO = '/assets/images/logistics-stock.webp?v=20260915-r12fix2'
 
 BRAND_HTML = (
     '<span class="tj-brand-composite">'
@@ -46,15 +46,24 @@ for p in ROOT.glob('*.html'):
         flags=re.S,
     )
 
+    # The sourcing article carried a stale image path that never existed in the repository.
+    s = s.replace(
+        '/assets/images/supply-route.webp',
+        '/assets/images/logistics-stock.webp?v=20260915-r12',
+    )
+
     if p.name == 'index.html':
-        # Keep the already validated R12 logistics hero until a complete next-gen binary asset exists.
+        # Keep the validated R12 logistics hero until a complete next-gen binary asset exists.
         absolute_hero = 'https://exoticalloycn.com/assets/images/logistics-stock.webp'
         s = re.sub(r'<meta content="[^"]*" property="og:image"\s*/?>', f'<meta content="{absolute_hero}" property="og:image"/>', s, count=1)
         s = re.sub(r'<meta content="[^"]*" name="twitter:image"\s*/?>', f'<meta content="{absolute_hero}" name="twitter:image"/>', s, count=1)
-        s = re.sub(r'<link rel="preload" as="image" href="/assets/images/[^\"]+" fetchpriority="high">', '', s)
+
+        # Remove every stale/duplicate image preload irrespective of attribute order, then add one canonical preload.
+        s = re.sub(r'<link\b[^>]*\brel=["\']preload["\'][^>]*\bas=["\']image["\'][^>]*>', '', s, flags=re.I)
+        s = re.sub(r'<link\b[^>]*\bas=["\']image["\'][^>]*\brel=["\']preload["\'][^>]*>', '', s, flags=re.I)
+        s = re.sub(r'<link\b[^>]*hero-special-metals\.webp[^>]*>', '', s, flags=re.I)
         preload = f'<link rel="preload" as="image" href="{HERO}" fetchpriority="high">'
-        if preload not in s:
-            s = s.replace('</head>', preload + '</head>', 1)
+        s = s.replace('</head>', preload + '</head>', 1)
 
     # Advance CSS only. R12 JS stays unchanged for this visual-system release.
     s = re.sub(
@@ -67,4 +76,4 @@ for p in ROOT.glob('*.html'):
         p.write_text(s, encoding='utf-8')
         changed.append(p.name)
 
-print(f'PASS: R13.1 safe brand overlay applied to {len(changed)} HTML files; R12 hero retained.')
+print(f'PASS: R13.1 safe brand overlay applied to {len(changed)} HTML files; stale image references removed.')
