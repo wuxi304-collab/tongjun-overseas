@@ -40,7 +40,6 @@ def simplify_rfq(s: str) -> str:
             1,
         )
 
-    # Move optional qualification + logistics behind the required application block.
     if 'class="field full r14-rfq-optional"' not in s:
         group3 = '<div class="rfq-group-label field full"><span>03 · Qualification / release</span>'
         group5 = '<div class="rfq-group-label field full"><span>05 · Application / notes</span>'
@@ -62,7 +61,6 @@ def simplify_rfq(s: str) -> str:
         )
         s = s[:review_start] + optional_details + s[review_start:]
 
-    # Wrap the governance/release console in a disclosure rather than deleting it.
     if 'class="field full r14-rfq-advanced"' not in s:
         outer_marker = '<div class="field full"><section class="v34-152-review"'
         outer_start = s.find(outer_marker)
@@ -87,12 +85,66 @@ def simplify_rfq(s: str) -> str:
     return s
 
 
+def associate_form_labels(s: str, form_id: str, prefix: str) -> str:
+    """Add stable ids and label[for] links to visible named controls in one form."""
+    form_match = re.search(rf'<form\b[^>]*\bid="{re.escape(form_id)}"[^>]*>.*?</form>', s, flags=re.S)
+    if not form_match:
+        raise SystemExit(f'ERROR: form #{form_id} not found for semantic labelling')
+    segment = form_match.group(0)
+    names = []
+    for m in re.finditer(r'<(?:input|select|textarea)\b[^>]*\bname="([^"]+)"[^>]*>', segment, flags=re.I):
+        name = m.group(1)
+        if name not in names:
+            names.append(name)
+
+    for name in names:
+        control_re = re.compile(
+            rf'<(?:input|select|textarea)\b(?=[^>]*\bname="{re.escape(name)}")[^>]*>',
+            flags=re.I,
+        )
+        m = control_re.search(segment)
+        if not m:
+            continue
+        tag = m.group(0)
+        lower = tag.lower()
+        if 'type="hidden"' in lower or 'aria-hidden="true"' in lower:
+            continue
+        if re.search(r'\bid="[^"]+"', tag, flags=re.I):
+            continue
+
+        stable = f'{prefix}-{re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")}'
+        new_tag = tag[:-1] + f' id="{stable}">' if tag.endswith('>') else tag
+        control_start = m.start()
+        segment = segment[:m.start()] + new_tag + segment[m.end():]
+
+        # Existing forms place the visible label immediately before the control.
+        # Associate only that nearest label; do not guess across another HTML element.
+        label_end = segment.rfind('</label>', 0, control_start)
+        if label_end < 0:
+            continue
+        between = segment[label_end + len('</label>'):control_start]
+        if '<' in between:
+            continue
+        label_start = segment.rfind('<label', 0, label_end)
+        if label_start < 0:
+            continue
+        label_open_end = segment.find('>', label_start, label_end)
+        if label_open_end < 0:
+            continue
+        label_open = segment[label_start:label_open_end + 1]
+        if re.search(r'\bfor="', label_open, flags=re.I):
+            continue
+        new_label_open = label_open[:-1] + f' for="{stable}">'
+        segment = segment[:label_start] + new_label_open + segment[label_open_end + 1:]
+
+    return s[:form_match.start()] + segment + s[form_match.end():]
+
+
 changed = []
 for p in ROOT.glob('*.html'):
     s = p.read_text(encoding='utf-8')
     old = s
 
-    # Advance every customer-facing page to the R14.1 stylesheet after the R13 baseline has been applied.
     s = s.replace(R13, R14)
     s = re.sub(r'/assets/brand-v34\.152-r13-1\.css\?v=[^"\']+', R14, s)
     s = re.sub(r'/assets/brand-v34\.152-r14\.css\?v=[^"\']+', R14, s)
@@ -125,6 +177,11 @@ for p in ROOT.glob('*.html'):
 
     if p.name == 'rfq.html':
         s = simplify_rfq(s)
+        s = associate_form_labels(s, 'rfqForm', 'rfq')
+    elif p.name == 'supply-route.html':
+        s = associate_form_labels(s, 'routeForm', 'route')
+    elif p.name == 'problem-order.html':
+        s = associate_form_labels(s, 'problemOrderForm', 'problem')
 
     if s != old:
         p.write_text(s, encoding='utf-8')
@@ -156,5 +213,8 @@ if rfq.find('05 · Application / notes') > rfq.find('Optional qualification + lo
     raise SystemExit('ERROR: required Application block must precede optional qualification/logistics')
 if 'id="technicalReviewControl"' not in rfq:
     raise SystemExit('ERROR: advanced technical review controls were lost')
+for marker in ('id="rfq-name"', 'for="rfq-name"', 'id="rfq-grade"', 'for="rfq-grade"'):
+    if marker not in rfq:
+        raise SystemExit(f'ERROR: RFQ label association missing: {marker}')
 
-print(f'PASS: R14.1 conversion overlay applied to {len(changed)} HTML files; buyer path and RFQ progressive disclosure installed.')
+print(f'PASS: R14.1 conversion overlay applied to {len(changed)} HTML files; RFQ progressive disclosure and buyer-form label semantics installed.')
