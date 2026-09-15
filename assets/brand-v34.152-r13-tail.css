@@ -1,0 +1,18 @@
+/* V34.152 R13 final imagery — approved Columbus brand, sharp export hero, branded-workwear people imagery. */
+body.brand-v34 .navin>.brand{width:330px!important;min-width:330px!important;height:64px!important;display:flex!important;align-items:center!important;overflow:visible!important;background:none!important}
+body.brand-v34 .tj-logo-r13{display:block!important;width:315px!important;max-width:315px!important;height:62px!important;object-fit:contain!important;object-position:left center!important;filter:none!important}
+body.brand-v34 .tj-footer-logo.tj-logo-r13{width:300px!important;max-width:300px!important;height:auto!important;object-fit:contain!important;object-position:left center!important;filter:none!important}
+body.brand-v34 .hero-bg-r13{display:block!important;opacity:1!important;visibility:visible!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 51%!important;z-index:0!important;filter:saturate(.94) contrast(1.045)!important;image-rendering:auto!important}
+body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(4,16,31,.95) 0%,rgba(5,20,39,.84) 31%,rgba(7,26,55,.56) 53%,rgba(7,26,55,.15) 76%,rgba(7,26,55,.025) 100%)!important}
+body.brand-v34[data-page="quality"] .visual-frame img,
+body.brand-v34[data-page="technical-data"] .visual-frame img,
+body.brand-v34[data-page="about"] .visual-frame img,
+body.brand-v34[data-page="rfq"] .visual-frame img,
+body.brand-v34[data-page="problem-order"] .visual-frame img{filter:saturate(.92) contrast(1.035)!important;image-rendering:auto!important}
+body.brand-v34[data-page="quality"] .visual-frame img{object-position:center 47%!important}
+body.brand-v34[data-page="technical-data"] .visual-frame img{object-position:center 49%!important}
+body.brand-v34[data-page="about"] .visual-frame img,
+body.brand-v34[data-page="rfq"] .visual-frame img,
+body.brand-v34[data-page="problem-order"] .visual-frame img{object-position:center 48%!important}
+@media(max-width:1200px){body.brand-v34 .navin>.brand{width:270px!important;min-width:270px!important}.tj-logo-r13{width:260px!important;max-width:260px!important;height:56px!important}}
+@media(max-width:900px){body.brand-v34 .navin>.brand{width:215px!important;min-width:215px!important;height:50px!important}.tj-logo-r13{width:205px!important;max-width:205px!important;height:48px!important}body.brand-v34 .hero-bg-r13{object-position:70% center!important}}
