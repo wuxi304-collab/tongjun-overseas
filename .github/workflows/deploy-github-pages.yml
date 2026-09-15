@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R12.1 direct-WebP asset fix for header logo + homepage hero
+# refresh: R12.2 live-render guard for text wordmark + validated logistics hero
 
 on:
   workflow_dispatch:
@@ -59,12 +59,13 @@ jobs:
             assets/brand-v34.152-r10-tail.css \
             assets/brand-v34.152-r11-tail.css \
             assets/brand-v34.152-r12-tail.css \
+            assets/brand-v34.152-r12-fix2.css \
             > assets/brand-v34.152-r12.css
           test -s assets/brand-v34.152-r12.css
           grep -q 'R12 image-led editorial system' assets/brand-v34.152-r12.css
-          grep -q 'nickel-process-equipment' assets/brand-v34.152-r12.css
-          grep -q 'titanium-heat-exchangers' assets/brand-v34.152-r12.css
-          echo 'PASS: one consolidated R12 brand stylesheet built.'
+          grep -q 'R12.2 live-render guard' assets/brand-v34.152-r12.css
+          grep -q 'tj-wordmark' assets/brand-v34.152-r12.css
+          echo 'PASS: consolidated R12.2 brand stylesheet built.'
 
       - name: Validate source image library
         shell: bash
@@ -73,21 +74,24 @@ jobs:
           for img in \
             about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys \
             precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi \
-            materials-overview-gen columbus-logo-v2 hero-port-v2 materials-warehouse-v2 quality-lab-v2 \
-            engineering-review-v2 engineering-discussion-v2 materials-r8 quality-r8; do
+            materials-overview-gen materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2 \
+            materials-r8 quality-r8; do
             p="assets/images/$img.webp"
             test -s "$p"
             file "$p" | grep -qi 'Web/P'
           done
+          file assets/images/logistics-stock.webp | grep -qi 'Web/P'
           test -s assets/brand-v34.152-r12.css
-          grep -q 'tj-footer-logo' assets/brand-v34.152-r12.css
           grep -q "cap.href='/quality'" assets/brand-v34.152.js
           grep -q "res.href='/technical-data'" assets/brand-v34.152.js
           ! grep -q 'images.unsplash.com' assets/brand-v34.152.js
-          echo 'PASS: R12.1 direct-WebP image library validated.'
+          echo 'PASS: R12.2 local-only industrial image library validated.'
 
       - name: Apply unified Tongjun brand shell
         run: python3 scripts/apply-brand-shell-v34-152.py
+
+      - name: Apply R12.2 live render guard
+        run: python3 scripts/apply-home-visual-fix-r12.py
 
       - name: Build Pages mirror
         shell: bash
@@ -136,23 +140,24 @@ jobs:
             grep -q 'brand-v34.152-r12.css?v=20260915-r12' "_site/$f"
             grep -q 'brand-v34.152.js?v=20260915-r12' "_site/$f"
             grep -q 'data-page=' "_site/$f"
-            grep -q 'tj-logo-img' "_site/$f"
-            grep -q 'tj-footer-logo' "_site/$f"
-            grep -q 'columbus-logo-v2.webp?v=20260915-r12fix1' "_site/$f"
-            ! grep -q 'columbus-logo-r7.svg?v=20260915-r12' "_site/$f"
+            grep -q 'tj-wordmark' "_site/$f"
+            grep -q 'METAL TECH · EST. 2026' "_site/$f"
+            ! grep -q 'tj-logo-img' "_site/$f"
             ! grep -q 'TONGJUN SPECIAL METALS' "_site/$f"
           done
 
           test -s _site/assets/brand-v34.152-r12.css
-          grep -q 'R12 image-led editorial system' _site/assets/brand-v34.152-r12.css
+          grep -q 'R12.2 live-render guard' _site/assets/brand-v34.152-r12.css
+          grep -q 'tj-wordmark' _site/assets/brand-v34.152-r12.css
 
-          for img in materials-r8 quality-r8 nickel-alloys precision-strip invar-tooling invar-lng heavy-plate titanium-zirconium logistics-stock resources-metal standards-rfq engineering-review-v2 engineering-discussion-v2 columbus-logo-v2 hero-port-v2; do
+          for img in materials-r8 quality-r8 nickel-alloys precision-strip invar-tooling invar-lng heavy-plate titanium-zirconium logistics-stock resources-metal standards-rfq engineering-review-v2 engineering-discussion-v2; do
             test -s "_site/assets/images/$img.webp"
             file "_site/assets/images/$img.webp" | grep -qi 'Web/P'
           done
 
-          grep -q 'hero-port-v2.webp?v=20260915-r12fix1' _site/index.html
-          ! grep -q 'hero-port-r7.svg?v=20260915-r12' _site/index.html
+          grep -q 'logistics-stock.webp?v=20260915-r12fix2' _site/index.html
+          ! grep -q 'hero-port-v2.webp?v=20260915-r12fix1' _site/index.html
+          ! grep -q 'hero-port-r7.svg' _site/index.html
           grep -q 'href="/tongjun-overseas/quality">Quality</a>' _site/index.html
           grep -q 'href="/tongjun-overseas/technical-data">Technical Data</a>' _site/index.html
 
@@ -181,7 +186,7 @@ jobs:
           grep -q 'release_checklist' _site/rfq.html
           ! grep -q '同钧' _site/index.html
           ! grep -q 'images.unsplash.com' _site/assets/brand-v34.152.js
-          echo 'PASS: R12.1 direct WebP header/hero, image ownership, English brand and RFQ workflow validated.'
+          echo 'PASS: R12.2 live brand fallback, visible hero path, image ownership and RFQ workflow validated.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
