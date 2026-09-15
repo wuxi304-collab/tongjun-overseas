@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R13.1 SAFE — composite brand + stable R12 imagery + hardened Pages/404 validation
+# V34.152 R14 — conversion-first mobile hierarchy over the R13.1 safe baseline
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R13.1 safe release candidate
+      - name: Checkout V34.152 R14 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r13-1-release
+          ref: feat/v34.152-r14-conversion
           fetch-depth: 1
 
       - name: Configure Pages
@@ -41,9 +41,8 @@ jobs:
             test -s "assets/images/${img}.webp"
             file "assets/images/${img}.webp" | grep -qi 'Web/P'
           done
-          echo 'PASS: generated material and quality visuals materialized.'
 
-      - name: Build consolidated R13.1 safe brand stylesheet
+      - name: Build consolidated R14 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -61,44 +60,36 @@ jobs:
             assets/brand-v34.152-r12-tail.css \
             assets/brand-v34.152-r12-fix2.css \
             assets/brand-v34.152-r13-1-tail.css \
-            > assets/brand-v34.152-r13-1.css
-          test -s assets/brand-v34.152-r13-1.css
-          grep -q 'R12 image-led editorial system' assets/brand-v34.152-r13-1.css
-          grep -q 'R12.2 live-render guard' assets/brand-v34.152-r13-1.css
-          grep -q 'V34.152 R13.1 SAFE' assets/brand-v34.152-r13-1.css
-          echo 'PASS: consolidated R13.1 safe brand stylesheet built.'
+            assets/brand-v34.152-r14-tail.css \
+            > assets/brand-v34.152-r14.css
+          test -s assets/brand-v34.152-r14.css
+          grep -q 'V34.152 R14' assets/brand-v34.152-r14.css
+          grep -q 'data-page="technical-data".*visual-band{display:none' assets/brand-v34.152-r14.css
+          grep -q 'data-page="rfq".*#rfqForm{order:1' assets/brand-v34.152-r14.css
 
-      - name: Validate source asset library
+      - name: Validate trusted source assets
         shell: bash
         run: |
           set -euo pipefail
           test -s assets/tongjun-logo.svg
           grep -q 'Tongjun portrait mark' assets/tongjun-logo.svg
-          for img in \
-            about-engineering heavy-plate invar-lng invar-tooling logistics-stock nickel-alloys \
-            precision-strip quality-inspection resources-metal standards-rfq titanium-zirconium traceability-pmi \
-            materials-overview-gen materials-warehouse-v2 quality-lab-v2 engineering-review-v2 engineering-discussion-v2 \
-            materials-r8 quality-r8; do
-            p="assets/images/$img.webp"
-            test -s "$p"
-            file "$p" | grep -qi 'Web/P'
+          for img in materials-r8 quality-r8 logistics-stock nickel-alloys precision-strip invar-tooling invar-lng heavy-plate titanium-zirconium resources-metal standards-rfq engineering-review-v2 engineering-discussion-v2; do
+            test -s "assets/images/$img.webp"
+            file "assets/images/$img.webp" | grep -qi 'Web/P'
           done
-          grep -q "cap.href='/quality'" assets/brand-v34.152.js
-          grep -q "res.href='/technical-data'" assets/brand-v34.152.js
           if grep -q 'images.unsplash.com' assets/brand-v34.152.js; then
-            echo 'ERROR: external Unsplash dependency returned to brand JS.'
+            echo 'ERROR: external Unsplash dependency returned.'
             exit 1
           fi
-          echo 'PASS: SVG brand mark and R12 industrial imagery validated.'
 
-      - name: Apply unified Tongjun brand shell
-        run: python3 scripts/apply-brand-shell-v34-152.py
-
-      - name: Apply R12.2 live fallback baseline
-        run: python3 scripts/apply-home-visual-fix-r12.py
-
-      - name: Apply R13.1 safe brand overlay
-        run: python3 scripts/apply-r13-1-release.py
+      - name: Apply V34.152 release overlays
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/apply-brand-shell-v34-152.py
+          python3 scripts/apply-home-visual-fix-r12.py
+          python3 scripts/apply-r13-1-release.py
+          python3 scripts/apply-r14-conversion.py
 
       - name: Build Pages mirror with syntax-safe base path rewriting
         shell: bash
@@ -113,38 +104,27 @@ jobs:
           root=Path('.')
           out=Path('_site')
           base=os.environ.get('BASE_PATH','/tongjun-overseas').rstrip('/')
-          if out.exists():
-              shutil.rmtree(out)
+          if out.exists(): shutil.rmtree(out)
           out.mkdir()
 
           skip={'.git','.github','.sync','node_modules','scripts','tests','api','_site'}
           text_ext={'.html','.css','.js','.json','.xml','.txt','.webmanifest','.svg'}
           keep_ext=text_ext|{'.ico','.png','.jpg','.jpeg','.webp','.avif','.woff','.woff2','.ttf'}
-
           attr_root=re.compile(r"(\b(?:href|src|action|poster|content|data-src|data-href)=[\"'])/(?!/)", re.I)
           quoted_root=re.compile(r"([\"'])/(?=[A-Za-z0-9])")
           css_root=re.compile(r"url\(([\"']?)/(?!/)")
 
           for p in root.rglob('*'):
-              if not p.is_file():
-                  continue
+              if not p.is_file(): continue
               rel=p.relative_to(root)
-              if rel.parts and rel.parts[0] in skip:
-                  continue
-              if p.suffix.lower() not in keep_ext and p.name not in {'robots.txt','sitemap.xml','manifest.webmanifest'}:
-                  continue
-
-              d=out/rel
-              d.parent.mkdir(parents=True,exist_ok=True)
+              if rel.parts and rel.parts[0] in skip: continue
+              if p.suffix.lower() not in keep_ext and p.name not in {'robots.txt','sitemap.xml','manifest.webmanifest'}: continue
+              d=out/rel; d.parent.mkdir(parents=True,exist_ok=True)
               suffix=p.suffix.lower()
-
               if suffix in text_ext:
-                  try:
-                      t=p.read_text(encoding='utf-8')
+                  try: t=p.read_text(encoding='utf-8')
                   except UnicodeDecodeError:
-                      shutil.copy2(p,d)
-                      continue
-
+                      shutil.copy2(p,d); continue
                   if suffix in {'.html','.xml','.svg'}:
                       t=attr_root.sub(lambda m:m.group(1)+base+'/',t)
                       t=css_root.sub(lambda m:'url('+m.group(1)+base+'/',t)
@@ -152,61 +132,16 @@ jobs:
                       t=css_root.sub(lambda m:'url('+m.group(1)+base+'/',t)
                   elif suffix in {'.js','.json','.webmanifest'}:
                       t=quoted_root.sub(lambda m:m.group(1)+base+'/',t)
-
                   d.write_text(t,encoding='utf-8')
               else:
                   shutil.copy2(p,d)
-
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
 
-      - name: Validate Pages artifact
+      - name: Validate R14 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
-          core_pages=(
-            index.html materials.html product-forms.html technical-data.html quality.html about.html rfq.html resources.html
-            nickel-alloys.html invar-36.html precision-strip.html heavy-plate.html titanium-zirconium.html industries.html
-            nickel-process-equipment.html titanium-heat-exchangers.html heavy-plate-pressure-equipment.html
-            precision-strip-bellows.html invar-lng.html invar-aerospace-tooling.html
-          )
-          for f in "${core_pages[@]}"; do
-            test -s "_site/$f"
-            grep -q 'brand-v34.152-r13-1.css?v=20260916-r13-1-safe' "_site/$f"
-            grep -q 'brand-v34.152.js?v=20260915-r12' "_site/$f"
-            grep -q 'data-page=' "_site/$f"
-            grep -q 'tj-brand-composite' "_site/$f"
-            grep -q 'tongjun-logo.svg?v=20260916-r13-1-safe' "_site/$f"
-          done
-
-          test -s _site/404.html
-          grep -q 'brand-v34.152-r13-1.css?v=20260916-r13-1-safe' _site/404.html
-          grep -q 'tj-brand-composite' _site/404.html
-          grep -q 'tongjun-logo.svg?v=20260916-r13-1-safe' _site/404.html
-          grep -q 'Page Not Found | Tongjun Metal Tech' _site/404.html
-
-          test -s _site/assets/brand-v34.152-r13-1.css
-          grep -q 'V34.152 R13.1 SAFE' _site/assets/brand-v34.152-r13-1.css
-          test -s _site/assets/tongjun-logo.svg
-          grep -q 'Tongjun portrait mark' _site/assets/tongjun-logo.svg
-
-          for img in materials-r8 quality-r8 nickel-alloys precision-strip invar-tooling invar-lng heavy-plate titanium-zirconium logistics-stock resources-metal standards-rfq engineering-review-v2 engineering-discussion-v2; do
-            test -s "_site/assets/images/$img.webp"
-            file "_site/assets/images/$img.webp" | grep -qi 'Web/P'
-          done
-
-          grep -q 'logistics-stock.webp?v=20260915-r12fix2' _site/index.html
-          grep -q 'logistics-stock.webp?v=20260915-r12' _site/resource-qualify-china-special-metals.html
-          grep -q 'href="/tongjun-overseas/quality">Quality</a>' _site/index.html
-          grep -q 'href="/tongjun-overseas/technical-data">Technical Data</a>' _site/index.html
-          grep -q 'materials-r8.webp?v=20260915-r12' _site/materials.html
-          grep -q 'quality-r8.webp?v=20260915-r12' _site/quality.html
-          grep -q 'quality-r8.webp?v=20260915-r12' _site/technical-data.html
-          grep -q 'engineering-discussion-v2.webp?v=20260915-r12' _site/about.html
-          grep -q 'engineering-review-v2.webp?v=20260915-r12' _site/rfq.html
-          grep -q 'technical_review_plan' _site/rfq.html
-          grep -q 'release_checklist' _site/rfq.html
-
           python3 - <<'PY'
           from pathlib import Path
           from html.parser import HTMLParser
@@ -214,58 +149,71 @@ jobs:
 
           root=Path('_site')
           base='/tongjun-overseas/'
-          broken=[]
+          htmls=sorted(root.glob('*.html'))
+          if len(htmls) != 50:
+              raise SystemExit(f'ERROR: expected 50 HTML pages, found {len(htmls)}')
+
+          core=['index.html','technical-data.html','quality.html','rfq.html','materials.html','product-forms.html','about.html','resources.html']
+          for name in core:
+              text=(root/name).read_text(encoding='utf-8')
+              if 'brand-v34.152-r14.css?v=20260916-r14' not in text:
+                  raise SystemExit(f'ERROR: R14 stylesheet missing in {name}')
+
+          tech=(root/'technical-data.html').read_text(encoding='utf-8')
+          quality=(root/'quality.html').read_text(encoding='utf-8')
+          rfq=(root/'rfq.html').read_text(encoding='utf-8')
+          if 'Technical data for sourcing decisions.' not in tech:
+              raise SystemExit('ERROR: Technical Data headline regressed')
+          for name,text in [('technical-data.html',tech),('quality.html',quality),('rfq.html',rfq)]:
+              if text.count('class="r14-action-rail"') != 1:
+                  raise SystemExit(f'ERROR: R14 action rail count wrong in {name}')
+          if 'href="#rfqForm"' not in rfq:
+              raise SystemExit('ERROR: RFQ direct form jump missing')
+
+          css=(root/'assets/brand-v34.152-r14.css').read_text(encoding='utf-8')
+          required=[
+              'V34.152 R14',
+              'body.brand-v34[data-page="technical-data"] .visual-band{display:none!important}',
+              'body.brand-v34[data-page="rfq"] .visual-band{display:none!important}',
+              'body.brand-v34[data-page="rfq"] #rfqForm{order:1!important',
+              'body.brand-v34[data-page="home"] .hero-positioning{display:none!important}',
+          ]
+          for marker in required:
+              if marker not in css:
+                  raise SystemExit(f'ERROR: missing R14 CSS gate: {marker}')
+
           forbidden=(
-              'SINCE 2010',
-              'TONGJUN SPECIAL METALS',
-              'hero-special-metals.webp',
-              'supply-route.webp',
-              'quality-lab-r13',
-              'engineering-team-r13',
-              'technical-lab-r13',
-              'logo-r13.avif',
-              'hero-port-r13.avif',
-              'tj-logo-r13',
-              'tj-wordmark',
+              'SINCE 2010','TONGJUN SPECIAL METALS','hero-special-metals.webp','supply-route.webp',
+              'quality-lab-r13','engineering-team-r13','technical-lab-r13','logo-r13.avif','hero-port-r13.avif',
+              'tj-logo-r13','tj-wordmark',
           )
-
+          broken=[]
           class AssetParser(HTMLParser):
-              def __init__(self, page):
-                  super().__init__()
-                  self.page=page
-              def handle_starttag(self, tag, attrs):
-                  self._check(attrs)
-              def handle_startendtag(self, tag, attrs):
-                  self._check(attrs)
-              def _check(self, attrs):
+              def __init__(self,page): super().__init__(); self.page=page
+              def handle_starttag(self,tag,attrs): self._check(attrs)
+              def handle_startendtag(self,tag,attrs): self._check(attrs)
+              def _check(self,attrs):
                   for key,val in attrs:
-                      if key not in {'src','href','poster','data-src'} or not val:
-                          continue
+                      if key not in {'src','href','poster','data-src'} or not val: continue
                       path=urlsplit(val).path
-                      if not path.startswith(base+'assets/'):
-                          continue
+                      if not path.startswith(base+'assets/'): continue
                       rel=path[len(base):]
-                      if not (root/rel).is_file():
-                          broken.append((self.page,val))
+                      if not (root/rel).is_file(): broken.append((self.page,val))
 
-          for page in sorted(root.glob('*.html')):
+          for page in htmls:
               text=page.read_text(encoding='utf-8')
               if '"/tongjun-overseas/>' in text or "'/tongjun-overseas/>" in text:
                   raise SystemExit(f'ERROR: malformed BASE_PATH rewrite in {page.name}')
               for marker in forbidden:
                   if marker in text:
-                      raise SystemExit(f'ERROR: forbidden legacy/broken marker {marker!r} in {page.name}')
-              parser=AssetParser(page.name)
-              parser.feed(text)
+                      raise SystemExit(f'ERROR: forbidden marker {marker!r} in {page.name}')
+              AssetParser(page.name).feed(text)
 
           if broken:
-              for page,val in broken:
-                  print(f'BROKEN ASSET: {page}: {val}')
+              for page,val in broken: print(f'BROKEN ASSET: {page}: {val}')
               raise SystemExit(f'ERROR: {len(broken)} broken local asset reference(s)')
-          print('PASS: 50-page HTML gate found no malformed paths, forbidden legacy markers, or broken local assets.')
+          print('PASS: R14 50-page gate, conversion rails, mobile hierarchy and assets validated.')
           PY
-
-          echo 'PASS: V34.152 R13.1 safe release validated end to end including 404.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
