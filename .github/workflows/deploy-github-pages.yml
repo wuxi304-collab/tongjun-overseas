@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R14.1 — conversion-first mobile hierarchy + progressive RFQ disclosure + form semantics + full route validation
+# V34.152 R14.1 — conversion-first UX + buyer-form semantics + RFQ delivery contract + full route validation
 
 on:
   workflow_dispatch:
@@ -87,7 +87,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 release overlays
+      - name: Apply and validate V34.152 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -95,7 +95,9 @@ jobs:
           python3 scripts/apply-home-visual-fix-r12.py
           python3 scripts/apply-r13-1-release.py
           python3 scripts/apply-r14-conversion.py
+          python3 scripts/apply-r14-runtime.py
           python3 scripts/validate-form-semantics.py .
+          python3 scripts/validate-rfq-contract.py .
 
       - name: Build Pages mirror with syntax-safe base path rewriting
         shell: bash
@@ -149,6 +151,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/validate-form-semantics.py _site
+          python3 scripts/validate-rfq-contract.py _site
           python3 - <<'PY'
           from pathlib import Path
           from html.parser import HTMLParser
@@ -198,6 +201,17 @@ jobs:
           for anchor in ('id="energy"','id="marine"'):
               if anchor not in industries:
                   raise SystemExit(f'ERROR: Industries deep-link destination missing: {anchor}')
+
+          runtime=(root/'assets/site.js').read_text(encoding='utf-8')
+          for marker in (
+              'Product Context:',
+              'First Seen:',
+              "setStore('tj_last_rfq','email_fallback')",
+              'use Copy Structured RFQ if no mail app opens.',
+              "fetch('/tongjun-overseas/api/rfq'",
+          ):
+              if marker not in runtime:
+                  raise SystemExit(f'ERROR: R14.1 RFQ runtime marker missing: {marker}')
 
           css=(root/'assets/brand-v34.152-r14.css').read_text(encoding='utf-8')
           required=[
@@ -288,7 +302,7 @@ jobs:
               for x in broken_anchors[:30]: print('BROKEN ANCHOR:',x)
               raise SystemExit(f'ERROR: {len(broken_anchors)} broken internal deep-link anchor(s)')
 
-          print('PASS: R14.1 50-page gate, progressive RFQ, buyer-form semantics, local assets, routes and deep-link anchors validated.')
+          print('PASS: R14.1 50-page gate, progressive RFQ, form semantics, RFQ delivery contract, local assets, routes and deep-link anchors validated.')
           PY
 
       - name: Upload Pages artifact
