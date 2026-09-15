@@ -1,0 +1,169 @@
+/* V34.152 R12 image-led editorial system — page-specific industrial visuals, tighter hierarchy, market-page convergence. */
+
+body.brand-v34 .visual-band{padding:0 0 74px!important;background:#fff!important}
+body.brand-v34 .visual-band .wrap{max-width:1240px!important}
+body.brand-v34 .visual-frame{position:relative!important;overflow:hidden!important;min-height:360px!important;aspect-ratio:16/6.8!important;background:#dfe5e9!important;border:1px solid rgba(11,31,51,.16)!important;border-radius:0!important;box-shadow:none!important}
+body.brand-v34 .visual-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,24,41,0) 48%,rgba(7,24,41,.68) 100%);pointer-events:none}
+body.brand-v34 .visual-frame img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;filter:saturate(.86) contrast(1.03)!important;transform:none!important}
+body.brand-v34 .visual-label{position:absolute!important;left:28px!important;bottom:22px!important;z-index:2!important;max-width:80%!important;padding:0!important;background:transparent!important;color:#fff!important;font-size:11px!important;font-weight:800!important;letter-spacing:.16em!important;line-height:1.45!important;text-transform:uppercase!important}
+
+/* Material-family visual crops */
+body.brand-v34[data-page="nickel-alloys"] .visual-frame img,
+body.brand-v34[data-page="nickel-process-equipment"] .visual-frame img{object-position:center 52%!important}
+body.brand-v34[data-page="invar-36"] .visual-frame img,
+body.brand-v34[data-page="invar-aerospace-tooling"] .visual-frame img{object-position:center 50%!important}
+body.brand-v34[data-page="invar-lng"] .visual-frame img{object-position:center 55%!important}
+body.brand-v34[data-page="precision-strip"] .visual-frame img,
+body.brand-v34[data-page="precision-strip-bellows"] .visual-frame img{object-position:center 48%!important}
+body.brand-v34[data-page="heavy-plate"] .visual-frame img,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .visual-frame img{object-position:center 52%!important}
+body.brand-v34[data-page="titanium-zirconium"] .visual-frame img,
+body.brand-v34[data-page="titanium-heat-exchangers"] .visual-frame img{object-position:center 52%!important}
+body.brand-v34[data-page="industries"] .visual-frame img{object-position:center 58%!important}
+
+/* Priority pages: editorial rather than card-first. */
+body.brand-v34[data-page="nickel-alloys"] .pagehero,
+body.brand-v34[data-page="invar-36"] .pagehero,
+body.brand-v34[data-page="heavy-plate"] .pagehero,
+body.brand-v34[data-page="titanium-zirconium"] .pagehero,
+body.brand-v34[data-page="precision-strip"] .pagehero,
+body.brand-v34[data-page="nickel-process-equipment"] .pagehero,
+body.brand-v34[data-page="invar-lng"] .pagehero,
+body.brand-v34[data-page="invar-aerospace-tooling"] .pagehero,
+body.brand-v34[data-page="precision-strip-bellows"] .pagehero,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .pagehero,
+body.brand-v34[data-page="titanium-heat-exchangers"] .pagehero{padding-top:58px!important;padding-bottom:48px!important;background:linear-gradient(135deg,#f7f9fb 0%,#fff 72%)!important}
+
+body.brand-v34[data-page="nickel-process-equipment"] .landing-grid,
+body.brand-v34[data-page="invar-lng"] .landing-grid,
+body.brand-v34[data-page="invar-aerospace-tooling"] .landing-grid,
+body.brand-v34[data-page="precision-strip-bellows"] .landing-grid,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .landing-grid,
+body.brand-v34[data-page="titanium-heat-exchangers"] .landing-grid{grid-template-columns:minmax(0,1.24fr) minmax(310px,.76fr)!important;gap:60px!important;align-items:end!important}
+body.brand-v34[data-page="nickel-process-equipment"] .specpanel,
+body.brand-v34[data-page="invar-lng"] .specpanel,
+body.brand-v34[data-page="invar-aerospace-tooling"] .specpanel,
+body.brand-v34[data-page="precision-strip-bellows"] .specpanel,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .specpanel,
+body.brand-v34[data-page="titanium-heat-exchangers"] .specpanel{min-height:250px!important;padding:32px!important;background:#0d2236!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+body.brand-v34[data-page="nickel-process-equipment"] .specpanel .num,
+body.brand-v34[data-page="invar-lng"] .specpanel .num,
+body.brand-v34[data-page="invar-aerospace-tooling"] .specpanel .num,
+body.brand-v34[data-page="precision-strip-bellows"] .specpanel .num,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .specpanel .num,
+body.brand-v34[data-page="titanium-heat-exchangers"] .specpanel .num{color:#fff!important;font-size:54px!important;line-height:.9!important}
+body.brand-v34[data-page="nickel-process-equipment"] .specpanel .unit,
+body.brand-v34[data-page="invar-lng"] .specpanel .unit,
+body.brand-v34[data-page="invar-aerospace-tooling"] .specpanel .unit,
+body.brand-v34[data-page="precision-strip-bellows"] .specpanel .unit,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .specpanel .unit,
+body.brand-v34[data-page="titanium-heat-exchangers"] .specpanel .unit{color:#e99a3d!important;text-transform:uppercase!important;letter-spacing:.15em!important;font-size:10px!important;font-weight:800!important}
+body.brand-v34[data-page="nickel-process-equipment"] .specpanel .mono,
+body.brand-v34[data-page="invar-lng"] .specpanel .mono,
+body.brand-v34[data-page="invar-aerospace-tooling"] .specpanel .mono,
+body.brand-v34[data-page="precision-strip-bellows"] .specpanel .mono,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .specpanel .mono,
+body.brand-v34[data-page="titanium-heat-exchangers"] .specpanel .mono{color:#cfdae3!important;font-size:12px!important;line-height:1.6!important}
+
+/* Capability matrices become technical grids. */
+body.brand-v34[data-page="nickel-alloys"] .capgrid,
+body.brand-v34[data-page="nickel-process-equipment"] .capgrid,
+body.brand-v34[data-page="invar-36"] .capgrid,
+body.brand-v34[data-page="invar-lng"] .capgrid,
+body.brand-v34[data-page="invar-aerospace-tooling"] .capgrid,
+body.brand-v34[data-page="heavy-plate"] .capgrid,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .capgrid,
+body.brand-v34[data-page="titanium-zirconium"] .capgrid,
+body.brand-v34[data-page="titanium-heat-exchangers"] .capgrid,
+body.brand-v34[data-page="precision-strip-bellows"] .capgrid{gap:0!important;border-top:1px solid #d7dfe6!important;border-left:1px solid #d7dfe6!important}
+body.brand-v34[data-page="nickel-alloys"] .cap,
+body.brand-v34[data-page="nickel-process-equipment"] .cap,
+body.brand-v34[data-page="invar-36"] .cap,
+body.brand-v34[data-page="invar-lng"] .cap,
+body.brand-v34[data-page="invar-aerospace-tooling"] .cap,
+body.brand-v34[data-page="heavy-plate"] .cap,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .cap,
+body.brand-v34[data-page="titanium-zirconium"] .cap,
+body.brand-v34[data-page="titanium-heat-exchangers"] .cap,
+body.brand-v34[data-page="precision-strip-bellows"] .cap{min-height:205px!important;padding:27px!important;background:#fff!important;border:0!important;border-right:1px solid #d7dfe6!important;border-bottom:1px solid #d7dfe6!important;border-radius:0!important;box-shadow:none!important}
+body.brand-v34[data-page="nickel-alloys"] .cap .icon,
+body.brand-v34[data-page="nickel-process-equipment"] .cap .icon,
+body.brand-v34[data-page="invar-36"] .cap .icon,
+body.brand-v34[data-page="invar-lng"] .cap .icon,
+body.brand-v34[data-page="invar-aerospace-tooling"] .cap .icon,
+body.brand-v34[data-page="heavy-plate"] .cap .icon,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .cap .icon,
+body.brand-v34[data-page="titanium-zirconium"] .cap .icon,
+body.brand-v34[data-page="titanium-heat-exchangers"] .cap .icon,
+body.brand-v34[data-page="precision-strip-bellows"] .cap .icon{width:auto!important;height:auto!important;margin:0 0 20px!important;padding:0!important;background:transparent!important;border:0!important;color:#b96c1d!important;font-size:10px!important;font-weight:800!important;letter-spacing:.14em!important}
+body.brand-v34[data-page="nickel-alloys"] .cap h3,
+body.brand-v34[data-page="nickel-process-equipment"] .cap h3,
+body.brand-v34[data-page="invar-36"] .cap h3,
+body.brand-v34[data-page="invar-lng"] .cap h3,
+body.brand-v34[data-page="invar-aerospace-tooling"] .cap h3,
+body.brand-v34[data-page="heavy-plate"] .cap h3,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .cap h3,
+body.brand-v34[data-page="titanium-zirconium"] .cap h3,
+body.brand-v34[data-page="titanium-heat-exchangers"] .cap h3,
+body.brand-v34[data-page="precision-strip-bellows"] .cap h3{font-family:Georgia,"Times New Roman",serif!important;font-size:22px!important;font-weight:500!important;line-height:1.15!important;color:#0d2236!important}
+body.brand-v34[data-page="nickel-alloys"] .cap p,
+body.brand-v34[data-page="nickel-process-equipment"] .cap p,
+body.brand-v34[data-page="invar-36"] .cap p,
+body.brand-v34[data-page="invar-lng"] .cap p,
+body.brand-v34[data-page="invar-aerospace-tooling"] .cap p,
+body.brand-v34[data-page="heavy-plate"] .cap p,
+body.brand-v34[data-page="heavy-plate-pressure-equipment"] .cap p,
+body.brand-v34[data-page="titanium-zirconium"] .cap p,
+body.brand-v34[data-page="titanium-heat-exchangers"] .cap p,
+body.brand-v34[data-page="precision-strip-bellows"] .cap p{color:#596878!important;font-size:13px!important;line-height:1.65!important}
+
+/* Main technical pages: image and information hierarchy. */
+body.brand-v34[data-page="materials"] .visual-frame,
+body.brand-v34[data-page="product-forms"] .visual-frame,
+body.brand-v34[data-page="quality"] .visual-frame,
+body.brand-v34[data-page="technical-data"] .visual-frame,
+body.brand-v34[data-page="about"] .visual-frame,
+body.brand-v34[data-page="rfq"] .visual-frame{aspect-ratio:16/7.2!important;min-height:340px!important}
+body.brand-v34[data-page="technical-data"] .visual-frame img,
+body.brand-v34[data-page="quality"] .visual-frame img{object-position:center 48%!important}
+body.brand-v34[data-page="about"] .visual-frame img,
+body.brand-v34[data-page="rfq"] .visual-frame img{object-position:center 45%!important}
+
+/* Page hero typography: keep titles compact and technical. */
+body.brand-v34:not([data-page="home"]) .pagehero h1{max-width:840px!important;font-size:clamp(46px,5.25vw,72px)!important;line-height:.98!important;letter-spacing:-.045em!important}
+body.brand-v34:not([data-page="home"]) .pagehero p{max-width:760px!important;font-size:17px!important;line-height:1.72!important;color:#536273!important}
+body.brand-v34 .sec-head h2{letter-spacing:-.035em!important}
+
+@media(max-width:1000px){
+  body.brand-v34 .visual-frame{aspect-ratio:16/8.4!important;min-height:300px!important}
+  body.brand-v34[data-page="nickel-process-equipment"] .landing-grid,
+  body.brand-v34[data-page="invar-lng"] .landing-grid,
+  body.brand-v34[data-page="invar-aerospace-tooling"] .landing-grid,
+  body.brand-v34[data-page="precision-strip-bellows"] .landing-grid,
+  body.brand-v34[data-page="heavy-plate-pressure-equipment"] .landing-grid,
+  body.brand-v34[data-page="titanium-heat-exchangers"] .landing-grid{grid-template-columns:1fr!important;gap:28px!important}
+  body.brand-v34[data-page="nickel-process-equipment"] .specpanel,
+  body.brand-v34[data-page="invar-lng"] .specpanel,
+  body.brand-v34[data-page="invar-aerospace-tooling"] .specpanel,
+  body.brand-v34[data-page="precision-strip-bellows"] .specpanel,
+  body.brand-v34[data-page="heavy-plate-pressure-equipment"] .specpanel,
+  body.brand-v34[data-page="titanium-heat-exchangers"] .specpanel{min-height:0!important}
+}
+@media(max-width:700px){
+  body.brand-v34 .visual-band{padding-bottom:48px!important}
+  body.brand-v34 .visual-frame{aspect-ratio:4/3!important;min-height:0!important}
+  body.brand-v34 .visual-label{left:18px!important;right:18px!important;bottom:16px!important;max-width:none!important;font-size:9px!important;line-height:1.45!important}
+  body.brand-v34:not([data-page="home"]) .pagehero{padding-top:42px!important;padding-bottom:34px!important}
+  body.brand-v34:not([data-page="home"]) .pagehero h1{font-size:clamp(39px,12vw,54px)!important;line-height:1!important}
+  body.brand-v34:not([data-page="home"]) .pagehero p{font-size:15px!important;line-height:1.65!important}
+  body.brand-v34[data-page="nickel-alloys"] .cap,
+  body.brand-v34[data-page="nickel-process-equipment"] .cap,
+  body.brand-v34[data-page="invar-36"] .cap,
+  body.brand-v34[data-page="invar-lng"] .cap,
+  body.brand-v34[data-page="invar-aerospace-tooling"] .cap,
+  body.brand-v34[data-page="heavy-plate"] .cap,
+  body.brand-v34[data-page="heavy-plate-pressure-equipment"] .cap,
+  body.brand-v34[data-page="titanium-zirconium"] .cap,
+  body.brand-v34[data-page="titanium-heat-exchangers"] .cap,
+  body.brand-v34[data-page="precision-strip-bellows"] .cap{min-height:0!important;padding:23px!important}
+}
