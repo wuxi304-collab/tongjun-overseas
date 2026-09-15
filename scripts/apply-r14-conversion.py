@@ -49,6 +49,17 @@ for p in ROOT.glob('*.html'):
             flags=re.S,
         )
 
+    if p.name == 'industries.html':
+        # Global Markets navigation has long linked to these fragments. Make the destinations real.
+        s = s.replace(
+            '<div class="industry"><h3>Energy &amp; Power</h3>',
+            '<div class="industry" id="energy"><h3>Energy &amp; Power</h3>',
+        )
+        s = s.replace(
+            '<div class="industry"><h3>Marine &amp; Offshore</h3>',
+            '<div class="industry" id="marine"><h3>Marine &amp; Offshore</h3>',
+        )
+
     rail = RAILS.get(p.name)
     if rail and 'class="r14-action-rail"' not in s:
         # Insert immediately after the page hero, before a visual band or any long-form content.
@@ -61,7 +72,7 @@ for p in ROOT.glob('*.html'):
         p.write_text(s, encoding='utf-8')
         changed.append(p.name)
 
-# Hard assertions: conversion pages must carry the new rail and the Technical Data headline must not regress again.
+# Hard assertions: conversion pages must carry the new rail and critical deep links must resolve.
 for name in RAILS:
     text = (ROOT / name).read_text(encoding='utf-8')
     if text.count('class="r14-action-rail"') != 1:
@@ -71,4 +82,9 @@ tech = (ROOT / 'technical-data.html').read_text(encoding='utf-8')
 if 'Technical data for sourcing decisions.' not in tech:
     raise SystemExit('ERROR: Technical Data action-first headline missing')
 
-print(f'PASS: R14 conversion overlay applied to {len(changed)} HTML files; 3 action rails installed.')
+industries = (ROOT / 'industries.html').read_text(encoding='utf-8')
+for anchor in ('id="energy"', 'id="marine"'):
+    if anchor not in industries:
+        raise SystemExit(f'ERROR: Industries deep-link target missing: {anchor}')
+
+print(f'PASS: R14 conversion overlay applied to {len(changed)} HTML files; action rails and Markets deep links installed.')
