@@ -16,7 +16,6 @@ PAGE_KEYS = {
     'problem-order.html':'problem-order','material-compare.html':'material-compare','alloys.html':'alloys'
 }
 
-# Every priority page owns an intentional, semantically matched industrial image.
 PAGE_VISUALS = {
     'materials.html': ('/assets/images/materials-r8.webp?v=20260915-r12','Material families · product forms · sourcing routes','Special-metal coils, sheet and plate in controlled industrial storage'),
     'product-forms.html': ('/assets/images/materials-r8.webp?v=20260915-r12','Product geometry · process route · qualification evidence','Special-metal product forms in controlled industrial storage'),
@@ -54,11 +53,9 @@ def apply_page_visual(s: str, page_name: str) -> str:
         f'<span class="visual-label">{label}</span></div></div></section>'
     )
 
-    # Replace the first existing visual band so old stock/placeholder imagery cannot survive.
     if re.search(r'<section class="visual-band[^>]*>.*?</section>', s, flags=re.S):
         s = re.sub(r'<section class="visual-band[^>]*>.*?</section>', visual, s, count=1, flags=re.S)
     else:
-        # Prefer section navigation, otherwise place directly after page hero.
         m = re.search(r'(<nav aria-label="Section navigation".*?</nav>)', s, re.S)
         if m:
             s = s[:m.end()] + visual + s[m.end():]
@@ -67,12 +64,10 @@ def apply_page_visual(s: str, page_name: str) -> str:
             if m:
                 s = s[:m.end()] + visual + s[m.end():]
 
-    # Page-specific social preview instead of one generic OG image.
     absolute = 'https://exoticalloycn.com' + img.split('?')[0]
     s = re.sub(r'<meta content="[^"]*" property="og:image"\s*/?>', f'<meta content="{absolute}" property="og:image"/>', s, count=1)
     s = re.sub(r'<meta content="[^"]*" name="twitter:image"\s*/?>', f'<meta content="{absolute}" name="twitter:image"/>', s, count=1)
 
-    # Preload the lead visual once; GitHub Pages is static and benefits from deterministic image discovery.
     preload = f'<link rel="preload" as="image" href="{img}" fetchpriority="high">'
     if preload not in s:
         s = s.replace('</head>', preload + '</head>', 1)
@@ -85,20 +80,16 @@ for p in ROOT.glob('*.html'):
     s = p.read_text(encoding='utf-8')
     old = s
 
-    # English-only brand normalization.
     s = s.replace('Tongjun Special Metals', 'Tongjun Metal Tech')
     s = s.replace('TONGJUN SPECIAL METALS', 'TONGJUN METAL TECH')
     s = s.replace('TONGJUN METALS · EST. 2026', 'TONGJUN METAL TECH · EST. 2026')
-    s = s.replace('TONGJUN METAL TECHNOLOGY', 'TONGJUN METAL TECH')
 
-    # Static primary navigation must match visible labels and destinations.
     s = s.replace(
         '<a href="/capabilities">Capabilities</a>\n<a href="/resources">Resources</a>\n<a href="/about">About</a>',
         '<a href="/quality">Quality</a>\n<a href="/technical-data">Technical Data</a>\n<a href="/about">About</a>'
     )
     s = re.sub(r'<a class="cta nav-cta" href="/rfq">.*?</a>', '<a class="cta nav-cta" href="/rfq">Request a Quote <span>→</span></a>', s, count=1, flags=re.S)
 
-    # Page identity hook for exact editorial styling.
     page_key = PAGE_KEYS.get(p.name, p.stem)
     if '<body' in s:
         m = re.search(r'<body([^>]*)>', s)
@@ -107,7 +98,6 @@ for p in ROOT.glob('*.html'):
             attrs = re.sub(r'\sdata-page="[^"]*"', '', attrs)
             s = s[:m.start()] + '<body' + attrs + f' data-page="{page_key}">' + s[m.end():]
 
-    # Editorial labels on the major technical pages.
     if p.name == 'materials.html':
         s = s.replace('>Material forms<', '>Material families · product forms · sourcing routes<')
     elif p.name == 'quality.html':
@@ -115,23 +105,19 @@ for p in ROOT.glob('*.html'):
     elif p.name == 'about.html':
         s = s.replace('>Engineering-led sourcing<', '>Requirement review · source role · evidence boundary<')
 
-    # One deterministic, semantically matched lead image per priority page.
     s = apply_page_visual(s, p.name)
 
-    # Approved hand-drawn Columbus lockup as real header/footer image nodes.
     logo_html = '<img class="tj-logo-img" src="/assets/images/columbus-logo-r7.svg?v=20260915-r12" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" />'
     s = re.sub(r'(<a[^>]*class="brand"[^>]*>).*?(</a>)', lambda m: m.group(1) + logo_html + m.group(2), s, count=1, flags=re.S)
     footer_logo = '<img class="tj-footer-logo" src="/assets/images/columbus-logo-r7.svg?v=20260915-r12" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" loading="lazy" />'
     s = re.sub(r'(<div class="footer-brand"><div class="brand"[^>]*>).*?(</div>)', lambda m: '<div class="footer-brand"><div class="brand tj-footer-brand">' + footer_logo + m.group(2), s, count=1, flags=re.S)
 
-    # Stable real-image homepage hero node.
     if p.name == 'index.html':
         hero = '<img class="hero-bg-r6" src="/assets/images/hero-port-r7.svg?v=20260915-r12" alt="Special metals prepared for international delivery at an industrial port" width="1916" height="821" decoding="async" fetchpriority="high" />'
         s = re.sub(r'<img class="hero-bg-r6"[^>]*>', hero, s, count=1)
         if 'hero-bg-r6' not in s:
             s = s.replace('<section class="hero">','<section class="hero">' + hero,1)
 
-    # R12 continues the single-consolidated-stylesheet delivery model.
     s = re.sub(r'<link[^>]+href="/assets/brand-v34\.152[^\"]*"[^>]*>', '', s)
     s = re.sub(r'<script[^>]+src="/assets/brand-v34\.152\.js[^\"]*"[^>]*></script>', '', s)
     s = s.replace('</head>', '<link rel="stylesheet" href="/assets/brand-v34.152-r12.css?v=20260915-r12"><script defer src="/assets/brand-v34.152.js?v=20260915-r12"></script></head>')
