@@ -46,10 +46,15 @@ for p in ROOT.glob('*.html'):
         flags=re.S,
     )
 
-    # The sourcing article carried a stale image path that never existed in the repository.
+    # Migrate stale image paths to assets that are present and validated in the release branch.
     s = s.replace(
         '/assets/images/supply-route.webp',
         '/assets/images/logistics-stock.webp?v=20260915-r12',
+    )
+    s = re.sub(
+        r'/assets/images/hero-special-metals\.webp(?:\?[^"\']*)?',
+        HERO,
+        s,
     )
 
     if p.name == 'index.html':
@@ -58,10 +63,8 @@ for p in ROOT.glob('*.html'):
         s = re.sub(r'<meta content="[^"]*" property="og:image"\s*/?>', f'<meta content="{absolute_hero}" property="og:image"/>', s, count=1)
         s = re.sub(r'<meta content="[^"]*" name="twitter:image"\s*/?>', f'<meta content="{absolute_hero}" name="twitter:image"/>', s, count=1)
 
-        # Remove every stale/duplicate image preload irrespective of attribute order, then add one canonical preload.
-        s = re.sub(r'<link\b[^>]*\brel=["\']preload["\'][^>]*\bas=["\']image["\'][^>]*>', '', s, flags=re.I)
-        s = re.sub(r'<link\b[^>]*\bas=["\']image["\'][^>]*\brel=["\']preload["\'][^>]*>', '', s, flags=re.I)
-        s = re.sub(r'<link\b[^>]*hero-special-metals\.webp[^>]*>', '', s, flags=re.I)
+        # Remove every image preload irrespective of attribute order, then add exactly one canonical hero preload.
+        s = re.sub(r'<link\b(?=[^>]*\brel=["\']preload["\'])(?=[^>]*\bas=["\']image["\'])[^>]*>', '', s, flags=re.I)
         preload = f'<link rel="preload" as="image" href="{HERO}" fetchpriority="high">'
         s = s.replace('</head>', preload + '</head>', 1)
 
@@ -76,4 +79,4 @@ for p in ROOT.glob('*.html'):
         p.write_text(s, encoding='utf-8')
         changed.append(p.name)
 
-print(f'PASS: R13.1 safe brand overlay applied to {len(changed)} HTML files; stale image references removed.')
+print(f'PASS: R13.1 safe brand overlay applied to {len(changed)} HTML files; stale image references migrated.')
