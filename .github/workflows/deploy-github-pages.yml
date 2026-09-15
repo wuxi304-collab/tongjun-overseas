@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R14.1 — conversion-first mobile hierarchy + progressive RFQ disclosure + full route validation
+# V34.152 R14.1 — conversion-first mobile hierarchy + progressive RFQ disclosure + form semantics + full route validation
 
 on:
   workflow_dispatch:
@@ -95,6 +95,7 @@ jobs:
           python3 scripts/apply-home-visual-fix-r12.py
           python3 scripts/apply-r13-1-release.py
           python3 scripts/apply-r14-conversion.py
+          python3 scripts/validate-form-semantics.py .
 
       - name: Build Pages mirror with syntax-safe base path rewriting
         shell: bash
@@ -147,6 +148,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 scripts/validate-form-semantics.py _site
           python3 - <<'PY'
           from pathlib import Path
           from html.parser import HTMLParser
@@ -167,6 +169,8 @@ jobs:
           tech=(root/'technical-data.html').read_text(encoding='utf-8')
           quality=(root/'quality.html').read_text(encoding='utf-8')
           rfq=(root/'rfq.html').read_text(encoding='utf-8')
+          route=(root/'supply-route.html').read_text(encoding='utf-8')
+          problem=(root/'problem-order.html').read_text(encoding='utf-8')
           industries=(root/'industries.html').read_text(encoding='utf-8')
           if 'Technical data for sourcing decisions.' not in tech:
               raise SystemExit('ERROR: Technical Data headline regressed')
@@ -184,6 +188,13 @@ jobs:
                   raise SystemExit(f'ERROR: RFQ progressive disclosure marker count wrong: {marker}')
           if rfq.find('05 · Application / notes') > rfq.find('Optional qualification + logistics'):
               raise SystemExit('ERROR: required Application block must precede optional qualification/logistics')
+          for marker,text in (
+              ('id="rfq-name"',rfq),('for="rfq-name"',rfq),
+              ('id="route-family"',route),('for="route-family"',route),
+              ('id="problem-family"',problem),('for="problem-family"',problem),
+          ):
+              if marker not in text:
+                  raise SystemExit(f'ERROR: buyer-form semantic marker missing: {marker}')
           for anchor in ('id="energy"','id="marine"'):
               if anchor not in industries:
                   raise SystemExit(f'ERROR: Industries deep-link destination missing: {anchor}')
@@ -277,7 +288,7 @@ jobs:
               for x in broken_anchors[:30]: print('BROKEN ANCHOR:',x)
               raise SystemExit(f'ERROR: {len(broken_anchors)} broken internal deep-link anchor(s)')
 
-          print('PASS: R14.1 50-page gate, progressive RFQ, local assets, routes and deep-link anchors validated.')
+          print('PASS: R14.1 50-page gate, progressive RFQ, buyer-form semantics, local assets, routes and deep-link anchors validated.')
           PY
 
       - name: Upload Pages artifact
