@@ -22,8 +22,6 @@ FOOTER_BRAND_HTML = (
 
 changed = []
 for p in ROOT.glob('*.html'):
-    if p.name == '404.html':
-        continue
     s = p.read_text(encoding='utf-8')
     old = s
 
@@ -68,15 +66,23 @@ for p in ROOT.glob('*.html'):
         preload = f'<link rel="preload" as="image" href="{HERO}" fetchpriority="high">'
         s = s.replace('</head>', preload + '</head>', 1)
 
-    # Advance CSS only. R12 JS stays unchanged for this visual-system release.
+    if p.name == '404.html':
+        # 404 is part of the customer-facing site too: remove the legacy naming and load the same visual system.
+        s = s.replace('Page not found | Tongjun Special Metals', 'Page not found | Tongjun Metal Tech')
+        s = s.replace('Page Not Found | Tongjun Special Metals', 'Page Not Found | Tongjun Metal Tech')
+        s = s.replace('Tongjun Special Metals', 'Tongjun Metal Tech')
+
+    # Advance CSS. 404 did not pass through the historic brand-shell script, so inject the stylesheet explicitly there.
     s = re.sub(
         r'/assets/brand-v34\.152-r12\.css\?v=[^"\']+',
         STYLESHEET,
         s,
     )
+    if p.name == '404.html' and STYLESHEET not in s:
+        s = s.replace('</head>', f'<link rel="stylesheet" href="{STYLESHEET}"></head>', 1)
 
     if s != old:
         p.write_text(s, encoding='utf-8')
         changed.append(p.name)
 
-print(f'PASS: R13.1 safe brand overlay applied to {len(changed)} HTML files; stale image references migrated.')
+print(f'PASS: R13.1 safe brand overlay applied to {len(changed)} HTML files including 404; stale image references migrated.')
