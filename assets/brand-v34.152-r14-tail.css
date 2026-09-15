@@ -1,0 +1,59 @@
+/* V34.152 R14 — conversion-first hierarchy for mobile and high-intent technical pages. */
+
+/* Fast action rail: industrial, flat, no card chrome. */
+body.brand-v34 .r14-action-rail{background:#fff;border-bottom:1px solid #d9e0e7;border-top:1px solid #e7ebef}
+body.brand-v34 .r14-action-rail .wrap{display:grid;grid-template-columns:repeat(3,1fr);max-width:min(1240px,calc(100% - 56px));padding:0}
+body.brand-v34 .r14-action-rail a{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:74px;padding:16px 22px;border-right:1px solid #d9e0e7;color:#10263c;background:#fff;font-size:11px;font-weight:800;letter-spacing:.045em;line-height:1.35;text-transform:uppercase}
+body.brand-v34 .r14-action-rail a:first-child{border-left:1px solid #d9e0e7}
+body.brand-v34 .r14-action-rail a:after{content:"↗";flex:0 0 auto;color:#e58e31;font-size:15px}
+body.brand-v34 .r14-action-rail a:hover{background:#f5f7f9}
+body.brand-v34[data-page="rfq"] .r14-action-rail a:first-child{background:#071a37;color:#fff}
+body.brand-v34[data-page="rfq"] .r14-action-rail a:first-child:after{color:#ffb15d}
+
+/* Keep anchor jumps clear of the sticky header. */
+body.brand-v34 #rfqForm{scroll-margin-top:108px}
+
+/* Homepage: reduce explanation before action on small screens. */
+@media(max-width:700px){
+  body.brand-v34[data-page="home"] .hero{min-height:0!important}
+  body.brand-v34[data-page="home"] .hero-grid{padding:44px 0 36px!important}
+  body.brand-v34[data-page="home"] .hero h1{font-size:clamp(42px,12.5vw,52px)!important;line-height:.98!important;margin-bottom:17px!important}
+  body.brand-v34[data-page="home"] .hero .lead{font-size:16px!important;line-height:1.55!important}
+  body.brand-v34[data-page="home"] .hero-positioning{display:none!important}
+  body.brand-v34[data-page="home"] .hero .buttonrow{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;margin-top:22px!important}
+  body.brand-v34[data-page="home"] .hero .cta{justify-content:center!important;width:100%!important;min-height:46px!important;padding:0 12px!important;text-align:center!important}
+  body.brand-v34[data-page="home"] .statband .stats{grid-template-columns:1fr 1fr!important}
+  body.brand-v34[data-page="home"] .stats .stat{min-height:88px!important;padding:18px 14px!important}
+  body.brand-v34[data-page="home"] .performance-grid{display:none!important}
+}
+@media(max-width:420px){
+  body.brand-v34[data-page="home"] .hero .buttonrow{grid-template-columns:1fr!important}
+}
+
+/* High-intent pages: action before photography on phone. */
+@media(max-width:700px){
+  body.brand-v34 .r14-action-rail{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  body.brand-v34 .r14-action-rail .wrap{width:max-content;min-width:100%;max-width:none!important;padding:0!important;grid-template-columns:repeat(3,minmax(118px,1fr))!important}
+  body.brand-v34 .r14-action-rail a{min-height:60px;padding:12px 14px;font-size:9.5px;letter-spacing:.035em;white-space:normal}
+
+  /* Restore the earlier action-first Technical Data treatment. */
+  body.brand-v34[data-page="technical-data"] .pagehero h1{font-size:clamp(38px,10.8vw,46px)!important;max-width:350px!important}
+  body.brand-v34[data-page="technical-data"] .visual-band{display:none!important}
+  body.brand-v34[data-page="technical-data"] .visual-band + .section{padding-top:38px!important}
+  body.brand-v34[data-page="technical-data"] .tds-row{min-height:0!important;padding:20px 16px!important}
+  body.brand-v34[data-page="technical-data"] .tds-row h2{font-size:26px!important}
+
+  /* RFQ should reach input fields before decorative/educational material. */
+  body.brand-v34[data-page="rfq"] .pagehero h1{font-size:clamp(38px,10.8vw,46px)!important;max-width:360px!important}
+  body.brand-v34[data-page="rfq"] .visual-band{display:none!important}
+  body.brand-v34[data-page="rfq"] .visual-band + .section{padding-top:38px!important}
+  body.brand-v34[data-page="rfq"] .rfqbox.full-rfq{display:flex!important;flex-direction:column!important}
+  body.brand-v34[data-page="rfq"] #rfqForm{order:1!important;padding:24px 18px 30px!important}
+  body.brand-v34[data-page="rfq"] .rfq-intro-column{order:2!important;padding:26px 20px!important}
+
+  /* Quality keeps photography, but it must not dominate the first mobile screen. */
+  body.brand-v34[data-page="quality"] .pagehero h1{font-size:clamp(37px,10.5vw,44px)!important;max-width:350px!important}
+  body.brand-v34[data-page="quality"] .visual-frame{height:220px!important;min-height:220px!important;aspect-ratio:auto!important}
+  body.brand-v34[data-page="quality"] .visual-band{padding-bottom:0!important}
+  body.brand-v34[data-page="quality"] .visual-band + .quality-console{margin-top:0!important}
+}
