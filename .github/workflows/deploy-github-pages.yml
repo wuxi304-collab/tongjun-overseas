@@ -199,17 +199,22 @@ jobs:
           class PageParser(HTMLParser):
               def __init__(self,page):
                   super().__init__(); self.page=page; self.ids=set(); self.links=[]; self.assets=[]
-              def handle_starttag(self,tag,attrs): self._read(attrs)
-              def handle_startendtag(self,tag,attrs): self._read(attrs)
-              def _read(self,attrs):
+              def handle_starttag(self,tag,attrs): self._read(tag,attrs)
+              def handle_startendtag(self,tag,attrs): self._read(tag,attrs)
+              def _read(self,tag,attrs):
                   data=dict(attrs)
                   if data.get('id'): self.ids.add(data['id'])
                   href=data.get('href')
-                  if href: self.links.append(href)
+                  # Only <a href> participates in navigation/deep-link validation.
+                  if tag == 'a' and href:
+                      if urlsplit(href).path.startswith(base+'assets/'):
+                          self.assets.append(href)
+                      else:
+                          self.links.append(href)
                   for key in ('src','poster','data-src'):
                       if data.get(key): self.assets.append(data[key])
-                  # stylesheet hrefs are assets too
-                  if data.get('rel') == 'stylesheet' and href: self.assets.append(href)
+                  # <link> href values are resources, never page routes.
+                  if tag == 'link' and href: self.assets.append(href)
 
           parsed={}
           stem_to_name={p.stem:p.name for p in htmls}
