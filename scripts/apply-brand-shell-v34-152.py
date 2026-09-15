@@ -107,13 +107,14 @@ for p in ROOT.glob('*.html'):
 
     s = apply_page_visual(s, p.name)
 
-    logo_html = '<img class="tj-logo-img" src="/assets/images/columbus-logo-r7.svg?v=20260915-r12" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" />'
+    # Use direct WebP assets on GitHub Pages. The former R7 SVG wrappers rendered as broken images in production.
+    logo_html = '<img class="tj-logo-img" src="/assets/images/columbus-logo-v2.webp?v=20260915-r12fix1" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" />'
     s = re.sub(r'(<a[^>]*class="brand"[^>]*>).*?(</a>)', lambda m: m.group(1) + logo_html + m.group(2), s, count=1, flags=re.S)
-    footer_logo = '<img class="tj-footer-logo" src="/assets/images/columbus-logo-r7.svg?v=20260915-r12" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" loading="lazy" />'
+    footer_logo = '<img class="tj-footer-logo" src="/assets/images/columbus-logo-v2.webp?v=20260915-r12fix1" alt="Tongjun Metal Tech" width="1200" height="400" decoding="async" loading="lazy" />'
     s = re.sub(r'(<div class="footer-brand"><div class="brand"[^>]*>).*?(</div>)', lambda m: '<div class="footer-brand"><div class="brand tj-footer-brand">' + footer_logo + m.group(2), s, count=1, flags=re.S)
 
     if p.name == 'index.html':
-        hero = '<img class="hero-bg-r6" src="/assets/images/hero-port-r7.svg?v=20260915-r12" alt="Special metals prepared for international delivery at an industrial port" width="1916" height="821" decoding="async" fetchpriority="high" />'
+        hero = '<img class="hero-bg-r6" src="/assets/images/hero-port-v2.webp?v=20260915-r12fix1" alt="Special metals prepared for international delivery at an industrial port" width="1916" height="821" decoding="async" fetchpriority="high" />'
         s = re.sub(r'<img class="hero-bg-r6"[^>]*>', hero, s, count=1)
         if 'hero-bg-r6' not in s:
             s = s.replace('<section class="hero">','<section class="hero">' + hero,1)
