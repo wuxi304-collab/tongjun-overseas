@@ -11,7 +11,9 @@ body.brand-v34[data-page="rfq"] .r14-action-rail a:first-child{background:#071a3
 body.brand-v34[data-page="rfq"] .r14-action-rail a:first-child:after{color:#ffb15d}
 
 /* Keep anchor jumps clear of the sticky header. */
-body.brand-v34 #rfqForm{scroll-margin-top:108px}
+body.brand-v34 #rfqForm,
+body.brand-v34 #energy,
+body.brand-v34 #marine{scroll-margin-top:108px}
 
 /* Homepage: reduce explanation before action on small screens. */
 @media(max-width:700px){
