@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# refresh: R13.1 SAFE composite brand over the stable R12 imagery system
+# V34.152 R13.1 SAFE — composite brand + stable R12 imagery + hardened Pages path rewriting
 
 on:
   workflow_dispatch:
@@ -97,7 +97,7 @@ jobs:
       - name: Apply R13.1 safe brand overlay
         run: python3 scripts/apply-r13-1-release.py
 
-      - name: Build Pages mirror
+      - name: Build Pages mirror with syntax-safe base path rewriting
         shell: bash
         env:
           BASE_PATH: /tongjun-overseas
@@ -106,26 +106,56 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import os,re,shutil
-          root=Path('.'); out=Path('_site'); base=os.environ.get('BASE_PATH','/tongjun-overseas').rstrip('/')
-          if out.exists(): shutil.rmtree(out)
+
+          root=Path('.')
+          out=Path('_site')
+          base=os.environ.get('BASE_PATH','/tongjun-overseas').rstrip('/')
+          if out.exists():
+              shutil.rmtree(out)
           out.mkdir()
+
           skip={'.git','.github','.sync','node_modules','scripts','tests','api','_site'}
           text_ext={'.html','.css','.js','.json','.xml','.txt','.webmanifest','.svg'}
           keep_ext=text_ext|{'.ico','.png','.jpg','.jpeg','.webp','.avif','.woff','.woff2','.ttf'}
+
+          attr_root=re.compile(r'(\b(?:href|src|action|poster|content|data-src|data-href)=['"'"']["'"'])/(?!/)', re.I)
+          quoted_root=re.compile(r'(["'"'])/(?=[A-Za-z0-9])')
+          css_root=re.compile(r'url\((["'"']?)/(?!/)')
+
           for p in root.rglob('*'):
-            if not p.is_file(): continue
-            rel=p.relative_to(root)
-            if rel.parts and rel.parts[0] in skip: continue
-            if p.suffix.lower() not in keep_ext and p.name not in {'robots.txt','sitemap.xml','manifest.webmanifest'}: continue
-            d=out/rel; d.parent.mkdir(parents=True,exist_ok=True)
-            if p.suffix.lower() in text_ext:
-              try: t=p.read_text(encoding='utf-8')
-              except UnicodeDecodeError: shutil.copy2(p,d); continue
-              t=re.sub(r'(["\'])/(?!/)',lambda m:m.group(1)+base+'/',t)
-              t=re.sub(r'url\((/)(?!/)',lambda m:'url('+base+'/',t)
-              d.write_text(t,encoding='utf-8')
-            else:
-              shutil.copy2(p,d)
+              if not p.is_file():
+                  continue
+              rel=p.relative_to(root)
+              if rel.parts and rel.parts[0] in skip:
+                  continue
+              if p.suffix.lower() not in keep_ext and p.name not in {'robots.txt','sitemap.xml','manifest.webmanifest'}:
+                  continue
+
+              d=out/rel
+              d.parent.mkdir(parents=True,exist_ok=True)
+              suffix=p.suffix.lower()
+
+              if suffix in text_ext:
+                  try:
+                      t=p.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:
+                      shutil.copy2(p,d)
+                      continue
+
+                  if suffix in {'.html','.xml','.svg'}:
+                      # Rewrite only URL-bearing attributes. Never touch a closing quote followed by '/>'.
+                      t=attr_root.sub(lambda m:m.group(1)+base+'/',t)
+                      t=css_root.sub(lambda m:'url('+m.group(1)+base+'/',t)
+                  elif suffix == '.css':
+                      t=css_root.sub(lambda m:'url('+m.group(1)+base+'/',t)
+                  elif suffix in {'.js','.json','.webmanifest'}:
+                      # In JS/JSON a quote immediately followed by /path starts a root-relative string.
+                      t=quoted_root.sub(lambda m:m.group(1)+base+'/',t)
+
+                  d.write_text(t,encoding='utf-8')
+              else:
+                  shutil.copy2(p,d)
+
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
 
@@ -163,37 +193,66 @@ jobs:
           done
 
           grep -q 'logistics-stock.webp?v=20260915-r12fix2' _site/index.html
+          ! grep -q 'hero-special-metals.webp' _site/index.html
+          grep -q 'logistics-stock.webp?v=20260915-r12' _site/resource-qualify-china-special-metals.html
+          ! grep -q 'supply-route.webp' _site/resource-qualify-china-special-metals.html
           ! grep -Eq 'logo-r13\.avif|hero-port-r13\.avif' _site/index.html
           grep -q 'href="/tongjun-overseas/quality">Quality</a>' _site/index.html
           grep -q 'href="/tongjun-overseas/technical-data">Technical Data</a>' _site/index.html
 
           grep -q 'materials-r8.webp?v=20260915-r12' _site/materials.html
-          grep -q 'materials-r8.webp?v=20260915-r12' _site/product-forms.html
           grep -q 'quality-r8.webp?v=20260915-r12' _site/quality.html
           grep -q 'quality-r8.webp?v=20260915-r12' _site/technical-data.html
           grep -q 'engineering-discussion-v2.webp?v=20260915-r12' _site/about.html
           grep -q 'engineering-review-v2.webp?v=20260915-r12' _site/rfq.html
 
-          grep -q 'nickel-alloys.webp?v=20260915-r12' _site/nickel-alloys.html
-          grep -q 'nickel-alloys.webp?v=20260915-r12' _site/nickel-process-equipment.html
-          grep -q 'precision-strip.webp?v=20260915-r12' _site/precision-strip.html
-          grep -q 'precision-strip.webp?v=20260915-r12' _site/precision-strip-bellows.html
-          grep -q 'invar-tooling.webp?v=20260915-r12' _site/invar-36.html
-          grep -q 'invar-tooling.webp?v=20260915-r12' _site/invar-aerospace-tooling.html
-          grep -q 'invar-lng.webp?v=20260915-r12' _site/invar-lng.html
-          grep -q 'heavy-plate.webp?v=20260915-r12' _site/heavy-plate.html
-          grep -q 'heavy-plate.webp?v=20260915-r12' _site/heavy-plate-pressure-equipment.html
-          grep -q 'titanium-zirconium.webp?v=20260915-r12' _site/titanium-zirconium.html
-          grep -q 'titanium-zirconium.webp?v=20260915-r12' _site/titanium-heat-exchangers.html
-          grep -q 'logistics-stock.webp?v=20260915-r12' _site/industries.html
-          grep -q 'resources-metal.webp?v=20260915-r12' _site/resources.html
-
           ! grep -R -E 'quality-lab-r13|engineering-team-r13|technical-lab-r13' _site/*.html
           ! grep -R -E 'logo-r13\.avif|hero-port-r13\.avif' _site/*.html
+          ! grep -R -E '["'"']/tongjun-overseas/\s*/?>' _site/*.html
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
           ! grep -q '同钧' _site/index.html
           ! grep -q 'images.unsplash.com' _site/assets/brand-v34.152.js
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urlsplit
+
+          root=Path('_site')
+          base='/tongjun-overseas/'
+          broken=[]
+
+          class AssetParser(HTMLParser):
+              def __init__(self, page):
+                  super().__init__()
+                  self.page=page
+              def handle_starttag(self, tag, attrs):
+                  for key,val in attrs:
+                      if key not in {'src','href','poster','data-src'} or not val:
+                          continue
+                      path=urlsplit(val).path
+                      if not path.startswith(base+'assets/'):
+                          continue
+                      rel=path[len(base):]
+                      if not (root/rel).is_file():
+                          broken.append((self.page,val))
+              handle_startendtag=handle_starttag
+
+          for page in sorted(root.glob('*.html')):
+              text=page.read_text(encoding='utf-8')
+              if '"/tongjun-overseas/>' in text or "'/tongjun-overseas/>" in text:
+                  raise SystemExit(f'ERROR: malformed BASE_PATH rewrite in {page.name}')
+              parser=AssetParser(page.name)
+              parser.feed(text)
+
+          if broken:
+              for page,val in broken:
+                  print(f'BROKEN ASSET: {page}: {val}')
+              raise SystemExit(f'ERROR: {len(broken)} broken local asset reference(s)')
+          print('PASS: no malformed self-closing tags or broken local asset references.')
+          PY
+
           echo 'PASS: V34.152 R13.1 safe release validated end to end.'
 
       - name: Upload Pages artifact
