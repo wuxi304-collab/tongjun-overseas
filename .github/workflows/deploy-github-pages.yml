@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R14 — conversion-first mobile hierarchy over the R13.1 safe baseline
+# V34.152 R14 — conversion-first mobile hierarchy + full internal route/deep-link validation
 
 on:
   workflow_dispatch:
@@ -66,6 +66,8 @@ jobs:
           grep -q 'V34.152 R14' assets/brand-v34.152-r14.css
           grep -q 'data-page="technical-data".*visual-band{display:none' assets/brand-v34.152-r14.css
           grep -q 'data-page="rfq".*#rfqForm{order:1' assets/brand-v34.152-r14.css
+          grep -q '#energy' assets/brand-v34.152-r14.css
+          grep -q '#marine' assets/brand-v34.152-r14.css
 
       - name: Validate trusted source assets
         shell: bash
@@ -153,7 +155,7 @@ jobs:
           if len(htmls) != 50:
               raise SystemExit(f'ERROR: expected 50 HTML pages, found {len(htmls)}')
 
-          core=['index.html','technical-data.html','quality.html','rfq.html','materials.html','product-forms.html','about.html','resources.html']
+          core=['index.html','technical-data.html','quality.html','rfq.html','materials.html','product-forms.html','about.html','resources.html','industries.html']
           for name in core:
               text=(root/name).read_text(encoding='utf-8')
               if 'brand-v34.152-r14.css?v=20260916-r14' not in text:
@@ -162,6 +164,7 @@ jobs:
           tech=(root/'technical-data.html').read_text(encoding='utf-8')
           quality=(root/'quality.html').read_text(encoding='utf-8')
           rfq=(root/'rfq.html').read_text(encoding='utf-8')
+          industries=(root/'industries.html').read_text(encoding='utf-8')
           if 'Technical data for sourcing decisions.' not in tech:
               raise SystemExit('ERROR: Technical Data headline regressed')
           for name,text in [('technical-data.html',tech),('quality.html',quality),('rfq.html',rfq)]:
@@ -169,6 +172,9 @@ jobs:
                   raise SystemExit(f'ERROR: R14 action rail count wrong in {name}')
           if 'href="#rfqForm"' not in rfq:
               raise SystemExit('ERROR: RFQ direct form jump missing')
+          for anchor in ('id="energy"','id="marine"'):
+              if anchor not in industries:
+                  raise SystemExit(f'ERROR: Industries deep-link destination missing: {anchor}')
 
           css=(root/'assets/brand-v34.152-r14.css').read_text(encoding='utf-8')
           required=[
@@ -177,6 +183,8 @@ jobs:
               'body.brand-v34[data-page="rfq"] .visual-band{display:none!important}',
               'body.brand-v34[data-page="rfq"] #rfqForm{order:1!important',
               'body.brand-v34[data-page="home"] .hero-positioning{display:none!important}',
+              'body.brand-v34 #energy',
+              'body.brand-v34 #marine',
           ]
           for marker in required:
               if marker not in css:
@@ -187,19 +195,25 @@ jobs:
               'quality-lab-r13','engineering-team-r13','technical-lab-r13','logo-r13.avif','hero-port-r13.avif',
               'tj-logo-r13','tj-wordmark',
           )
-          broken=[]
-          class AssetParser(HTMLParser):
-              def __init__(self,page): super().__init__(); self.page=page
-              def handle_starttag(self,tag,attrs): self._check(attrs)
-              def handle_startendtag(self,tag,attrs): self._check(attrs)
-              def _check(self,attrs):
-                  for key,val in attrs:
-                      if key not in {'src','href','poster','data-src'} or not val: continue
-                      path=urlsplit(val).path
-                      if not path.startswith(base+'assets/'): continue
-                      rel=path[len(base):]
-                      if not (root/rel).is_file(): broken.append((self.page,val))
 
+          class PageParser(HTMLParser):
+              def __init__(self,page):
+                  super().__init__(); self.page=page; self.ids=set(); self.links=[]; self.assets=[]
+              def handle_starttag(self,tag,attrs): self._read(attrs)
+              def handle_startendtag(self,tag,attrs): self._read(attrs)
+              def _read(self,attrs):
+                  data=dict(attrs)
+                  if data.get('id'): self.ids.add(data['id'])
+                  href=data.get('href')
+                  if href: self.links.append(href)
+                  for key in ('src','poster','data-src'):
+                      if data.get(key): self.assets.append(data[key])
+                  # stylesheet hrefs are assets too
+                  if data.get('rel') == 'stylesheet' and href: self.assets.append(href)
+
+          parsed={}
+          stem_to_name={p.stem:p.name for p in htmls}
+          stem_to_name['index']='index.html'
           for page in htmls:
               text=page.read_text(encoding='utf-8')
               if '"/tongjun-overseas/>' in text or "'/tongjun-overseas/>" in text:
@@ -207,12 +221,46 @@ jobs:
               for marker in forbidden:
                   if marker in text:
                       raise SystemExit(f'ERROR: forbidden marker {marker!r} in {page.name}')
-              AssetParser(page.name).feed(text)
+              parser=PageParser(page.name); parser.feed(text); parsed[page.name]=parser
 
-          if broken:
-              for page,val in broken: print(f'BROKEN ASSET: {page}: {val}')
-              raise SystemExit(f'ERROR: {len(broken)} broken local asset reference(s)')
-          print('PASS: R14 50-page gate, conversion rails, mobile hierarchy and assets validated.')
+          broken_assets=[]; broken_routes=[]; broken_anchors=[]
+          for page in htmls:
+              parser=parsed[page.name]
+              for val in parser.assets:
+                  path=urlsplit(val).path
+                  if not path.startswith(base+'assets/'): continue
+                  rel=path[len(base):]
+                  if not (root/rel).is_file(): broken_assets.append((page.name,val))
+
+              for href in parser.links:
+                  if href.startswith(('mailto:','tel:','javascript:','http://','https://')): continue
+                  u=urlsplit(href); path=u.path
+                  if path == '':
+                      target_name=page.name
+                  else:
+                      if path.startswith(base): path=path[len(base)-1:]
+                      if path in ('','/'):
+                          target_name='index.html'
+                      else:
+                          target=path.strip('/').split('/')[-1]
+                          if target.endswith('.html'): target=target[:-5]
+                          target_name=stem_to_name.get(target)
+                          if not target_name:
+                              broken_routes.append((page.name,href)); continue
+                  if u.fragment and u.fragment not in parsed[target_name].ids:
+                      broken_anchors.append((page.name,href,target_name,u.fragment))
+
+          if broken_assets:
+              for x in broken_assets: print('BROKEN ASSET:',x)
+              raise SystemExit(f'ERROR: {len(broken_assets)} broken local asset reference(s)')
+          if broken_routes:
+              for x in broken_routes[:30]: print('BROKEN ROUTE:',x)
+              raise SystemExit(f'ERROR: {len(broken_routes)} broken internal route(s)')
+          if broken_anchors:
+              for x in broken_anchors[:30]: print('BROKEN ANCHOR:',x)
+              raise SystemExit(f'ERROR: {len(broken_anchors)} broken internal deep-link anchor(s)')
+
+          print('PASS: R14 50-page gate, conversion hierarchy, local assets, internal routes and deep-link anchors validated.')
           PY
 
       - name: Upload Pages artifact
