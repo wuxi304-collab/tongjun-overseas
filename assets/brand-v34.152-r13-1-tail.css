@@ -1,0 +1,8 @@
+/* V34.152 R13.1 — validated logo + homepage hero only. Inner-page R12 imagery remains authoritative. */
+body.brand-v34 .navin>.brand{width:330px!important;min-width:330px!important;height:64px!important;display:flex!important;align-items:center!important;overflow:visible!important;background:none!important}
+body.brand-v34 .tj-logo-r13{display:block!important;width:315px!important;max-width:315px!important;height:62px!important;object-fit:contain!important;object-position:left center!important;filter:none!important}
+body.brand-v34 .tj-footer-logo.tj-logo-r13{width:300px!important;max-width:300px!important;height:auto!important;object-fit:contain!important;object-position:left center!important;filter:none!important}
+body.brand-v34 .hero-bg-r13{display:block!important;opacity:1!important;visibility:visible!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 51%!important;z-index:0!important;filter:saturate(.94) contrast(1.045)!important;image-rendering:auto!important}
+body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(4,16,31,.95) 0%,rgba(5,20,39,.84) 31%,rgba(7,26,55,.56) 53%,rgba(7,26,55,.15) 76%,rgba(7,26,55,.025) 100%)!important}
+@media(max-width:1200px){body.brand-v34 .navin>.brand{width:270px!important;min-width:270px!important}body.brand-v34 .tj-logo-r13{width:260px!important;max-width:260px!important;height:56px!important}}
+@media(max-width:900px){body.brand-v34 .navin>.brand{width:215px!important;min-width:215px!important;height:50px!important}body.brand-v34 .tj-logo-r13{width:205px!important;max-width:205px!important;height:48px!important}body.brand-v34 .hero-bg-r13{object-position:70% center!important}}
