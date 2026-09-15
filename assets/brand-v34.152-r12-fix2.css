@@ -1,0 +1,12 @@
+/* R12.2 live-render guard: never allow a blank brand or invisible first-fold image. */
+body.brand-v34 .navin>.brand{display:flex!important;align-items:center!important;width:300px!important;min-width:300px!important;height:60px!important;color:#0b1f33!important;text-decoration:none!important;overflow:visible!important}
+body.brand-v34 .tj-wordmark{display:flex!important;flex-direction:column!important;justify-content:center!important;gap:2px!important;white-space:nowrap!important;color:#0b1f33!important;line-height:1!important}
+body.brand-v34 .tj-wordmark strong{display:block!important;font-family:Georgia,"Times New Roman",serif!important;font-size:29px!important;font-weight:700!important;letter-spacing:.025em!important;color:#0b1f33!important}
+body.brand-v34 .tj-wordmark small{display:block!important;font-size:8px!important;font-weight:800!important;letter-spacing:.22em!important;color:#40566c!important}
+body.brand-v34 .footer .tj-wordmark,body.brand-v34 footer .tj-wordmark{color:#fff!important}
+body.brand-v34 .footer .tj-wordmark strong,body.brand-v34 footer .tj-wordmark strong{color:#fff!important}
+body.brand-v34 .footer .tj-wordmark small,body.brand-v34 footer .tj-wordmark small{color:#aebdca!important}
+body.brand-v34 .hero-bg-r6{display:block!important;opacity:1!important;visibility:visible!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 48%!important;z-index:0!important;filter:saturate(.9) contrast(1.03)!important}
+body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(4,16,31,.94) 0%,rgba(5,20,39,.83) 32%,rgba(7,26,55,.56) 55%,rgba(7,26,55,.14) 78%,rgba(7,26,55,.02) 100%)!important}
+@media(max-width:1200px){body.brand-v34 .navin>.brand{width:245px!important;min-width:245px!important}.tj-wordmark strong{font-size:25px!important}}
+@media(max-width:900px){body.brand-v34 .navin>.brand{width:205px!important;min-width:205px!important}.tj-wordmark strong{font-size:22px!important}.tj-wordmark small{font-size:7px!important;letter-spacing:.17em!important}body.brand-v34 .hero-bg-r6{object-position:68% center!important}}
