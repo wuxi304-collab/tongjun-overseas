@@ -40,12 +40,11 @@ def simplify_rfq(s: str) -> str:
             1,
         )
 
-    # Move the optional qualification + logistics blocks behind the required application block.
-    # They remain inside the same form and are fully submitted when the buyer opens/completes them.
+    # Move optional qualification + logistics behind the required application block.
     if 'class="field full r14-rfq-optional"' not in s:
         group3 = '<div class="rfq-group-label field full"><span>03 · Qualification / release</span>'
         group5 = '<div class="rfq-group-label field full"><span>05 · Application / notes</span>'
-        review_marker = '<div class="field full"><section class="v34-152-review" id="technicalReviewControl">'
+        review_marker = '<div class="field full"><section class="v34-152-review"'
         opt_start = s.find(group3)
         app_start = s.find(group5)
         if opt_start < 0 or app_start < 0 or app_start <= opt_start:
@@ -63,19 +62,20 @@ def simplify_rfq(s: str) -> str:
         )
         s = s[:review_start] + optional_details + s[review_start:]
 
-    # The governance/release console is valuable for controlled procurement, but it should not
-    # confront every first-time buyer before they can send a technically useful requirement.
+    # Wrap the governance/release console in a disclosure rather than deleting it.
     if 'class="field full r14-rfq-advanced"' not in s:
-        outer_start_marker = '<div class="field full"><section class="v34-152-review" id="technicalReviewControl">'
-        outer_start = s.find(outer_start_marker)
+        outer_marker = '<div class="field full"><section class="v34-152-review"'
+        outer_start = s.find(outer_marker)
         if outer_start < 0:
             raise SystemExit('ERROR: RFQ technical review control wrapper not found')
-        inner_start = outer_start + len('<div class="field full">')
+        section_start = s.find('<section class="v34-152-review"', outer_start)
+        if section_start < 0:
+            raise SystemExit('ERROR: RFQ technical review section not found')
         end_marker = '</section></div>'
-        outer_end = s.find(end_marker, inner_start)
+        outer_end = s.find(end_marker, section_start)
         if outer_end < 0:
             raise SystemExit('ERROR: RFQ technical review control closing marker not found')
-        review_section = s[inner_start:outer_end + len('</section>')]
+        review_section = s[section_start:outer_end + len('</section>')]
         advanced_details = (
             '<details class="field full r14-rfq-advanced">'
             '<summary><span>Advanced qualification controls</span><small>Buyer governance · deviations · release basis</small></summary>'
@@ -98,7 +98,6 @@ for p in ROOT.glob('*.html'):
     s = re.sub(r'/assets/brand-v34\.152-r14\.css\?v=[^"\']+', R14, s)
 
     if p.name == 'technical-data.html':
-        # Restore the action-first headline that was lost during later visual consolidation.
         s = re.sub(
             r'(<section class="pagehero tech-center-hero"[^>]*>.*?<h1>).*?(</h1>)',
             r'\1Technical data for sourcing decisions.\2',
@@ -108,7 +107,6 @@ for p in ROOT.glob('*.html'):
         )
 
     if p.name == 'industries.html':
-        # Global Markets navigation links to these fragments. Make the destinations real.
         s = s.replace(
             '<div class="industry"><h3>Energy &amp; Power</h3>',
             '<div class="industry" id="energy"><h3>Energy &amp; Power</h3>',
@@ -120,7 +118,6 @@ for p in ROOT.glob('*.html'):
 
     rail = RAILS.get(p.name)
     if rail and 'class="r14-action-rail"' not in s:
-        # Insert immediately after the page hero, before photography or long-form content.
         m = re.search(r'(<main\b[^>]*>\s*<section\b[^>]*class="[^"]*pagehero[^"]*"[^>]*>.*?</section>)', s, flags=re.S)
         if not m:
             raise SystemExit(f'ERROR: page hero not found for R14 rail in {p.name}')
@@ -133,7 +130,6 @@ for p in ROOT.glob('*.html'):
         p.write_text(s, encoding='utf-8')
         changed.append(p.name)
 
-# Hard assertions: conversion pages must carry the new rail and critical deep links must resolve.
 for name in RAILS:
     text = (ROOT / name).read_text(encoding='utf-8')
     if text.count('class="r14-action-rail"') != 1:
@@ -158,5 +154,7 @@ for marker in (
         raise SystemExit(f'ERROR: RFQ progressive-disclosure marker count wrong: {marker}')
 if rfq.find('05 · Application / notes') > rfq.find('Optional qualification + logistics'):
     raise SystemExit('ERROR: required Application block must precede optional qualification/logistics')
+if 'id="technicalReviewControl"' not in rfq:
+    raise SystemExit('ERROR: advanced technical review controls were lost')
 
 print(f'PASS: R14.1 conversion overlay applied to {len(changed)} HTML files; buyer path and RFQ progressive disclosure installed.')
