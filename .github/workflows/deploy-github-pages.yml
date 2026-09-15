@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R14 — conversion-first mobile hierarchy + full internal route/deep-link validation
+# V34.152 R14.1 — conversion-first mobile hierarchy + progressive RFQ disclosure + full route validation
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R14 release candidate
+      - name: Checkout V34.152 R14.1 release candidate
         uses: actions/checkout@v6
         with:
           ref: feat/v34.152-r14-conversion
@@ -42,7 +42,7 @@ jobs:
             file "assets/images/${img}.webp" | grep -qi 'Web/P'
           done
 
-      - name: Build consolidated R14 stylesheet
+      - name: Build consolidated R14.1 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -63,9 +63,12 @@ jobs:
             assets/brand-v34.152-r14-tail.css \
             > assets/brand-v34.152-r14.css
           test -s assets/brand-v34.152-r14.css
-          grep -q 'V34.152 R14' assets/brand-v34.152-r14.css
+          grep -q 'V34.152 R14.1' assets/brand-v34.152-r14.css
           grep -q 'data-page="technical-data".*visual-band{display:none' assets/brand-v34.152-r14.css
           grep -q 'data-page="rfq".*#rfqForm{order:1' assets/brand-v34.152-r14.css
+          grep -q 'r14-rfq-optional' assets/brand-v34.152-r14.css
+          grep -q 'r14-rfq-advanced' assets/brand-v34.152-r14.css
+          grep -q '#rfqReadiness' assets/brand-v34.152-r14.css
           grep -q '#energy' assets/brand-v34.152-r14.css
           grep -q '#marine' assets/brand-v34.152-r14.css
 
@@ -140,7 +143,7 @@ jobs:
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
 
-      - name: Validate R14 Pages artifact
+      - name: Validate R14.1 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
@@ -158,8 +161,8 @@ jobs:
           core=['index.html','technical-data.html','quality.html','rfq.html','materials.html','product-forms.html','about.html','resources.html','industries.html']
           for name in core:
               text=(root/name).read_text(encoding='utf-8')
-              if 'brand-v34.152-r14.css?v=20260916-r14' not in text:
-                  raise SystemExit(f'ERROR: R14 stylesheet missing in {name}')
+              if 'brand-v34.152-r14.css?v=20260916-r14-1' not in text:
+                  raise SystemExit(f'ERROR: R14.1 stylesheet missing in {name}')
 
           tech=(root/'technical-data.html').read_text(encoding='utf-8')
           quality=(root/'quality.html').read_text(encoding='utf-8')
@@ -172,23 +175,34 @@ jobs:
                   raise SystemExit(f'ERROR: R14 action rail count wrong in {name}')
           if 'href="#rfqForm"' not in rfq:
               raise SystemExit('ERROR: RFQ direct form jump missing')
+          for marker in (
+              'class="r14-rfq-fast-note"',
+              'class="field full r14-rfq-optional"',
+              'class="field full r14-rfq-advanced"',
+          ):
+              if rfq.count(marker) != 1:
+                  raise SystemExit(f'ERROR: RFQ progressive disclosure marker count wrong: {marker}')
+          if rfq.find('05 · Application / notes') > rfq.find('Optional qualification + logistics'):
+              raise SystemExit('ERROR: required Application block must precede optional qualification/logistics')
           for anchor in ('id="energy"','id="marine"'):
               if anchor not in industries:
                   raise SystemExit(f'ERROR: Industries deep-link destination missing: {anchor}')
 
           css=(root/'assets/brand-v34.152-r14.css').read_text(encoding='utf-8')
           required=[
-              'V34.152 R14',
+              'V34.152 R14.1',
               'body.brand-v34[data-page="technical-data"] .visual-band{display:none!important}',
               'body.brand-v34[data-page="rfq"] .visual-band{display:none!important}',
               'body.brand-v34[data-page="rfq"] #rfqForm{order:1!important',
               'body.brand-v34[data-page="home"] .hero-positioning{display:none!important}',
+              'body.brand-v34[data-page="rfq"] .r14-rfq-optional-grid',
+              '.formgrid>.field.full:has(#rfqReadiness)',
               'body.brand-v34 #energy',
               'body.brand-v34 #marine',
           ]
           for marker in required:
               if marker not in css:
-                  raise SystemExit(f'ERROR: missing R14 CSS gate: {marker}')
+                  raise SystemExit(f'ERROR: missing R14.1 CSS gate: {marker}')
 
           forbidden=(
               'SINCE 2010','TONGJUN SPECIAL METALS','hero-special-metals.webp','supply-route.webp',
@@ -205,7 +219,6 @@ jobs:
                   data=dict(attrs)
                   if data.get('id'): self.ids.add(data['id'])
                   href=data.get('href')
-                  # Only <a href> participates in navigation/deep-link validation.
                   if tag == 'a' and href:
                       if urlsplit(href).path.startswith(base+'assets/'):
                           self.assets.append(href)
@@ -213,7 +226,6 @@ jobs:
                           self.links.append(href)
                   for key in ('src','poster','data-src'):
                       if data.get(key): self.assets.append(data[key])
-                  # <link> href values are resources, never page routes.
                   if tag == 'link' and href: self.assets.append(href)
 
           parsed={}
@@ -265,7 +277,7 @@ jobs:
               for x in broken_anchors[:30]: print('BROKEN ANCHOR:',x)
               raise SystemExit(f'ERROR: {len(broken_anchors)} broken internal deep-link anchor(s)')
 
-          print('PASS: R14 50-page gate, conversion hierarchy, local assets, internal routes and deep-link anchors validated.')
+          print('PASS: R14.1 50-page gate, progressive RFQ, local assets, routes and deep-link anchors validated.')
           PY
 
       - name: Upload Pages artifact
