@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R13.1 SAFE — composite brand + stable R12 imagery + hardened Pages path rewriting
+# V34.152 R13.1 SAFE — composite brand + stable R12 imagery + hardened Pages/404 validation
 
 on:
   workflow_dispatch:
@@ -85,7 +85,10 @@ jobs:
           done
           grep -q "cap.href='/quality'" assets/brand-v34.152.js
           grep -q "res.href='/technical-data'" assets/brand-v34.152.js
-          ! grep -q 'images.unsplash.com' assets/brand-v34.152.js
+          if grep -q 'images.unsplash.com' assets/brand-v34.152.js; then
+            echo 'ERROR: external Unsplash dependency returned to brand JS.'
+            exit 1
+          fi
           echo 'PASS: SVG brand mark and R12 industrial imagery validated.'
 
       - name: Apply unified Tongjun brand shell
@@ -143,7 +146,6 @@ jobs:
                       continue
 
                   if suffix in {'.html','.xml','.svg'}:
-                      # Rewrite URL-bearing attributes only. This cannot hit a closing quote before '/>'.
                       t=attr_root.sub(lambda m:m.group(1)+base+'/',t)
                       t=css_root.sub(lambda m:'url('+m.group(1)+base+'/',t)
                   elif suffix == '.css':
@@ -175,11 +177,13 @@ jobs:
             grep -q 'data-page=' "_site/$f"
             grep -q 'tj-brand-composite' "_site/$f"
             grep -q 'tongjun-logo.svg?v=20260916-r13-1-safe' "_site/$f"
-            ! grep -q 'tj-logo-r13' "_site/$f"
-            ! grep -q 'tj-wordmark' "_site/$f"
-            ! grep -qi 'SINCE 2010' "_site/$f"
-            ! grep -q 'TONGJUN SPECIAL METALS' "_site/$f"
           done
+
+          test -s _site/404.html
+          grep -q 'brand-v34.152-r13-1.css?v=20260916-r13-1-safe' _site/404.html
+          grep -q 'tj-brand-composite' _site/404.html
+          grep -q 'tongjun-logo.svg?v=20260916-r13-1-safe' _site/404.html
+          grep -q 'Page Not Found | Tongjun Metal Tech' _site/404.html
 
           test -s _site/assets/brand-v34.152-r13-1.css
           grep -q 'V34.152 R13.1 SAFE' _site/assets/brand-v34.152-r13-1.css
@@ -192,25 +196,16 @@ jobs:
           done
 
           grep -q 'logistics-stock.webp?v=20260915-r12fix2' _site/index.html
-          ! grep -q 'hero-special-metals.webp' _site/index.html
           grep -q 'logistics-stock.webp?v=20260915-r12' _site/resource-qualify-china-special-metals.html
-          ! grep -q 'supply-route.webp' _site/resource-qualify-china-special-metals.html
-          ! grep -Eq 'logo-r13\.avif|hero-port-r13\.avif' _site/index.html
           grep -q 'href="/tongjun-overseas/quality">Quality</a>' _site/index.html
           grep -q 'href="/tongjun-overseas/technical-data">Technical Data</a>' _site/index.html
-
           grep -q 'materials-r8.webp?v=20260915-r12' _site/materials.html
           grep -q 'quality-r8.webp?v=20260915-r12' _site/quality.html
           grep -q 'quality-r8.webp?v=20260915-r12' _site/technical-data.html
           grep -q 'engineering-discussion-v2.webp?v=20260915-r12' _site/about.html
           grep -q 'engineering-review-v2.webp?v=20260915-r12' _site/rfq.html
-
-          ! grep -R -E 'quality-lab-r13|engineering-team-r13|technical-lab-r13' _site/*.html
-          ! grep -R -E 'logo-r13\.avif|hero-port-r13\.avif' _site/*.html
           grep -q 'technical_review_plan' _site/rfq.html
           grep -q 'release_checklist' _site/rfq.html
-          ! grep -q '同钧' _site/index.html
-          ! grep -q 'images.unsplash.com' _site/assets/brand-v34.152.js
 
           python3 - <<'PY'
           from pathlib import Path
@@ -220,12 +215,29 @@ jobs:
           root=Path('_site')
           base='/tongjun-overseas/'
           broken=[]
+          forbidden=(
+              'SINCE 2010',
+              'TONGJUN SPECIAL METALS',
+              'hero-special-metals.webp',
+              'supply-route.webp',
+              'quality-lab-r13',
+              'engineering-team-r13',
+              'technical-lab-r13',
+              'logo-r13.avif',
+              'hero-port-r13.avif',
+              'tj-logo-r13',
+              'tj-wordmark',
+          )
 
           class AssetParser(HTMLParser):
               def __init__(self, page):
                   super().__init__()
                   self.page=page
               def handle_starttag(self, tag, attrs):
+                  self._check(attrs)
+              def handle_startendtag(self, tag, attrs):
+                  self._check(attrs)
+              def _check(self, attrs):
                   for key,val in attrs:
                       if key not in {'src','href','poster','data-src'} or not val:
                           continue
@@ -235,12 +247,14 @@ jobs:
                       rel=path[len(base):]
                       if not (root/rel).is_file():
                           broken.append((self.page,val))
-              handle_startendtag=handle_starttag
 
           for page in sorted(root.glob('*.html')):
               text=page.read_text(encoding='utf-8')
               if '"/tongjun-overseas/>' in text or "'/tongjun-overseas/>" in text:
                   raise SystemExit(f'ERROR: malformed BASE_PATH rewrite in {page.name}')
+              for marker in forbidden:
+                  if marker in text:
+                      raise SystemExit(f'ERROR: forbidden legacy/broken marker {marker!r} in {page.name}')
               parser=AssetParser(page.name)
               parser.feed(text)
 
@@ -248,10 +262,10 @@ jobs:
               for page,val in broken:
                   print(f'BROKEN ASSET: {page}: {val}')
               raise SystemExit(f'ERROR: {len(broken)} broken local asset reference(s)')
-          print('PASS: no malformed self-closing tags or broken local asset references.')
+          print('PASS: 50-page HTML gate found no malformed paths, forbidden legacy markers, or broken local assets.')
           PY
 
-          echo 'PASS: V34.152 R13.1 safe release validated end to end.'
+          echo 'PASS: V34.152 R13.1 safe release validated end to end including 404.'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
