@@ -49,7 +49,7 @@ def main():
     if not ROOT.is_dir():
         fail(f'Pages root missing: {ROOT}')
 
-    forbidden_dirs = {'ops', 'api', 'scripts', 'tests', '.git', '.github', '.sync'}
+    forbidden_dirs = {'ops', 'api', 'scripts', 'tests', 'lib', '.git', '.github', '.sync'}
     leaked = []
     for path in ROOT.rglob('*'):
         if not path.is_file():
@@ -59,8 +59,11 @@ def main():
             leaked.append(str(rel))
     if leaked:
         fail(f'internal/server paths leaked into Pages artifact: {leaked[:20]}')
-    if (ROOT / 'CNAME').exists():
-        fail('CNAME must not ship in the temporary Pages mirror')
+
+    forbidden_root_files = {'CNAME', 'R7_TEST.txt', 'package.json', 'vercel.json'}
+    stray = sorted(name for name in forbidden_root_files if (ROOT / name).exists())
+    if stray:
+        fail(f'build-only root files leaked into Pages artifact: {stray}')
 
     robots_txt = (ROOT / 'robots.txt').read_text(encoding='utf-8') if (ROOT / 'robots.txt').is_file() else ''
     if robots_txt.strip() != 'User-agent: *\nDisallow: /':
@@ -215,7 +218,7 @@ def main():
         fail(f'{len(broken_anchors)} broken internal deep-link anchor(s): {broken_anchors[:20]}')
 
     print(
-        'PASS: R15 Pages release — 50 root pages, temporary mirror noindex, internal paths excluded, '
+        'PASS: R15 Pages release — 50 root pages, temporary mirror noindex, internal/build-only paths excluded, '
         'RFQ trace runtime gated, 0 broken assets/routes/anchors and 0 duplicate ids.'
     )
 
