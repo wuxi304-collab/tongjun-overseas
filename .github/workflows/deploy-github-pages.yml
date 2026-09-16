@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.3 — hardened mirror + accessibility + production-readiness gates
+# V34.152 R15.4 — hardened mirror + keyboard/focus accessibility + production-readiness gates
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.3 release candidate
+      - name: Checkout V34.152 R15.4 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15-production-launch
+          ref: feat/v34.152-r15.4-keyboard-polish
           fetch-depth: 1
 
       - name: Configure Pages
@@ -42,7 +42,7 @@ jobs:
             file "assets/images/${img}.webp" | grep -qi 'Web/P'
           done
 
-      - name: Build consolidated R14.1 stylesheet
+      - name: Build consolidated R15.4 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -61,9 +61,14 @@ jobs:
             assets/brand-v34.152-r12-fix2.css \
             assets/brand-v34.152-r13-1-tail.css \
             assets/brand-v34.152-r14-tail.css \
+            assets/brand-v34.152-r15-tail.css \
             > assets/brand-v34.152-r14.css
           test -s assets/brand-v34.152-r14.css
           grep -q 'V34.152 R14.1' assets/brand-v34.152-r14.css
+          grep -q 'V34.152 R15.4' assets/brand-v34.152-r14.css
+          grep -q 'body.brand-v34 .skip-link' assets/brand-v34.152-r14.css
+          grep -q ':focus-visible' assets/brand-v34.152-r14.css
+          grep -q 'prefers-reduced-motion: reduce' assets/brand-v34.152-r14.css
           grep -q 'data-page="technical-data".*visual-band{display:none' assets/brand-v34.152-r14.css
           grep -q 'data-page="rfq".*#rfqForm{order:1' assets/brand-v34.152-r14.css
           grep -q 'r14-rfq-optional' assets/brand-v34.152-r14.css
@@ -87,7 +92,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.3 release overlays
+      - name: Apply V34.152 R15.4 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -98,7 +103,7 @@ jobs:
           python3 scripts/apply-r14-runtime.py
           python3 scripts/apply-r15-accessibility.py
 
-      - name: Run full V34.152 R15.3 source gate
+      - name: Run full V34.152 R15.4 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -114,7 +119,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.3 Pages artifact
+      - name: Validate V34.152 R15.4 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
