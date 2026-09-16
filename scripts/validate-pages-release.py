@@ -15,6 +15,10 @@ class PageParser(HTMLParser):
         self.links = []
         self.assets = []
         self.robots = []
+        self.skip_targets = []
+        self.main_ids = []
+        self.nav_count = 0
+        self.named_nav_count = 0
 
     def handle_starttag(self, tag, attrs):
         self._read(tag, attrs)
@@ -24,12 +28,22 @@ class PageParser(HTMLParser):
 
     def _read(self, tag, attrs):
         data = dict(attrs)
-        if data.get('id'):
-            self.ids.append(data['id'])
+        ident = data.get('id')
+        if ident:
+            self.ids.append(ident)
+        if tag == 'main':
+            self.main_ids.append(ident or '')
+        if tag == 'nav':
+            self.nav_count += 1
+            if data.get('aria-label') or data.get('aria-labelledby'):
+                self.named_nav_count += 1
         if tag == 'meta' and (data.get('name') or '').lower() == 'robots':
             self.robots.append((data.get('content') or '').lower())
         href = data.get('href')
         if tag == 'a' and href:
+            classes = set((data.get('class') or '').split())
+            if 'skip-link' in classes:
+                self.skip_targets.append(href)
             if urlsplit(href).path.startswith(BASE + 'assets/'):
                 self.assets.append(href)
             else:
@@ -84,6 +98,15 @@ def main():
         parsed[page.name] = parser
         if len(parser.robots) != 1 or 'noindex' not in parser.robots[0] or 'nofollow' not in parser.robots[0]:
             fail(f'Pages noindex/nofollow marker missing or duplicated in {page.name}')
+        if len(parser.skip_targets) != 1:
+            fail(f'expected exactly one skip link in {page.name}, found {len(parser.skip_targets)}')
+        skip = urlsplit(parser.skip_targets[0])
+        if not skip.fragment or skip.fragment not in set(parser.ids):
+            fail(f'skip link target is missing in {page.name}: {parser.skip_targets[0]}')
+        if len(parser.main_ids) != 1 or not parser.main_ids[0]:
+            fail(f'expected one named main landmark in {page.name}')
+        if parser.nav_count and parser.named_nav_count < 1:
+            fail(f'navigation landmark lacks accessible name in {page.name}')
         seen = set()
         for ident in parser.ids:
             if ident in seen:
@@ -95,8 +118,8 @@ def main():
     core = ['index.html', 'technical-data.html', 'quality.html', 'rfq.html', 'materials.html', 'product-forms.html', 'about.html', 'resources.html', 'industries.html']
     for name in core:
         text = (ROOT / name).read_text(encoding='utf-8')
-        if 'brand-v34.152-r14.css?v=20260916-r14-1' not in text:
-            fail(f'R14.1 stylesheet missing in {name}')
+        if 'brand-v34.152-r14.css?v=20260916-r15-4' not in text:
+            fail(f'R15.4 stylesheet cache version missing in {name}')
         if 'assets/site.js?v=20260916-r14-2' not in text:
             fail(f'R14.2 site.js cache version missing in {name}')
 
@@ -150,6 +173,10 @@ def main():
     css = (ROOT / 'assets' / 'brand-v34.152-r14.css').read_text(encoding='utf-8')
     for marker in (
         'V34.152 R14.1',
+        'V34.152 R15.4',
+        'body.brand-v34 .skip-link',
+        ':focus-visible',
+        'prefers-reduced-motion: reduce',
         'body.brand-v34[data-page="technical-data"] .visual-band{display:none!important}',
         'body.brand-v34[data-page="rfq"] .visual-band{display:none!important}',
         'body.brand-v34[data-page="rfq"] #rfqForm{order:1!important',
@@ -160,7 +187,7 @@ def main():
         'body.brand-v34 #marine',
     ):
         if marker not in css:
-            fail(f'missing R14.1 CSS gate: {marker}')
+            fail(f'missing release CSS gate: {marker}')
 
     forbidden_markers = (
         'SINCE 2010', 'TONGJUN SPECIAL METALS', 'hero-special-metals.webp', 'supply-route.webp',
@@ -218,8 +245,8 @@ def main():
         fail(f'{len(broken_anchors)} broken internal deep-link anchor(s): {broken_anchors[:20]}')
 
     print(
-        'PASS: R15 Pages release — 50 root pages, temporary mirror noindex, internal/build-only paths excluded, '
-        'RFQ trace runtime gated, 0 broken assets/routes/anchors and 0 duplicate ids.'
+        'PASS: R15.4 Pages release — 50 root pages, staging noindex, keyboard landmarks/focus CSS gated, '
+        'internal/build-only paths excluded, RFQ trace runtime gated, 0 broken assets/routes/anchors and 0 duplicate ids.'
     )
 
 
