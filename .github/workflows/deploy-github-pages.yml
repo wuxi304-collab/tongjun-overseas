@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R14.2 — conversion-first UX + traceable RFQ delivery + buyer-form semantics + full route validation
+# V34.152 R15 — hardened temporary mirror + production-launch gates
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R14.2 release candidate
+      - name: Checkout V34.152 R15 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r14-conversion
+          ref: feat/v34.152-r15-production-launch
           fetch-depth: 1
 
       - name: Configure Pages
@@ -87,7 +87,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply and validate V34.152 R14.2 release overlays
+      - name: Apply and validate V34.152 R15 source contract
         shell: bash
         run: |
           set -euo pipefail
@@ -96,223 +96,33 @@ jobs:
           python3 scripts/apply-r13-1-release.py
           python3 scripts/apply-r14-conversion.py
           python3 scripts/apply-r14-runtime.py
+          node --check api/rfq.js
+          node --check assets/site.js
+          node --check scripts/smoke-rfq-production.js
           python3 scripts/validate-form-semantics.py .
           python3 scripts/validate-rfq-contract.py .
 
-      - name: Build Pages mirror with syntax-safe base path rewriting
+      - name: Build hardened temporary Pages mirror
         shell: bash
         env:
           BASE_PATH: /tongjun-overseas
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          import os,re,shutil
+          python3 scripts/build-pages-mirror.py
 
-          root=Path('.')
-          out=Path('_site')
-          base=os.environ.get('BASE_PATH','/tongjun-overseas').rstrip('/')
-          if out.exists(): shutil.rmtree(out)
-          out.mkdir()
-
-          skip={'.git','.github','.sync','node_modules','scripts','tests','api','_site'}
-          text_ext={'.html','.css','.js','.json','.xml','.txt','.webmanifest','.svg'}
-          keep_ext=text_ext|{'.ico','.png','.jpg','.jpeg','.webp','.avif','.woff','.woff2','.ttf'}
-          attr_root=re.compile(r"(\b(?:href|src|action|poster|content|data-src|data-href)=[\"'])/(?!/)", re.I)
-          quoted_root=re.compile(r"([\"'])/(?=[A-Za-z0-9])")
-          css_root=re.compile(r"url\(([\"']?)/(?!/)")
-
-          for p in root.rglob('*'):
-              if not p.is_file(): continue
-              rel=p.relative_to(root)
-              if rel.parts and rel.parts[0] in skip: continue
-              if p.suffix.lower() not in keep_ext and p.name not in {'robots.txt','sitemap.xml','manifest.webmanifest'}: continue
-              d=out/rel; d.parent.mkdir(parents=True,exist_ok=True)
-              suffix=p.suffix.lower()
-              if suffix in text_ext:
-                  try: t=p.read_text(encoding='utf-8')
-                  except UnicodeDecodeError:
-                      shutil.copy2(p,d); continue
-                  if suffix in {'.html','.xml','.svg'}:
-                      t=attr_root.sub(lambda m:m.group(1)+base+'/',t)
-                      t=css_root.sub(lambda m:'url('+m.group(1)+base+'/',t)
-                  elif suffix == '.css':
-                      t=css_root.sub(lambda m:'url('+m.group(1)+base+'/',t)
-                  elif suffix in {'.js','.json','.webmanifest'}:
-                      t=quoted_root.sub(lambda m:m.group(1)+base+'/',t)
-                  d.write_text(t,encoding='utf-8')
-              else:
-                  shutil.copy2(p,d)
-          (out/'.nojekyll').write_text('',encoding='utf-8')
-          PY
-
-      - name: Validate R14.2 Pages artifact
+      - name: Validate V34.152 R15 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/validate-form-semantics.py _site
           python3 scripts/validate-rfq-contract.py _site
-          python3 - <<'PY'
-          from pathlib import Path
-          from html.parser import HTMLParser
-          from urllib.parse import urlsplit
-
-          root=Path('_site')
-          base='/tongjun-overseas/'
-          htmls=sorted(root.glob('*.html'))
-          if len(htmls) != 50:
-              raise SystemExit(f'ERROR: expected 50 HTML pages, found {len(htmls)}')
-
-          core=['index.html','technical-data.html','quality.html','rfq.html','materials.html','product-forms.html','about.html','resources.html','industries.html']
-          for name in core:
-              text=(root/name).read_text(encoding='utf-8')
-              if 'brand-v34.152-r14.css?v=20260916-r14-1' not in text:
-                  raise SystemExit(f'ERROR: R14.1 stylesheet missing in {name}')
-              if 'assets/site.js?v=20260916-r14-2' not in text:
-                  raise SystemExit(f'ERROR: R14.2 site.js cache version missing in {name}')
-
-          tech=(root/'technical-data.html').read_text(encoding='utf-8')
-          quality=(root/'quality.html').read_text(encoding='utf-8')
-          rfq=(root/'rfq.html').read_text(encoding='utf-8')
-          route=(root/'supply-route.html').read_text(encoding='utf-8')
-          problem=(root/'problem-order.html').read_text(encoding='utf-8')
-          industries=(root/'industries.html').read_text(encoding='utf-8')
-          if 'Technical data for sourcing decisions.' not in tech:
-              raise SystemExit('ERROR: Technical Data headline regressed')
-          for name,text in [('technical-data.html',tech),('quality.html',quality),('rfq.html',rfq)]:
-              if text.count('class="r14-action-rail"') != 1:
-                  raise SystemExit(f'ERROR: R14 action rail count wrong in {name}')
-          if 'href="#rfqForm"' not in rfq:
-              raise SystemExit('ERROR: RFQ direct form jump missing')
-          for marker in (
-              'class="r14-rfq-fast-note"',
-              'class="field full r14-rfq-optional"',
-              'class="field full r14-rfq-advanced"',
-          ):
-              if rfq.count(marker) != 1:
-                  raise SystemExit(f'ERROR: RFQ progressive disclosure marker count wrong: {marker}')
-          if rfq.find('05 · Application / notes') > rfq.find('Optional qualification + logistics'):
-              raise SystemExit('ERROR: required Application block must precede optional qualification/logistics')
-          for marker,text in (
-              ('id="rfq-name"',rfq),('for="rfq-name"',rfq),
-              ('id="route-family"',route),('for="route-family"',route),
-              ('id="problem-family"',problem),('for="problem-family"',problem),
-          ):
-              if marker not in text:
-                  raise SystemExit(f'ERROR: buyer-form semantic marker missing: {marker}')
-          for anchor in ('id="energy"','id="marine"'):
-              if anchor not in industries:
-                  raise SystemExit(f'ERROR: Industries deep-link destination missing: {anchor}')
-
-          runtime=(root/'assets/site.js').read_text(encoding='utf-8')
-          for marker in (
-              'Product Context:',
-              'First Seen:',
-              'routeError.requestId=safe(result.request_id,80)',
-              'Secure Route Attempt:',
-              "setStore('tj_last_rfq','email_fallback')",
-              'use Copy Structured RFQ if no mail app opens.',
-              "fetch('/tongjun-overseas/api/rfq'",
-          ):
-              if marker not in runtime:
-                  raise SystemExit(f'ERROR: R14.2 RFQ runtime marker missing: {marker}')
-
-          css=(root/'assets/brand-v34.152-r14.css').read_text(encoding='utf-8')
-          required=[
-              'V34.152 R14.1',
-              'body.brand-v34[data-page="technical-data"] .visual-band{display:none!important}',
-              'body.brand-v34[data-page="rfq"] .visual-band{display:none!important}',
-              'body.brand-v34[data-page="rfq"] #rfqForm{order:1!important',
-              'body.brand-v34[data-page="home"] .hero-positioning{display:none!important}',
-              'body.brand-v34[data-page="rfq"] .r14-rfq-optional-grid',
-              '.formgrid>.field.full:has(#rfqReadiness)',
-              'body.brand-v34 #energy',
-              'body.brand-v34 #marine',
-          ]
-          for marker in required:
-              if marker not in css:
-                  raise SystemExit(f'ERROR: missing R14.1 CSS gate: {marker}')
-
-          forbidden=(
-              'SINCE 2010','TONGJUN SPECIAL METALS','hero-special-metals.webp','supply-route.webp',
-              'quality-lab-r13','engineering-team-r13','technical-lab-r13','logo-r13.avif','hero-port-r13.avif',
-              'tj-logo-r13','tj-wordmark',
-          )
-
-          class PageParser(HTMLParser):
-              def __init__(self,page):
-                  super().__init__(); self.page=page; self.ids=set(); self.links=[]; self.assets=[]
-              def handle_starttag(self,tag,attrs): self._read(tag,attrs)
-              def handle_startendtag(self,tag,attrs): self._read(tag,attrs)
-              def _read(self,tag,attrs):
-                  data=dict(attrs)
-                  if data.get('id'): self.ids.add(data['id'])
-                  href=data.get('href')
-                  if tag == 'a' and href:
-                      if urlsplit(href).path.startswith(base+'assets/'):
-                          self.assets.append(href)
-                      else:
-                          self.links.append(href)
-                  for key in ('src','poster','data-src'):
-                      if data.get(key): self.assets.append(data[key])
-                  if tag == 'link' and href: self.assets.append(href)
-
-          parsed={}
-          stem_to_name={p.stem:p.name for p in htmls}
-          stem_to_name['index']='index.html'
-          for page in htmls:
-              text=page.read_text(encoding='utf-8')
-              if '"/tongjun-overseas/>' in text or "'/tongjun-overseas/>" in text:
-                  raise SystemExit(f'ERROR: malformed BASE_PATH rewrite in {page.name}')
-              for marker in forbidden:
-                  if marker in text:
-                      raise SystemExit(f'ERROR: forbidden marker {marker!r} in {page.name}')
-              parser=PageParser(page.name); parser.feed(text); parsed[page.name]=parser
-
-          broken_assets=[]; broken_routes=[]; broken_anchors=[]
-          for page in htmls:
-              parser=parsed[page.name]
-              for val in parser.assets:
-                  path=urlsplit(val).path
-                  if not path.startswith(base+'assets/'): continue
-                  rel=path[len(base):]
-                  if not (root/rel).is_file(): broken_assets.append((page.name,val))
-
-              for href in parser.links:
-                  if href.startswith(('mailto:','tel:','javascript:','http://','https://')): continue
-                  u=urlsplit(href); path=u.path
-                  if path == '':
-                      target_name=page.name
-                  else:
-                      if path.startswith(base): path=path[len(base)-1:]
-                      if path in ('','/'):
-                          target_name='index.html'
-                      else:
-                          target=path.strip('/').split('/')[-1]
-                          if target.endswith('.html'): target=target[:-5]
-                          target_name=stem_to_name.get(target)
-                          if not target_name:
-                              broken_routes.append((page.name,href)); continue
-                  if u.fragment and u.fragment not in parsed[target_name].ids:
-                      broken_anchors.append((page.name,href,target_name,u.fragment))
-
-          if broken_assets:
-              for x in broken_assets: print('BROKEN ASSET:',x)
-              raise SystemExit(f'ERROR: {len(broken_assets)} broken local asset reference(s)')
-          if broken_routes:
-              for x in broken_routes[:30]: print('BROKEN ROUTE:',x)
-              raise SystemExit(f'ERROR: {len(broken_routes)} broken internal route(s)')
-          if broken_anchors:
-              for x in broken_anchors[:30]: print('BROKEN ANCHOR:',x)
-              raise SystemExit(f'ERROR: {len(broken_anchors)} broken internal deep-link anchor(s)')
-
-          print('PASS: R14.2 50-page gate, progressive RFQ, traceable delivery, form semantics, local assets, routes and deep-link anchors validated.')
-          PY
+          python3 scripts/validate-pages-release.py _site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
+          retention-days: 1
 
   deploy:
     needs: build
