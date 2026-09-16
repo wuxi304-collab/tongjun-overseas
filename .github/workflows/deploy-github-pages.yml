@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.2 — hardened mirror + full production-readiness source gate
+# V34.152 R15.3 — hardened mirror + accessibility + production-readiness gates
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.2 release candidate
+      - name: Checkout V34.152 R15.3 release candidate
         uses: actions/checkout@v6
         with:
           ref: feat/v34.152-r15-production-launch
@@ -87,7 +87,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 release overlays
+      - name: Apply V34.152 R15.3 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -96,8 +96,9 @@ jobs:
           python3 scripts/apply-r13-1-release.py
           python3 scripts/apply-r14-conversion.py
           python3 scripts/apply-r14-runtime.py
+          python3 scripts/apply-r15-accessibility.py
 
-      - name: Run full V34.152 R15.2 source gate
+      - name: Run full V34.152 R15.3 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -113,7 +114,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.2 Pages artifact
+      - name: Validate V34.152 R15.3 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
