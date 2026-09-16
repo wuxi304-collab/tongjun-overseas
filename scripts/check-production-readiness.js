@@ -17,6 +17,28 @@ async function resolveHost(host){
   return results;
 }
 
+function attr(tag,name){
+  const m=tag.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`,'i'));
+  return m ? m[1] : '';
+}
+
+function robotsContent(html){
+  const tags=html.match(/<meta\b[^>]*>/gi)||[];
+  for(const tag of tags){
+    if(attr(tag,'name').toLowerCase()==='robots') return attr(tag,'content');
+  }
+  return '';
+}
+
+function canonicalHref(html){
+  const tags=html.match(/<link\b[^>]*>/gi)||[];
+  for(const tag of tags){
+    const rel=attr(tag,'rel').toLowerCase().split(/\s+/).filter(Boolean);
+    if(rel.includes('canonical')) return attr(tag,'href');
+  }
+  return '';
+}
+
 function assertSecurityHeaders(response){
   assert.equal((response.headers.get('x-content-type-options')||'').toLowerCase(),'nosniff','X-Content-Type-Options must be nosniff');
   assert.equal((response.headers.get('x-frame-options')||'').toUpperCase(),'DENY','X-Frame-Options must be DENY');
@@ -42,8 +64,10 @@ async function run(){
   assert.equal(home.status,200,`Homepage expected 200, got ${home.status}`);
   assertSecurityHeaders(home);
   const html=await home.text();
-  assert.match(html,/<link\b[^>]*rel=["']canonical["'][^>]*href=["']https:\/\/exoticalloycn\.com\/?["']/i,'Production canonical missing or wrong');
-  const robots=(html.match(/<meta\b[^>]*name=["']robots["'][^>]*content=["']([^"']+)["'][^>]*>/i)||[])[1]||'';
+  const canonical=canonicalHref(html);
+  assert.ok(canonical==='https://exoticalloycn.com/' || canonical==='https://exoticalloycn.com',`Production canonical missing or wrong: ${canonical||'(missing)'}`);
+  const robots=robotsContent(html);
+  assert.ok(robots,'Production homepage robots meta is missing');
   assert.ok(!/noindex/i.test(robots),'Production homepage must not be noindex');
   assert.match(html,/assets\/site\.js\?v=20260916-r14-2/,'Expected R14.2 runtime asset is not active');
   console.log('Homepage: 200, indexable, canonical + security headers + current runtime verified.');
@@ -52,8 +76,10 @@ async function run(){
   assert.equal(rfq.status,200,`/rfq expected 200, got ${rfq.status}`);
   const rfqHtml=await rfq.text();
   assert.match(rfqHtml,/id=["']rfqForm["']/,'/rfq missing #rfqForm');
-  assert.ok(!/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(rfqHtml),'/rfq must not be noindex in production');
-  console.log('/rfq: 200 and buyer form present.');
+  const rfqRobots=robotsContent(rfqHtml);
+  assert.ok(rfqRobots,'/rfq robots meta is missing');
+  assert.ok(!/noindex/i.test(rfqRobots),'/rfq must not be noindex in production');
+  console.log('/rfq: 200, indexable and buyer form present.');
 
   const thankYou=await fetchChecked(`${BASE}/thank-you`,{redirect:'follow'});
   assert.equal(thankYou.status,200,`/thank-you expected 200, got ${thankYou.status}`);
