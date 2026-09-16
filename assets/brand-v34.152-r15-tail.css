@@ -1,0 +1,51 @@
+/* V34.152 R15.4 — keyboard, focus and reduced-motion polish. */
+
+body.brand-v34 .skip-link{
+  position:fixed;
+  left:16px;
+  top:12px;
+  z-index:1200;
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  padding:0 16px;
+  border:2px solid #fff;
+  background:var(--tj-navy,#071a37);
+  color:#fff;
+  font:800 12px/1.2 Inter,system-ui,sans-serif;
+  letter-spacing:.04em;
+  text-decoration:none;
+  transform:translateY(-150%);
+  transition:transform .16s ease;
+  box-shadow:0 0 0 2px var(--tj-navy,#071a37);
+}
+body.brand-v34 .skip-link:focus,
+body.brand-v34 .skip-link:focus-visible{transform:translateY(0)}
+
+body.brand-v34 :where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{
+  outline:3px solid #d9822b;
+  outline-offset:3px;
+}
+body.brand-v34 :where(input,select,textarea):focus-visible{
+  border-color:#315a83!important;
+  box-shadow:0 0 0 2px rgba(49,90,131,.18)!important;
+}
+body.brand-v34 :where(.navtoggle,.hamb,.btn,.cta,.nav-cta,.quote):focus-visible{
+  outline-offset:4px;
+}
+body.brand-v34 details>summary:focus-visible{
+  background:#eef3f7!important;
+}
+body.brand-v34 :where(#main-content,main[id]){scroll-margin-top:112px}
+
+@media (prefers-reduced-motion: reduce){
+  html:focus-within{scroll-behavior:auto!important}
+  body.brand-v34 *,
+  body.brand-v34 *::before,
+  body.brand-v34 *::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
