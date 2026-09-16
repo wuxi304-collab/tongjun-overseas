@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15 — hardened temporary mirror + production-launch gates
+# V34.152 R15.1 — minimal public mirror + production-launch gates
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15 release candidate
+      - name: Checkout V34.152 R15.1 release candidate
         uses: actions/checkout@v6
         with:
           ref: feat/v34.152-r15-production-launch
@@ -87,7 +87,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply and validate V34.152 R15 source contract
+      - name: Apply and validate V34.152 R15.1 source contract
         shell: bash
         run: |
           set -euo pipefail
@@ -110,7 +110,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15 Pages artifact
+      - name: Validate V34.152 R15.1 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
