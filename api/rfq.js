@@ -17,7 +17,13 @@ const LIMITS = {
 function norm(value, max){
   return String(value ?? '').replace(/\u0000/g,'').trim().slice(0,max);
 }
-
+function makeRequestId(){
+  return `TJ-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+}
+function respond(res,status,payload,requestId){
+  if(requestId) res.setHeader('X-Tongjun-Request-Id',requestId);
+  return res.status(status).json(requestId ? {...payload,request_id:requestId} : payload);
+}
 function clientKey(req){
   const raw=req.headers['x-forwarded-for'] || '';
   return String(raw).split(',')[0].trim().slice(0,80);
@@ -69,30 +75,33 @@ module.exports = async function handler(req, res) {
     res.setHeader('Allow','POST');
     return res.status(405).json({ok:false,error:'method_not_allowed'});
   }
-  if (!allowedOrigin(req)) return res.status(403).json({ok:false,error:'origin_not_allowed'});
-  if (!withinRateLimit(req,res)) return res.status(429).json({ok:false,error:'rate_limited'});
+
+  const requestId=makeRequestId();
+  res.setHeader('X-Tongjun-Request-Id',requestId);
+
+  if (!allowedOrigin(req)) return respond(res,403,{ok:false,error:'origin_not_allowed'},requestId);
+  if (!withinRateLimit(req,res)) return respond(res,429,{ok:false,error:'rate_limited'},requestId);
   const raw = req.body || {};
-  if (JSON.stringify(raw).length > MAX_BODY_CHARS) return res.status(413).json({ok:false,error:'payload_too_large'});
+  if (JSON.stringify(raw).length > MAX_BODY_CHARS) return respond(res,413,{ok:false,error:'payload_too_large'},requestId);
   const b={};
   for(const [key,max] of Object.entries(LIMITS)) b[key]=norm(raw[key],max);
-  if (b.website) return res.status(202).json({ok:true});
+  if (b.website) return respond(res,202,{ok:true},requestId);
 
   const required=['name','company','email','grade','size','qty','application'];
   const missing=required.filter(k=>!b[k]);
-  if(missing.length) return res.status(400).json({ok:false,error:'missing_fields',missing});
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)) return res.status(400).json({ok:false,error:'invalid_email'});
+  if(missing.length) return respond(res,400,{ok:false,error:'missing_fields',missing},requestId);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)) return respond(res,400,{ok:false,error:'invalid_email'},requestId);
 
-  const requestId=`TJ-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
   const record={request_id:requestId,received_at:new Date().toISOString(),site:'exoticalloycn.com',...b};
   const webhook=process.env.RFQ_WEBHOOK_URL;
-  if(!webhook) return res.status(503).json({ok:false,error:'rfq_route_not_configured',request_id:requestId});
+  if(!webhook) return respond(res,503,{ok:false,error:'rfq_route_not_configured'},requestId);
 
   try{
     const r=await postWebhook(webhook,record,requestId);
     if(!r.ok) throw new Error(`webhook_${r.status}`);
-    return res.status(202).json({ok:true,request_id:requestId});
+    return respond(res,202,{ok:true},requestId);
   } catch(e){
     console.error('RFQ_WEBHOOK_ERROR', requestId, e && e.message ? e.message : 'unknown');
-    return res.status(502).json({ok:false,error:'rfq_delivery_failed',request_id:requestId});
+    return respond(res,502,{ok:false,error:'rfq_delivery_failed'},requestId);
   }
 };
