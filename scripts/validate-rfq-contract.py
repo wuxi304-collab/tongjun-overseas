@@ -8,6 +8,7 @@ RFQ = ROOT / 'rfq.html'
 SITE_JS = ROOT / 'assets' / 'site.js'
 # API source lives in the repository root even when validating a built _site artifact.
 API_JS = Path('api/rfq.js')
+RUNTIME_VERSION = '20260916-r14-2'
 
 
 class RfqFormParser(HTMLParser):
@@ -80,8 +81,10 @@ def main():
     if not form_parser.fields:
         raise SystemExit('ERROR: #rfqForm has no named fields')
 
-    api_limits, api_required = parse_api_contract(API_JS.read_text(encoding='utf-8'))
-    fallback_fields = parse_fallback_fields(SITE_JS.read_text(encoding='utf-8'))
+    api_text = API_JS.read_text(encoding='utf-8')
+    api_limits, api_required = parse_api_contract(api_text)
+    js_text = SITE_JS.read_text(encoding='utf-8')
+    fallback_fields = parse_fallback_fields(js_text)
 
     form_fields = set(form_parser.fields)
     form_required = set(form_parser.required)
@@ -104,28 +107,51 @@ def main():
     if missing_fallback:
         raise SystemExit(f'ERROR: fields missing from structured email fallback: {missing_fallback}')
 
-    js_text = SITE_JS.read_text(encoding='utf-8')
+    # Runtime must keep secure POST + traceable fallback + cache-busted critical JS.
+    if "fetch('/api/rfq'" not in js_text and "fetch('/tongjun-overseas/api/rfq'" not in js_text:
+        raise SystemExit('ERROR: RFQ secure POST endpoint missing from runtime')
     runtime_markers = (
-        "fetch('/api/rfq'",
         'Product Context:',
         'First Seen:',
+        'routeError.requestId=safe(result.request_id,80)',
+        'Secure Route Attempt:',
         "setStore('tj_last_rfq','email_fallback')",
         'Copy Structured RFQ',
         'mailto:ask2205@outlook.com',
     )
-    # In a GitHub Pages artifact, the safe base-path rewrite changes /api/rfq to /tongjun-overseas/api/rfq.
-    if "fetch('/api/rfq'" not in js_text and "fetch('/tongjun-overseas/api/rfq'" not in js_text:
-        raise SystemExit('ERROR: RFQ secure POST endpoint missing from runtime')
-    for marker in runtime_markers[1:]:
+    for marker in runtime_markers:
         if marker not in js_text:
             raise SystemExit(f'ERROR: RFQ runtime/fallback marker missing: {marker}')
 
+    rfq_text = RFQ.read_text(encoding='utf-8')
+    expected_site_ref = f'/assets/site.js?v={RUNTIME_VERSION}'
+    if expected_site_ref not in rfq_text and f'/tongjun-overseas/assets/site.js?v={RUNTIME_VERSION}' not in rfq_text:
+        raise SystemExit('ERROR: RFQ page is not pinned to the R14.2 site.js runtime version')
+
+    # Every POST outcome after method validation must be traceable through a stable request ID.
+    api_markers = (
+        'function makeRequestId()',
+        'function respond(res,status,payload,requestId)',
+        "res.setHeader('X-Tongjun-Request-Id',requestId)",
+        'request_id:requestId',
+        "respond(res,403,{ok:false,error:'origin_not_allowed'},requestId)",
+        "respond(res,429,{ok:false,error:'rate_limited'},requestId)",
+        "respond(res,413,{ok:false,error:'payload_too_large'},requestId)",
+        "respond(res,400,{ok:false,error:'missing_fields',missing},requestId)",
+        "respond(res,400,{ok:false,error:'invalid_email'},requestId)",
+        "respond(res,503,{ok:false,error:'rfq_route_not_configured'},requestId)",
+        "respond(res,502,{ok:false,error:'rfq_delivery_failed'},requestId)",
+    )
+    for marker in api_markers:
+        if marker not in api_text:
+            raise SystemExit(f'ERROR: RFQ API trace contract marker missing: {marker}')
+
     print(
-        'PASS: RFQ contract aligned — '
+        'PASS: RFQ R14.2 contract aligned — '
         f'{len(form_fields)} form fields covered by API, '
         f'{len(form_required)} required fields match backend, '
         f'{len(fallback_required)} non-honeypot fields preserved in email fallback, '
-        f'{len(visible_fields)} visible buyer fields audited.'
+        f'{len(visible_fields)} visible buyer fields audited, trace IDs and runtime cache version gated.'
     )
 
 
