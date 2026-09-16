@@ -1,15 +1,25 @@
-# Public deployment allowlist. Internal sales/ops material stays in the private repository only.
+# Vercel build-source allowlist. Only _prod becomes public static output.
+# api/ and lib/ remain source inputs for Vercel Functions; scripts/.sync/docs are build-only inputs.
 /*
+!.vercelignore
 !api/
 !api/**
 !lib/
 !lib/**
 !assets/
 !assets/**
+!scripts/
+!scripts/**
+!.sync/
+!.sync/r8-modules/
+!.sync/r8-modules/**
 !.well-known/
 !.well-known/**
 !vercel.json
 !package.json
+!MINIMAX_ENV.example
+!TECHNICAL_DATA_SOURCES.md
+!TECHNICAL_DOCUMENT_GOVERNANCE.md
 !manifest.webmanifest
 !robots.txt
 !sitemap.xml
