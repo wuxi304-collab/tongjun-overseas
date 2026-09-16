@@ -1,6 +1,7 @@
 from pathlib import Path
 from html.parser import HTMLParser
 import re
+import subprocess
 import sys
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
@@ -145,6 +146,16 @@ def main():
     for marker in api_markers:
         if marker not in api_text:
             raise SystemExit(f'ERROR: RFQ API trace contract marker missing: {marker}')
+
+    # The source-stage contract gate also executes the real Node handler regression suite.
+    if ROOT.resolve() == Path('.').resolve():
+        test = subprocess.run(['node', 'scripts/test-rfq.js'], text=True, capture_output=True)
+        if test.stdout:
+            print(test.stdout.rstrip())
+        if test.returncode != 0:
+            if test.stderr:
+                print(test.stderr.rstrip(), file=sys.stderr)
+            raise SystemExit(f'ERROR: RFQ handler regression suite failed with exit code {test.returncode}')
 
     print(
         'PASS: RFQ R14.2 contract aligned — '
