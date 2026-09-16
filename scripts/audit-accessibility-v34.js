@@ -19,7 +19,10 @@ for(const file of htmls){
   if(!/<html\b[^>]*\blang=["']en["']/i.test(text)) failures.push(`${file}: html lang=en missing`);
   if(!/class=["'][^"']*skip-link[^"']*["'][^>]*href=["']#main-content["']/i.test(text)) failures.push(`${file}: skip link to #main-content missing`);
   if(!/<main\b[^>]*\bid=["']main-content["']/i.test(text)) failures.push(`${file}: main landmark #main-content missing`);
-  if(!/<nav\b[^>]*(?:aria-label|aria-labelledby)=/i.test(text)) failures.push(`${file}: navigation landmark lacks accessible name`);
+  for(const m of text.matchAll(/<nav\b[^>]*>/gi)){
+    const a=attrs(m[0]);
+    if(!a['aria-label']&&!a['aria-labelledby']) failures.push(`${file}: nav landmark lacks accessible name`);
+  }
   if(/tabindex=["']?[1-9]\d*/i.test(text)) failures.push(`${file}: positive tabindex is not allowed`);
   const ids=[...text.matchAll(/\bid=["']([^"']+)["']/gi)].map(m=>m[1]);
   const seen=new Set();
@@ -44,4 +47,4 @@ for(const file of htmls){
 if(!fs.existsSync(path.join(root,'scripts','validate-form-semantics.py'))) failures.push('missing dedicated buyer-form semantics validator');
 
 if(failures.length){console.error('FAIL: accessibility audit');failures.slice(0,80).forEach(x=>console.error(' - '+x));if(failures.length>80)console.error(` - ... ${failures.length-80} more`);process.exit(1);}
-console.log(`PASS: accessibility audit (${htmls.length} HTML; language, landmarks, skip links, IDs, images, buttons and semantics gate presence).`);
+console.log(`PASS: accessibility audit (${htmls.length} HTML; language, main/skip landmarks, named navs when present, IDs, images, buttons and semantics gate presence).`);
