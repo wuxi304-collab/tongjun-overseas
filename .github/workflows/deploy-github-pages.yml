@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.1 — minimal public mirror + production-launch gates
+# V34.152 R15.2 — hardened mirror + full production-readiness source gate
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.1 release candidate
+      - name: Checkout V34.152 R15.2 release candidate
         uses: actions/checkout@v6
         with:
           ref: feat/v34.152-r15-production-launch
@@ -87,7 +87,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply and validate V34.152 R15.1 source contract
+      - name: Apply V34.152 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -96,9 +96,12 @@ jobs:
           python3 scripts/apply-r13-1-release.py
           python3 scripts/apply-r14-conversion.py
           python3 scripts/apply-r14-runtime.py
-          node --check api/rfq.js
-          node --check assets/site.js
-          node --check scripts/smoke-rfq-production.js
+
+      - name: Run full V34.152 R15.2 source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run check
           python3 scripts/validate-form-semantics.py .
           python3 scripts/validate-rfq-contract.py .
 
@@ -110,7 +113,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.1 Pages artifact
+      - name: Validate V34.152 R15.2 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
