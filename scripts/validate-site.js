@@ -21,7 +21,12 @@ for(const f of htmls){
   const cm=s.match(/rel=["']canonical["'][^>]*href=["']([^"']+)/i)||s.match(/href=["']([^"']+)["'][^>]*rel=["']canonical["']/i);
   if(cm){ if(cm[1].endsWith('.html')) errors.push(`${f}: canonical contains .html with cleanUrls`); if(canon.has(cm[1])) errors.push(`${f}: duplicate canonical with ${canon.get(cm[1])}`); canon.set(cm[1],f); }
   for(const m of s.matchAll(/<img\b[^>]*src=["']([^"']+)["'][^>]*>/gi)){
-    const src=m[1]; if(!/^https?:|^data:/.test(src)){const fp=path.join(root,src.replace(/^\//,'')); if(!fs.existsSync(fp)) errors.push(`${f}: missing image ${src}`)}
+    const src=m[1];
+    if(!/^https?:|^data:/.test(src)){
+      const clean=src.split(/[?#]/)[0];
+      const fp=path.join(root,clean.replace(/^\//,''));
+      if(!fs.existsSync(fp)) errors.push(`${f}: missing image ${src}`)
+    }
     if(!/\balt=["'][^"']*["']/i.test(m[0])) errors.push(`${f}: img missing alt`);
   }
   for(const m of s.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>/gi)){
@@ -123,5 +128,3 @@ if(!js.includes('nav-open')||!js.includes("details[open]")) errors.push('site.js
 
 if(errors.length){console.error(errors.join('\n')); process.exit(1)}
 console.log(`PASS: ${htmls.length} HTML files; clean routes, canonical, images and deployment assets validated.`);
-
-
