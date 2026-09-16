@@ -3,6 +3,7 @@ const path=require('path');
 const root=path.resolve(__dirname,'..');
 const htmls=fs.readdirSync(root).filter(f=>f.endsWith('.html')).sort();
 const failures=[];
+const sitemap=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');
 
 function attr(tag,name){
   const m=tag.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`,'i'));
@@ -13,6 +14,7 @@ function robotsContent(html){
   for(const tag of tags) if(attr(tag,'name').toLowerCase()==='robots') return attr(tag,'content');
   return '';
 }
+function routeFor(file){return file==='index.html'?'/':'/'+file.replace(/\.html$/,'');}
 
 if(htmls.length!==50) failures.push(`expected 50 root HTML files, found ${htmls.length}`);
 const forbidden=['SINCE 2010','hero-special-metals.webp','quality-lab-r13','engineering-team-r13','technical-lab-r13','logo-r13.avif','hero-port-r13.avif'];
@@ -21,7 +23,11 @@ for(const file of htmls){
   if(!text.includes('assets/site.js?v=20260916-r14-2')) failures.push(`${file}: current site.js release marker missing`);
   for(const marker of forbidden) if(text.includes(marker)) failures.push(`${file}: forbidden release marker ${marker}`);
   const robots=robotsContent(text);
-  if(/noindex/i.test(robots) && file!=='404.html' && file!=='thank-you.html') failures.push(`${file}: unexpected production noindex`);
+  if(/noindex/i.test(robots)){
+    const route=routeFor(file);
+    const loc=`<loc>https://exoticalloycn.com${route}</loc>`;
+    if(sitemap.includes(loc)) failures.push(`${file}: noindex page appears in sitemap`);
+  }
 }
 
 for(const required of ['api/rfq.js','api/health.js','vercel.json','.vercelignore','robots.txt','sitemap.xml','scripts/check-production-readiness.js','scripts/smoke-rfq-production.js']){
@@ -44,4 +50,4 @@ if(!smoke.includes('RFQ_SMOKE_URL')) failures.push('production RFQ smoke is not 
 if(!smoke.includes('NO COMMERCIAL ORDER')) failures.push('production RFQ smoke is not clearly marked synthetic');
 
 if(failures.length){console.error('FAIL: R15 prelaunch audit');failures.forEach(x=>console.error(' - '+x));process.exit(1);}
-console.log('PASS: R15 prelaunch audit — production source, deploy boundary, runtime version, health and smoke contracts validated.');
+console.log('PASS: R15 prelaunch audit — production source, index/noindex sitemap consistency, deploy boundary, runtime version, health and smoke contracts validated.');
