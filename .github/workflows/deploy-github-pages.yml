@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R14.1 — conversion-first UX + buyer-form semantics + RFQ delivery contract + full route validation
+# V34.152 R14.2 — conversion-first UX + traceable RFQ delivery + buyer-form semantics + full route validation
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R14.1 release candidate
+      - name: Checkout V34.152 R14.2 release candidate
         uses: actions/checkout@v6
         with:
           ref: feat/v34.152-r14-conversion
@@ -87,7 +87,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply and validate V34.152 release overlays
+      - name: Apply and validate V34.152 R14.2 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -146,7 +146,7 @@ jobs:
           (out/'.nojekyll').write_text('',encoding='utf-8')
           PY
 
-      - name: Validate R14.1 Pages artifact
+      - name: Validate R14.2 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
@@ -168,6 +168,8 @@ jobs:
               text=(root/name).read_text(encoding='utf-8')
               if 'brand-v34.152-r14.css?v=20260916-r14-1' not in text:
                   raise SystemExit(f'ERROR: R14.1 stylesheet missing in {name}')
+              if 'assets/site.js?v=20260916-r14-2' not in text:
+                  raise SystemExit(f'ERROR: R14.2 site.js cache version missing in {name}')
 
           tech=(root/'technical-data.html').read_text(encoding='utf-8')
           quality=(root/'quality.html').read_text(encoding='utf-8')
@@ -206,12 +208,14 @@ jobs:
           for marker in (
               'Product Context:',
               'First Seen:',
+              'routeError.requestId=safe(result.request_id,80)',
+              'Secure Route Attempt:',
               "setStore('tj_last_rfq','email_fallback')",
               'use Copy Structured RFQ if no mail app opens.',
               "fetch('/tongjun-overseas/api/rfq'",
           ):
               if marker not in runtime:
-                  raise SystemExit(f'ERROR: R14.1 RFQ runtime marker missing: {marker}')
+                  raise SystemExit(f'ERROR: R14.2 RFQ runtime marker missing: {marker}')
 
           css=(root/'assets/brand-v34.152-r14.css').read_text(encoding='utf-8')
           required=[
@@ -302,7 +306,7 @@ jobs:
               for x in broken_anchors[:30]: print('BROKEN ANCHOR:',x)
               raise SystemExit(f'ERROR: {len(broken_anchors)} broken internal deep-link anchor(s)')
 
-          print('PASS: R14.1 50-page gate, progressive RFQ, form semantics, RFQ delivery contract, local assets, routes and deep-link anchors validated.')
+          print('PASS: R14.2 50-page gate, progressive RFQ, traceable delivery, form semantics, local assets, routes and deep-link anchors validated.')
           PY
 
       - name: Upload Pages artifact
