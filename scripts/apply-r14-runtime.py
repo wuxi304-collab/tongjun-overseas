@@ -1,6 +1,8 @@
 from pathlib import Path
+import re
 
 JS = Path('assets/site.js')
+VERSION = '20260916-r14-2'
 s = JS.read_text(encoding='utf-8')
 old = s
 
@@ -68,6 +70,19 @@ for marker in required:
 
 if s != old:
     JS.write_text(s, encoding='utf-8')
-    print('PASS: R14.2 RFQ runtime patched with product context, traceable secure-route failure and explicit copy fallback.')
-else:
-    print('PASS: R14.2 RFQ runtime already patched.')
+
+# Critical form runtime must not depend on stale asset caching after deployment.
+html_changed = 0
+site_ref = f'/assets/site.js?v={VERSION}'
+for p in Path('.').glob('*.html'):
+    text = p.read_text(encoding='utf-8')
+    updated = re.sub(r'/assets/site\.js(?:\?v=[^"\']+)?', site_ref, text)
+    if updated != text:
+        p.write_text(updated, encoding='utf-8')
+        html_changed += 1
+
+rfq = Path('rfq.html').read_text(encoding='utf-8')
+if site_ref not in rfq:
+    raise SystemExit('ERROR: R14.2 versioned site.js reference missing from RFQ page')
+
+print(f'PASS: R14.2 RFQ runtime trace fallback patched; site.js cache-busted on {html_changed} HTML files.')
