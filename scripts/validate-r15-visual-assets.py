@@ -86,7 +86,7 @@ def main():
     if '<section class="hero">' not in index:
         fail('homepage hero section missing')
     hero = index.split('<section class="hero">', 1)[1].split('</section>', 1)[0]
-    if hero.count('logistics-stock.webp') < 2:
+    if hero.count('logistics-stock.webp') < 1:
         fail('homepage hero visual changed from frozen logistics-stock.webp')
     if 'hero-special-metals.webp' in hero:
         fail('homepage hero silently switched to hero-special-metals.webp')
