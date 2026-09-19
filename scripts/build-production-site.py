@@ -31,6 +31,7 @@ OVERLAYS = [
     'scripts/apply-r14-runtime.py',
     'scripts/apply-r15-accessibility.py',
     'scripts/apply-r15-2k-visual-freeze.py',
+    'scripts/apply-r15-6-native-visuals.py',
 ]
 PUBLIC_ROOT_FILES = [
     'manifest.webmanifest',
@@ -140,6 +141,7 @@ def main():
     materialize_split_image('materials-r8')
     materialize_split_image('quality-r8')
     subprocess.run(['python3', 'scripts/materialize-r15-2k-assets.py'], check=True)
+    subprocess.run(['python3', 'scripts/materialize-r15-6-native-assets.py'], check=True)
     build_css()
     run_overlays()
     build_output()
