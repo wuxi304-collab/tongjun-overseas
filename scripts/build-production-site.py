@@ -21,6 +21,7 @@ CSS_PARTS = [
     'assets/brand-v34.152-r12-fix2.css',
     'assets/brand-v34.152-r13-1-tail.css',
     'assets/brand-v34.152-r14-tail.css',
+    'assets/brand-v34.152-r15-tail.css',
 ]
 OVERLAYS = [
     'scripts/apply-brand-shell-v34-152.py',
@@ -29,6 +30,7 @@ OVERLAYS = [
     'scripts/apply-r14-conversion.py',
     'scripts/apply-r14-runtime.py',
     'scripts/apply-r15-accessibility.py',
+    'scripts/apply-r15-2k-visual-freeze.py',
 ]
 PUBLIC_ROOT_FILES = [
     'manifest.webmanifest',
@@ -137,6 +139,7 @@ def build_output():
 def main():
     materialize_split_image('materials-r8')
     materialize_split_image('quality-r8')
+    subprocess.run(['python3', 'scripts/materialize-r15-2k-assets.py'], check=True)
     build_css()
     run_overlays()
     build_output()
