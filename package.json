@@ -4,7 +4,7 @@
   "version": "34.0.0",
   "scripts": {
     "check": "node --check api/rfq.js && node --check api/health.js && node --check assets/site.js && node --check scripts/smoke-rfq-production.js && node --check scripts/check-production-readiness.js && node scripts/test-health.js && node scripts/validate-site.js && node scripts/test-rfq.js && node scripts/audit-launch.js && node scripts/audit-prelaunch-v34.js && node scripts/audit-accessibility-v34.js && node scripts/audit-performance-v34.js && node scripts/test-agents.js && node scripts/audit-agent-launch.js",
-    "build:production": "python3 scripts/build-production-site.py && npm run check && python3 scripts/validate-form-semantics.py . && python3 scripts/validate-rfq-contract.py . && python3 scripts/validate-production-release.py _prod",
+    "build:production": "python3 scripts/build-production-site.py && npm run check && python3 scripts/validate-form-semantics.py . && python3 scripts/validate-rfq-contract.py . && python3 scripts/validate-r15-visual-assets.py _prod && python3 scripts/validate-production-release.py _prod",
     "audit:prelaunch": "node scripts/audit-prelaunch-v34.js",
     "check:production": "node scripts/check-production-readiness.js",
     "smoke:rfq:production": "node scripts/smoke-rfq-production.js"
