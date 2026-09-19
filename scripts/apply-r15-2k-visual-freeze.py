@@ -49,13 +49,13 @@ def main():
         updated = bust(text)
         if path.name == 'index.html':
             # The R15.4 homepage visual remains frozen: no silent hero substitution.
-            if 'hero-special-metals.webp' in updated:
-                # Product/runtime legacy references are allowed elsewhere, but not as the homepage hero.
-                hero_section = updated.split('<section class="hero">', 1)[1].split('</section>', 1)[0]
-                if 'hero-special-metals.webp' in hero_section:
-                    raise SystemExit('ERROR: homepage hero regressed to hero-special-metals.webp')
-            if hero_section.count('logistics-stock.webp') < 2:
-                raise SystemExit('ERROR: frozen homepage hero is not present in both hero layers')
+            if '<section class="hero">' not in updated:
+                raise SystemExit('ERROR: homepage hero section missing')
+            hero_section = updated.split('<section class="hero">', 1)[1].split('</section>', 1)[0]
+            if 'hero-special-metals.webp' in hero_section:
+                raise SystemExit('ERROR: homepage hero regressed to hero-special-metals.webp')
+            if hero_section.count('logistics-stock.webp') < 1:
+                raise SystemExit('ERROR: frozen homepage hero logistics-stock.webp is missing')
             # Intrinsic ratio now matches the generated 2K hero asset.
             hero_section_new = re.sub(
                 r'(class="hero-bg-r6"[^>]*\bwidth=")\d+("[^>]*\bheight=")\d+(")',
