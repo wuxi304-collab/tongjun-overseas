@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.5 — hardened mirror + DOM-safe frozen hero + mandatory 2K content imagery + production-readiness gates
+# V34.152 R15.6 — frozen homepage hero + native high-resolution real-photo inner visuals + production-readiness gates
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.5 release candidate
+      - name: Checkout V34.152 R15.6 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.5-2k-visual-freeze
+          ref: feat/v34.152-r15.6-native-visual-rebuild
           fetch-depth: 1
 
       - name: Configure Pages
@@ -57,7 +57,13 @@ jobs:
           set -euo pipefail
           python3 scripts/materialize-r15-2k-assets.py
 
-      - name: Build consolidated R15.5 stylesheet
+      - name: Materialize R15.6 native real-photo assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/materialize-r15-6-native-assets.py
+
+      - name: Build consolidated R15.6 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -107,7 +113,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.5 release overlays
+      - name: Apply V34.152 R15.6 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -118,8 +124,9 @@ jobs:
           python3 scripts/apply-r14-runtime.py
           python3 scripts/apply-r15-accessibility.py
           python3 scripts/apply-r15-2k-visual-freeze.py
+          python3 scripts/apply-r15-6-native-visuals.py
 
-      - name: Run full V34.152 R15.5 source gate
+      - name: Run full V34.152 R15.6 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -127,6 +134,7 @@ jobs:
           python3 scripts/validate-form-semantics.py .
           python3 scripts/validate-rfq-contract.py .
           python3 scripts/validate-r15-visual-assets.py .
+          python3 scripts/validate-r15-6-native-visuals.py .
 
       - name: Build hardened temporary Pages mirror
         shell: bash
@@ -136,13 +144,14 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.5 Pages artifact
+      - name: Validate V34.152 R15.6 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/validate-form-semantics.py _site
           python3 scripts/validate-rfq-contract.py _site
           python3 scripts/validate-r15-visual-assets.py _site
+          python3 scripts/validate-r15-6-native-visuals.py _site
           python3 scripts/validate-pages-release.py _site
 
       - name: Upload Pages artifact
