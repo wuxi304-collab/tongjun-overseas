@@ -80,7 +80,7 @@ jobs:
             > assets/brand-v34.152-r14.css
           test -s assets/brand-v34.152-r14.css
           grep -q 'V34.152 R14.1' assets/brand-v34.152-r14.css
-          grep -q 'V34.152 R15.5' assets/brand-v34.152-r14.css
+          grep -q 'V34.152 R15.4' assets/brand-v34.152-r14.css
           grep -q 'body.brand-v34 .skip-link' assets/brand-v34.152-r14.css
           grep -q ':focus-visible' assets/brand-v34.152-r14.css
           grep -q 'prefers-reduced-motion: reduce' assets/brand-v34.152-r14.css
