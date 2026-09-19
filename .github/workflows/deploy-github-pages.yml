@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.5 — hardened mirror + frozen hero + mandatory 2K content imagery + production-readiness gates
+# V34.152 R15.5 — hardened mirror + DOM-safe frozen hero + mandatory 2K content imagery + production-readiness gates
 
 on:
   workflow_dispatch:
