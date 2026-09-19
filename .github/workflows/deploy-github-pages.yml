@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.4 — hardened mirror + keyboard/focus accessibility + production-readiness gates
+# V34.152 R15.5 — hardened mirror + frozen hero + mandatory 2K content imagery + production-readiness gates
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.4 release candidate
+      - name: Checkout V34.152 R15.5 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.4-keyboard-polish
+          ref: feat/v34.152-r15.5-2k-visual-freeze
           fetch-depth: 1
 
       - name: Configure Pages
@@ -42,7 +42,15 @@ jobs:
             file "assets/images/${img}.webp" | grep -qi 'Web/P'
           done
 
-      - name: Build consolidated R15.4 stylesheet
+      - name: Materialize frozen R15.5 content imagery at 2K
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          command -v ffprobe
+          python3 scripts/materialize-r15-2k-assets.py
+
+      - name: Build consolidated R15.5 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -65,7 +73,7 @@ jobs:
             > assets/brand-v34.152-r14.css
           test -s assets/brand-v34.152-r14.css
           grep -q 'V34.152 R14.1' assets/brand-v34.152-r14.css
-          grep -q 'V34.152 R15.4' assets/brand-v34.152-r14.css
+          grep -q 'V34.152 R15.5' assets/brand-v34.152-r14.css
           grep -q 'body.brand-v34 .skip-link' assets/brand-v34.152-r14.css
           grep -q ':focus-visible' assets/brand-v34.152-r14.css
           grep -q 'prefers-reduced-motion: reduce' assets/brand-v34.152-r14.css
@@ -92,7 +100,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.4 release overlays
+      - name: Apply V34.152 R15.5 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -102,14 +110,16 @@ jobs:
           python3 scripts/apply-r14-conversion.py
           python3 scripts/apply-r14-runtime.py
           python3 scripts/apply-r15-accessibility.py
+          python3 scripts/apply-r15-2k-visual-freeze.py
 
-      - name: Run full V34.152 R15.4 source gate
+      - name: Run full V34.152 R15.5 source gate
         shell: bash
         run: |
           set -euo pipefail
           npm run check
           python3 scripts/validate-form-semantics.py .
           python3 scripts/validate-rfq-contract.py .
+          python3 scripts/validate-r15-visual-assets.py .
 
       - name: Build hardened temporary Pages mirror
         shell: bash
@@ -119,12 +129,13 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.4 Pages artifact
+      - name: Validate V34.152 R15.5 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/validate-form-semantics.py _site
           python3 scripts/validate-rfq-contract.py _site
+          python3 scripts/validate-r15-visual-assets.py _site
           python3 scripts/validate-pages-release.py _site
 
       - name: Upload Pages artifact
