@@ -6,6 +6,20 @@ ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
 HERO_CLASSES = {'pagehero', 'landinghero', 'articlehero', 'tech-hero'}
 VOID_TAGS = {'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
 EXPECTED_GHOST_CTAS = 19
+TEXT_HEX = '#10263c'
+BG_HEX = '#ffffff'
+
+
+def luminance(hex_color: str) -> float:
+    value = hex_color.lstrip('#')
+    rgb = [int(value[i:i+2], 16) / 255 for i in (0, 2, 4)]
+    linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def contrast_ratio(a: str, b: str) -> float:
+    hi, lo = sorted((luminance(a), luminance(b)), reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
 
 
 def fail(message):
@@ -85,6 +99,10 @@ def main():
         if marker not in css:
             fail(f'R15.13 CTA contrast CSS marker missing: {marker}')
 
+    ratio = contrast_ratio(TEXT_HEX, BG_HEX)
+    if ratio < 4.5:
+        fail(f'R15.13 secondary CTA text contrast below WCAG AA: {ratio:.2f}:1')
+
     tail = ROOT / 'assets' / 'brand-v34.152-r15-13-tail.css'
     if tail.is_file():
         tail_text = tail.read_text(encoding='utf-8')
@@ -93,7 +111,7 @@ def main():
 
     print(
         f'PASS: R15.13 hero CTA contrast gate — {total} secondary CTAs across {len(pages)} light technical-hero pages '
-        'use scoped dark-on-white treatment; dark homepage hero remains untouched.'
+        f'use scoped dark-on-white treatment at {ratio:.2f}:1 contrast; dark homepage hero remains untouched.'
     )
 
 
