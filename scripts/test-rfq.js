@@ -182,15 +182,35 @@ async function run(){
   assert.equal(sent.name.length,120);
   assert.equal(sent.application.length,2500);
 
-  // No configured secure route fails closed with a traceable ID.
+  // Missing, invalid or unsigned downstream routes fail closed with traceable IDs.
   const oldWebhook=process.env.RFQ_WEBHOOK_URL;
+  const oldSecret=process.env.RFQ_SHARED_SECRET;
+
   delete process.env.RFQ_WEBHOOK_URL;
   res=makeRes();
   await handler(req(baseBody,{'x-forwarded-for':'198.51.100.16'}),res);
   assert.equal(res.statusCode,503);
   assert.equal(res.payload.error,'rfq_route_not_configured');
   assertTrace(res);
+
+  process.env.RFQ_WEBHOOK_URL='http://example.invalid/hook';
+  process.env.RFQ_SHARED_SECRET='unit-test-secret';
+  res=makeRes();
+  await handler(req(baseBody,{'x-forwarded-for':'198.51.100.22'}),res);
+  assert.equal(res.statusCode,503);
+  assert.equal(res.payload.error,'rfq_route_invalid');
+  assertTrace(res);
+
+  process.env.RFQ_WEBHOOK_URL='https://example.invalid/hook';
+  delete process.env.RFQ_SHARED_SECRET;
+  res=makeRes();
+  await handler(req(baseBody,{'x-forwarded-for':'198.51.100.23'}),res);
+  assert.equal(res.statusCode,503);
+  assert.equal(res.payload.error,'rfq_signature_not_configured');
+  assertTrace(res);
+
   process.env.RFQ_WEBHOOK_URL=oldWebhook;
+  process.env.RFQ_SHARED_SECRET=oldSecret;
 
   // Downstream non-2xx and network failures become traceable 502 responses.
   fetchMode='fail';
