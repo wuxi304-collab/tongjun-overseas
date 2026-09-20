@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.8a — deterministic visuals + observable static/API release identity
+# V34.152 R15.8b — preserve validated .well-known release identity in Pages artifact
 
 on:
   workflow_dispatch:
@@ -152,6 +152,7 @@ jobs:
         with:
           path: _site
           retention-days: 1
+          include-hidden-files: true
 
 
   production-build:
