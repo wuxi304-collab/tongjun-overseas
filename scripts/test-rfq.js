@@ -87,7 +87,7 @@ async function run(){
   assert.equal(sent.first_seen,'2026-09-16T03:00:00.000Z');
 
   // Shared-secret mode adds an integrity signature over timestamp + exact JSON body.
-  assert.equal(sentHeaders['X-Tongjun-Webhook-Secret'],'unit-test-secret');
+  assert.equal(sentHeaders['X-Tongjun-Webhook-Secret'],undefined);
   assert.equal(sentHeaders['X-Tongjun-Webhook-Signature-Version'],'v1');
   assert.match(String(sentHeaders['X-Tongjun-Webhook-Timestamp']||''),/^\d{10}$/);
   const expectedSignature=crypto
@@ -96,6 +96,16 @@ async function run(){
     .digest('hex');
   assert.equal(sentHeaders['X-Tongjun-Webhook-Signature'],`sha256=${expectedSignature}`);
   assert.equal(sentHeaders['X-Tongjun-Request-Id'],res.payload.request_id);
+
+  // Raw shared-secret forwarding is disabled by default and only available as an explicit migration switch.
+  process.env.RFQ_LEGACY_SECRET_HEADER='1';
+  res=makeRes();
+  await handler(req(baseBody,{'x-forwarded-for':'198.51.100.21'}),res);
+  assert.equal(res.statusCode,202);
+  assertTrace(res);
+  assert.equal(sentHeaders['X-Tongjun-Webhook-Secret'],'unit-test-secret');
+  assert.equal(sentHeaders['X-Tongjun-Webhook-Signature-Version'],'v1');
+  delete process.env.RFQ_LEGACY_SECRET_HEADER;
 
   // Only POST is accepted.
   res=makeRes();
