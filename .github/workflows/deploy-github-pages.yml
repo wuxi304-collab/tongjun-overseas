@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.8d — explicit Pages tar preserves validated hidden release metadata
+# V34.152 R15.8e — explicit Pages tar + pipefail-safe hidden metadata verification
 
 on:
   workflow_dispatch:
@@ -156,9 +156,10 @@ jobs:
             --exclude=.git \
             --exclude=.github \
             -cvf "$RUNNER_TEMP/artifact.tar" .
-          tar -tf "$RUNNER_TEMP/artifact.tar" | grep -Fqx './.well-known/release.json'
-          tar -tf "$RUNNER_TEMP/artifact.tar" | grep -Fqx './.well-known/security.txt'
-          tar -tf "$RUNNER_TEMP/artifact.tar" | grep -Fqx './.nojekyll'
+          tar -tf "$RUNNER_TEMP/artifact.tar" > "$RUNNER_TEMP/artifact-list.txt"
+          grep -Fqx './.well-known/release.json' "$RUNNER_TEMP/artifact-list.txt"
+          grep -Fqx './.well-known/security.txt' "$RUNNER_TEMP/artifact-list.txt"
+          grep -Fqx './.nojekyll' "$RUNNER_TEMP/artifact-list.txt"
 
       - name: Upload Pages artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
