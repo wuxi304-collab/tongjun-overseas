@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.14 — public 2K raster hygiene + light-hero CTA contrast + mobile QA
+# V34.152 R15.14a — public 2K raster hygiene + light-hero CTA contrast + mobile QA
 
 on:
   workflow_dispatch:
@@ -202,7 +202,7 @@ jobs:
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
-          echo "PASS: R15.11 production build completed from frozen repository assets with observable identity."
+          echo "PASS: R15.14 production build completed from frozen repository assets with observable identity and public 2K raster hygiene."
 
   deploy:
     needs: [build, production-build]
