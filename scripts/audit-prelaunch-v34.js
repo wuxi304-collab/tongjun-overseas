@@ -30,19 +30,21 @@ for(const file of htmls){
   }
 }
 
-for(const required of ['api/rfq.js','api/health.js','vercel.json','.vercelignore','robots.txt','sitemap.xml','scripts/check-production-readiness.js','scripts/smoke-rfq-production.js']){
+for(const required of ['api/rfq.js','api/health.js','vercel.json','.vercelignore','robots.txt','sitemap.xml','RELEASE_R15_8.json','VISUAL_MANIFEST_R15_7.json','scripts/write-release-metadata.py','scripts/check-production-readiness.js','scripts/smoke-rfq-production.js']){
   if(!fs.existsSync(path.join(root,required))) failures.push(`missing production release file ${required}`);
 }
 
 const vi=fs.readFileSync(path.join(root,'.vercelignore'),'utf8');
 if(/!ops(?:\/|\b)/.test(vi)) failures.push('.vercelignore exposes ops');
 if(!vi.includes('!api/**')) failures.push('.vercelignore must deploy serverless API');
+if(!vi.includes('!RELEASE_R15_8.json')) failures.push('.vercelignore must include R15.8 release descriptor for build identity');
+if(!vi.includes('!VISUAL_MANIFEST_R15_7.json')) failures.push('.vercelignore must include frozen visual manifest for build identity');
 
 const robotsTxt=fs.readFileSync(path.join(root,'robots.txt'),'utf8');
 if(/Disallow:\s*\/$/m.test(robotsTxt)) failures.push('production robots.txt blocks the entire site');
 
 const health=fs.readFileSync(path.join(root,'api','health.js'),'utf8');
-for(const marker of ['rfq_route_configured','Cache-Control','RFQ_WEBHOOK_URL']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
+for(const marker of ['rfq_route_configured','Cache-Control','RFQ_WEBHOOK_URL','V34.152 R15.8','X-Tongjun-Release','visual_release']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
 if(/RFQ_SHARED_SECRET/.test(health)) failures.push('api/health.js must not expose or depend on RFQ_SHARED_SECRET');
 
 const smoke=fs.readFileSync(path.join(root,'scripts','smoke-rfq-production.js'),'utf8');
