@@ -1,72 +1,59 @@
 from pathlib import Path
+import hashlib
+import json
 import re
-import shutil
-import subprocess
 import sys
-from urllib.parse import urlsplit
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
+MANIFEST = Path('VISUAL_MANIFEST_R15_7.json')
 MIN_LONG_EDGE = 2048
 VERSION = '20260919-r15-5'
 RASTER = {'.webp', '.jpg', '.jpeg', '.png', '.avif'}
 LOGO_EXEMPT = {'columbus-logo-v2.webp', 'columbus-mark.webp'}
 
-
 def fail(message):
     raise SystemExit('ERROR: ' + message)
 
-
-def ffprobe():
-    tool = shutil.which('ffprobe')
-    if not tool:
-        fail('ffprobe is required for the R15.5 visual gate')
-    return tool
-
-
-FFPROBE = ffprobe()
+def webp_dimensions(path: Path):
+    data = path.read_bytes()
+    if len(data) < 30 or data[:4] != b'RIFF' or data[8:12] != b'WEBP':
+        fail(f'invalid WebP: {path}')
+    pos = 12
+    while pos + 8 <= len(data):
+        fourcc = data[pos:pos+4]
+        size = int.from_bytes(data[pos+4:pos+8], 'little')
+        payload = data[pos+8:pos+8+size]
+        if fourcc == b'VP8X' and len(payload) >= 10:
+            return 1 + int.from_bytes(payload[4:7], 'little'), 1 + int.from_bytes(payload[7:10], 'little')
+        if fourcc == b'VP8 ' and len(payload) >= 10 and payload[3:6] == b'\\x9d\\x01\\x2a':
+            return int.from_bytes(payload[6:8], 'little') & 0x3fff, int.from_bytes(payload[8:10], 'little') & 0x3fff
+        if fourcc == b'VP8L' and len(payload) >= 5 and payload[0] == 0x2f:
+            bits = int.from_bytes(payload[1:5], 'little')
+            return (bits & 0x3fff) + 1, ((bits >> 14) & 0x3fff) + 1
+        pos += 8 + size + (size & 1)
+    fail(f'WebP dimensions unavailable: {path}')
 
 
 def dimensions(path: Path):
-    result = subprocess.run(
-        [
-            FFPROBE, '-v', 'error', '-select_streams', 'v:0',
-            '-show_entries', 'stream=width,height', '-of', 'csv=s=x:p=0',
-            str(path),
-        ],
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0 or 'x' not in result.stdout:
-        fail(f'cannot decode image dimensions: {path}')
-    width, height = result.stdout.strip().split('x')
-    return int(width), int(height)
-
+    if path.suffix.lower() == '.webp':
+        return webp_dimensions(path)
+    fail(f'R15.7 visual gate only permits shipped content WebP rasters: {path.name}')
 
 def collect_refs():
     refs = set()
-    # Scan shipped markup plus the active CSS/runtime surfaces that can select visuals.
     candidates = list(ROOT.glob('*.html'))
-    for rel in (
-        'assets/brand-v34.152-r14.css',
-        'assets/site.css',
-        'assets/brand-v34.152.js',
-    ):
+    for rel in ('assets/brand-v34.152-r14.css','assets/site.css','assets/brand-v34.152.js'):
         path = ROOT / rel
         if path.is_file():
             candidates.append(path)
     pattern = re.compile(r'assets/images/([A-Za-z0-9._-]+)')
     for path in candidates:
-        text = path.read_text(encoding='utf-8')
-        refs.update(pattern.findall(text))
+        refs.update(pattern.findall(path.read_text(encoding='utf-8')))
     return refs
-
 
 def main():
     refs = collect_refs()
-    raster_refs = sorted(
-        name for name in refs
-        if Path(name).suffix.lower() in RASTER and name not in LOGO_EXEMPT
-    )
+    raster_refs = sorted(name for name in refs if Path(name).suffix.lower() in RASTER and name not in LOGO_EXEMPT)
     if not raster_refs:
         fail('no content raster references found')
 
@@ -76,32 +63,32 @@ def main():
         if not path.is_file():
             bad.append((name, 'missing'))
             continue
-        width, height = dimensions(path)
-        if max(width, height) < MIN_LONG_EDGE:
-            bad.append((name, f'{width}x{height}'))
+        w, h = dimensions(path)
+        if max(w, h) < MIN_LONG_EDGE:
+            bad.append((name, f'{w}x{h}'))
     if bad:
         fail(f'content raster(s) below 2K or missing: {bad}')
 
+    if not MANIFEST.is_file():
+        fail('R15.7 visual manifest missing')
+    manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
+    hero_meta = manifest['hero']
+    hero_path = ROOT / 'assets' / 'images' / hero_meta['file']
+    if hashlib.sha256(hero_path.read_bytes()).hexdigest() != hero_meta['sha256']:
+        fail('frozen homepage hero SHA256 drifted')
+
     index = (ROOT / 'index.html').read_text(encoding='utf-8')
-    if '<section class="hero">' not in index:
-        fail('homepage hero section missing')
-    hero = index.split('<section class="hero">', 1)[1].split('</section>', 1)[0]
-    if hero.count('logistics-stock.webp') < 1:
-        fail('homepage hero visual changed from frozen logistics-stock.webp')
-    if 'hero-special-metals.webp' in hero:
-        fail('homepage hero silently switched to hero-special-metals.webp')
-    if f'logistics-stock.webp?v={VERSION}' not in hero:
-        fail('homepage hero 2K cache key missing')
+    hero = index.split('<section class="hero">',1)[1].split('</section>',1)[0]
+    if hero_meta['file'] not in hero or 'hero-special-metals.webp' in hero:
+        fail('homepage hero reference changed')
+    if f"{hero_meta['file']}?v={VERSION}" not in hero:
+        fail('homepage hero cache key missing')
 
-    width, height = dimensions(ROOT / 'assets' / 'images' / 'logistics-stock.webp')
-    if max(width, height) < MIN_LONG_EDGE:
-        fail(f'frozen homepage hero is below 2K: {width}x{height}')
-
+    w, h = dimensions(hero_path)
     print(
-        f'PASS: R15.5 visual gate — {len(raster_refs)} shipped content raster references are >=2K; '
-        f'homepage hero frozen to logistics-stock.webp ({width}x{height}).'
+        f'PASS: R15.7 visual gate — {len(raster_refs)} shipped content rasters >=2K; '
+        f'homepage hero binary frozen by SHA256 ({w}x{h}).'
     )
-
 
 if __name__ == '__main__':
     main()
