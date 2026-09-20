@@ -55,6 +55,16 @@ function withinRateLimit(req,res){
   return true;
 }
 
+function validHttpsWebhook(value){
+  const raw=String(value||'').trim();
+  if(!raw) return false;
+  try{
+    const url=new URL(raw);
+    return url.protocol==='https:' && Boolean(url.hostname);
+  }catch{
+    return false;
+  }
+}
 function allowedOrigin(req){
   const origin = req.headers.origin;
   if (!origin) return true;
@@ -115,8 +125,10 @@ module.exports = async function handler(req, res) {
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)) return respond(res,400,{ok:false,error:'invalid_email'},requestId);
 
   const record={request_id:requestId,received_at:new Date().toISOString(),site:'exoticalloycn.com',...b};
-  const webhook=process.env.RFQ_WEBHOOK_URL;
+  const webhook=String(process.env.RFQ_WEBHOOK_URL||'').trim();
   if(!webhook) return respond(res,503,{ok:false,error:'rfq_route_not_configured'},requestId);
+  if(!validHttpsWebhook(webhook)) return respond(res,503,{ok:false,error:'rfq_route_invalid'},requestId);
+  if(!String(process.env.RFQ_SHARED_SECRET||'').trim()) return respond(res,503,{ok:false,error:'rfq_signature_not_configured'},requestId);
 
   try{
     const r=await postWebhook(webhook,record,requestId);
