@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.12 — real-browser mobile overflow QA + signed RFQ trust boundary
+# V34.152 R15.13 — light-hero CTA contrast + real-browser mobile QA + signed RFQ trust boundary
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.12 release candidate
+      - name: Checkout V34.152 R15.13 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.12-real-browser-mobile-qa
+          ref: feat/v34.152-r15.13-hero-cta-contrast
           fetch-depth: 1
 
       - name: Configure Pages
@@ -56,7 +56,7 @@ jobs:
           python3 scripts/materialize-r15-6-native-assets.py
 
 
-      - name: Build consolidated R15.12 stylesheet
+      - name: Build consolidated R15.13 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -77,6 +77,7 @@ jobs:
             assets/brand-v34.152-r14-tail.css \
             assets/brand-v34.152-r15-tail.css \
             assets/brand-v34.152-r15-12-tail.css \
+            assets/brand-v34.152-r15-13-tail.css \
             > assets/brand-v34.152-r14.css
           test -s assets/brand-v34.152-r14.css
           grep -q 'V34.152 R14.1' assets/brand-v34.152-r14.css
@@ -107,7 +108,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.12 release overlays
+      - name: Apply V34.152 R15.13 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -122,7 +123,7 @@ jobs:
           python3 scripts/apply-r15-9-media-performance.py
           python3 scripts/apply-r15-12-mobile-layout.py
 
-      - name: Run full V34.152 R15.12 source gate
+      - name: Run full V34.152 R15.13 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -132,6 +133,7 @@ jobs:
           python3 scripts/validate-r15-visual-assets.py .
           python3 scripts/validate-r15-6-native-visuals.py .
           python3 scripts/validate-r15-12-mobile-layout.py .
+          python3 scripts/validate-r15-13-cta-contrast.py .
 
       - name: Build hardened temporary Pages mirror
         shell: bash
@@ -141,7 +143,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.12 Pages artifact
+      - name: Validate V34.152 R15.13 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
@@ -151,6 +153,7 @@ jobs:
           python3 scripts/validate-r15-6-native-visuals.py _site
           python3 scripts/validate-html-media-conformance.py _site
           python3 scripts/validate-r15-12-mobile-layout.py _site
+          python3 scripts/validate-r15-13-cta-contrast.py _site
           python3 scripts/validate-pages-release.py _site
 
       - name: Archive Pages artifact with validated hidden metadata
@@ -179,10 +182,10 @@ jobs:
   production-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.12 production candidate
+      - name: Checkout V34.152 R15.13 production candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.12-real-browser-mobile-qa
+          ref: feat/v34.152-r15.13-hero-cta-contrast
           fetch-depth: 1
 
       - name: Run production build contract
@@ -194,7 +197,7 @@ jobs:
           test -s _prod/assets/images/logistics-stock.webp
           test -s _prod/assets/images/r15-6-titanium.webp
           test -s _prod/.well-known/release.json
-          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.12"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
+          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.13"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
