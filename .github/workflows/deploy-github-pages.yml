@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.10 — HTML/media conformance + unique LCP contract + deterministic release identity
+# V34.152 R15.10a — HTML/media conformance + unique LCP contract + deterministic release identity
 
 on:
   workflow_dispatch:
@@ -56,7 +56,7 @@ jobs:
           python3 scripts/materialize-r15-6-native-assets.py
 
 
-      - name: Build consolidated R15.9 stylesheet
+      - name: Build consolidated R15.10 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -194,7 +194,7 @@ jobs:
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
-          echo "PASS: R15.9 production build completed from frozen repository assets with observable identity."
+          echo "PASS: R15.10 production build completed from frozen repository assets with observable identity."
 
   deploy:
     needs: [build, production-build]
