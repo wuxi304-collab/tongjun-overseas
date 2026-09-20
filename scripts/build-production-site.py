@@ -32,6 +32,7 @@ OVERLAYS = [
     'scripts/apply-r15-accessibility.py',
     'scripts/apply-r15-2k-visual-freeze.py',
     'scripts/apply-r15-6-native-visuals.py',
+    'scripts/apply-r15-9-media-performance.py',
 ]
 PUBLIC_ROOT_FILES = [
     'manifest.webmanifest',
