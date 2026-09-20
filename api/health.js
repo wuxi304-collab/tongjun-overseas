@@ -1,4 +1,4 @@
-const SITE_RELEASE = 'V34.152 R15.11';
+const SITE_RELEASE = 'V34.152 R15.12';
 const VISUAL_RELEASE = 'V34.152 R15.7';
 
 function validHttpsWebhook(value){
