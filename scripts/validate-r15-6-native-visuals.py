@@ -31,7 +31,7 @@ def webp_dimensions(path: Path):
         payload = data[pos+8:pos+8+size]
         if fourcc == b'VP8X' and len(payload) >= 10:
             return 1 + int.from_bytes(payload[4:7], 'little'), 1 + int.from_bytes(payload[7:10], 'little')
-        if fourcc == b'VP8 ' and len(payload) >= 10 and payload[3:6] == b'\\x9d\\x01\\x2a':
+        if fourcc == b'VP8 ' and len(payload) >= 10 and payload[3:6] == b'\x9d\x01\x2a':
             return int.from_bytes(payload[6:8], 'little') & 0x3fff, int.from_bytes(payload[8:10], 'little') & 0x3fff
         if fourcc == b'VP8L' and len(payload) >= 5 and payload[0] == 0x2f:
             bits = int.from_bytes(payload[1:5], 'little')
