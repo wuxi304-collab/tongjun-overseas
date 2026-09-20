@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.11b — HTML/media conformance + unique LCP contract + deterministic release identity
+# V34.152 R15.11c — signed HTTPS RFQ fail-closed trust boundary
 
 on:
   workflow_dispatch:
