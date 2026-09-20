@@ -44,8 +44,9 @@ const robotsTxt=fs.readFileSync(path.join(root,'robots.txt'),'utf8');
 if(/Disallow:\s*\/$/m.test(robotsTxt)) failures.push('production robots.txt blocks the entire site');
 
 const health=fs.readFileSync(path.join(root,'api','health.js'),'utf8');
-for(const marker of ['rfq_route_configured','Cache-Control','RFQ_WEBHOOK_URL','V34.152 R15.11','X-Tongjun-Release','visual_release']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
-if(/RFQ_SHARED_SECRET/.test(health)) failures.push('api/health.js must not expose or depend on RFQ_SHARED_SECRET');
+for(const marker of ['rfq_route_configured','rfq_route_https_valid','rfq_signature_configured','Cache-Control','RFQ_WEBHOOK_URL','RFQ_SHARED_SECRET','V34.152 R15.11','X-Tongjun-Release','visual_release']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
+if(/X-Tongjun-Webhook-Secret/.test(health)) failures.push('api/health.js must never expose the raw webhook secret header');
+if(/RFQ_SHARED_SECRET\s*[:=]\s*process\.env\.RFQ_SHARED_SECRET/.test(health)) failures.push('api/health.js must not serialize RFQ_SHARED_SECRET into the response payload');
 
 const smoke=fs.readFileSync(path.join(root,'scripts','smoke-rfq-production.js'),'utf8');
 if(!smoke.includes('RFQ_SMOKE_URL')) failures.push('production RFQ smoke is not explicitly opt-in');
