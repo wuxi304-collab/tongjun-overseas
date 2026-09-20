@@ -4,6 +4,7 @@ import sys
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
 HERO_CLASSES = {'pagehero', 'landinghero', 'articlehero', 'tech-hero'}
+VOID_TAGS = {'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
 EXPECTED_GHOST_CTAS = 19
 
 
@@ -21,13 +22,15 @@ class HeroGhostParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         data = dict(attrs)
         classes = set((data.get('class') or '').split())
+        if tag == 'a' and self.hero_depth and {'cta', 'ghost'} <= classes:
+            self.count += 1
+
+        if tag in VOID_TAGS:
+            return
         is_hero = bool(classes & HERO_CLASSES)
-        self.stack.append(is_hero)
+        self.stack.append((tag, is_hero))
         if is_hero:
             self.hero_depth += 1
-        if tag == 'a' and self.hero_depth:
-            if {'cta', 'ghost'} <= classes:
-                self.count += 1
 
     def handle_startendtag(self, tag, attrs):
         data = dict(attrs)
@@ -36,10 +39,15 @@ class HeroGhostParser(HTMLParser):
             self.count += 1
 
     def handle_endtag(self, tag):
-        if self.stack:
-            is_hero = self.stack.pop()
-            if is_hero:
-                self.hero_depth -= 1
+        for index in range(len(self.stack) - 1, -1, -1):
+            if self.stack[index][0] != tag:
+                continue
+            closing = self.stack[index:]
+            self.stack = self.stack[:index]
+            for _, is_hero in closing:
+                if is_hero:
+                    self.hero_depth -= 1
+            return
 
 
 def main():
@@ -52,6 +60,8 @@ def main():
     for page in htmls:
         parser = HeroGhostParser()
         parser.feed(page.read_text(encoding='utf-8'))
+        if parser.hero_depth != 0:
+            fail(f'{page.name}: unbalanced technical-hero nesting after parse')
         if parser.count:
             total += parser.count
             pages.append((page.name, parser.count))
@@ -75,7 +85,6 @@ def main():
         if marker not in css:
             fail(f'R15.13 CTA contrast CSS marker missing: {marker}')
 
-    # R15.13 must never change the approved dark homepage hero ghost treatment.
     tail = ROOT / 'assets' / 'brand-v34.152-r15-13-tail.css'
     if tail.is_file():
         tail_text = tail.read_text(encoding='utf-8')
