@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.9 — unique LCP media contract + deterministic release identity
+# V34.152 R15.10 — HTML/media conformance + unique LCP contract + deterministic release identity
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.9 release candidate
+      - name: Checkout V34.152 R15.10 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.9-media-performance
+          ref: feat/v34.152-r15.10-html-media-conformance
           fetch-depth: 1
 
       - name: Configure Pages
@@ -106,7 +106,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.9 release overlays
+      - name: Apply V34.152 R15.10 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -120,7 +120,7 @@ jobs:
           python3 scripts/apply-r15-6-native-visuals.py
           python3 scripts/apply-r15-9-media-performance.py
 
-      - name: Run full V34.152 R15.9 source gate
+      - name: Run full V34.152 R15.10 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -138,7 +138,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.9 Pages artifact
+      - name: Validate V34.152 R15.10 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
@@ -146,6 +146,7 @@ jobs:
           python3 scripts/validate-rfq-contract.py _site
           python3 scripts/validate-r15-visual-assets.py _site
           python3 scripts/validate-r15-6-native-visuals.py _site
+          python3 scripts/validate-html-media-conformance.py _site
           python3 scripts/validate-pages-release.py _site
 
       - name: Archive Pages artifact with validated hidden metadata
@@ -174,10 +175,10 @@ jobs:
   production-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.9 production candidate
+      - name: Checkout V34.152 R15.10 production candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.9-media-performance
+          ref: feat/v34.152-r15.10-html-media-conformance
           fetch-depth: 1
 
       - name: Run production build contract
@@ -189,7 +190,7 @@ jobs:
           test -s _prod/assets/images/logistics-stock.webp
           test -s _prod/assets/images/r15-6-titanium.webp
           test -s _prod/.well-known/release.json
-          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.9"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
+          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.10"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
