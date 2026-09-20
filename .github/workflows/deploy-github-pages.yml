@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.10a — HTML/media conformance + unique LCP contract + deterministic release identity
+# V34.152 R15.10b — HTML/media conformance + unique LCP contract + deterministic release identity
 
 on:
   workflow_dispatch:
