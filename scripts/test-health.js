@@ -34,12 +34,12 @@ async function run(){
   assert.equal(res.payload.rfq_route_configured,false);
   assert.equal(res.payload.rfq_route_https_valid,false);
   assert.equal(res.payload.rfq_signature_configured,false);
-  assert.equal(res.payload.site_release,'V34.152 R15.13');
+  assert.equal(res.payload.site_release,'V34.152 R15.14');
   assert.equal(res.payload.visual_release,'V34.152 R15.7');
   assert.equal(res.payload.release,'1234567890abcdef1234567890abcdef12345678'.slice(0,40));
   assert.equal(res.payload.deployment_environment,'production');
   assert.equal(res.headers['Cache-Control'],'no-store');
-  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.13');
+  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.14');
 
   // HTTP webhook URLs are never considered production-ready.
   process.env.RFQ_WEBHOOK_URL='http://example.invalid/hook';
@@ -70,7 +70,7 @@ async function run(){
   assert.equal(res.payload.rfq_route_configured,true);
   assert.equal(res.payload.rfq_route_https_valid,true);
   assert.equal(res.payload.rfq_signature_configured,true);
-  assert.equal(res.payload.site_release,'V34.152 R15.13');
+  assert.equal(res.payload.site_release,'V34.152 R15.14');
   assert.equal(res.payload.visual_release,'V34.152 R15.7');
   assert.match(res.payload.checked_at,/^\d{4}-\d{2}-\d{2}T/);
 
@@ -78,7 +78,7 @@ async function run(){
   await handler({method:'HEAD',headers:{}},res);
   assert.equal(res.statusCode,200);
   assert.equal(res.ended,true);
-  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.13');
+  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.14');
 
   res=makeRes();
   await handler({method:'POST',headers:{}},res);
@@ -95,7 +95,7 @@ async function run(){
   if(oldEnv===undefined) delete process.env.VERCEL_ENV;
   else process.env.VERCEL_ENV=oldEnv;
 
-  console.log('PASS: R15.13 production health requires HTTPS RFQ routing + HMAC secret, with release identity, HEAD and method gates validated.');
+  console.log('PASS: R15.14 production health requires HTTPS RFQ routing + HMAC secret, with release identity, HEAD and method gates validated.');
 }
 
 run().catch(err=>{console.error(err);process.exit(1);});
