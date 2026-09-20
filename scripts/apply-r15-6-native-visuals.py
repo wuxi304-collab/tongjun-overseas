@@ -2,29 +2,29 @@ from pathlib import Path
 import re
 
 ROOT = Path('.')
-VERSION = '20260919-r15-6'
+VERSION = '20260920-r15-6b'
 
 MAP = {
-    'about-engineering.webp': 'r15-6-about.jpg',
-    'engineering-discussion-v2.webp': 'r15-6-about.jpg',
-    'engineering-review-v2.webp': 'r15-6-quality.jpg',
-    'heavy-plate.webp': 'r15-6-heavy.jpg',
-    'hero-port-v2.webp': 'r15-6-materials.jpg',
-    'hero-special-metals.webp': 'r15-6-materials.jpg',
-    'invar-lng.webp': 'r15-6-lng.jpg',
-    'invar-tooling.webp': 'r15-6-tooling.jpg',
+    'about-engineering.webp': 'r15-6-about.webp',
+    'engineering-discussion-v2.webp': 'r15-6-about.webp',
+    'engineering-review-v2.webp': 'r15-6-quality.webp',
+    'heavy-plate.webp': 'r15-6-heavy.webp',
+    'hero-port-v2.webp': 'r15-6-materials.webp',
+    'hero-special-metals.webp': 'r15-6-materials.webp',
+    'invar-lng.webp': 'r15-6-lng.webp',
+    'invar-tooling.webp': 'r15-6-tooling.webp',
     # Homepage logistics-stock.webp is intentionally NOT replaced.
-    'materials-r8.webp': 'r15-6-materials.jpg',
-    'materials-warehouse-v2.webp': 'r15-6-materials.jpg',
-    'nickel-alloys.webp': 'r15-6-process.jpg',
-    'og-cover.webp': 'r15-6-materials.jpg',
-    'precision-strip.webp': 'r15-6-precision.jpg',
-    'quality-inspection.webp': 'r15-6-quality.jpg',
-    'quality-lab-v2.webp': 'r15-6-quality.jpg',
-    'quality-r8.webp': 'r15-6-quality.jpg',
-    'resources-metal.webp': 'r15-6-resources.jpg',
-    'standards-rfq.webp': 'r15-6-resources.jpg',
-    'titanium-zirconium.webp': 'r15-6-titanium.jpg',
+    'materials-r8.webp': 'r15-6-materials.webp',
+    'materials-warehouse-v2.webp': 'r15-6-materials.webp',
+    'nickel-alloys.webp': 'r15-6-process.webp',
+    'og-cover.webp': 'r15-6-materials.webp',
+    'precision-strip.webp': 'r15-6-precision.webp',
+    'quality-inspection.webp': 'r15-6-quality.webp',
+    'quality-lab-v2.webp': 'r15-6-quality.webp',
+    'quality-r8.webp': 'r15-6-quality.webp',
+    'resources-metal.webp': 'r15-6-resources.webp',
+    'standards-rfq.webp': 'r15-6-resources.webp',
+    'titanium-zirconium.webp': 'r15-6-titanium.webp',
 }
 
 TARGETS = [
@@ -71,7 +71,7 @@ def main():
     if legacy_refs:
         raise SystemExit(f'ERROR: legacy soft visual reference(s) remain after R15.6 rewrite: {legacy_refs[:20]}')
 
-    print(f'PASS: R15.6 native visual overlay — {changed} text assets updated; homepage hero kept frozen; all mapped content visuals now point to native high-resolution photography.')
+    print(f'PASS: R15.6 native visual overlay — {changed} text assets updated; homepage hero kept frozen; all mapped content visuals now point to optimized high-resolution photography.')
 
 if __name__ == '__main__':
     main()
