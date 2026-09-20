@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.6c — frozen homepage hero + zero-upsample native-source 2K WebP inner visuals + production-readiness gates
+# V34.152 R15.7 — content-addressed frozen 2K+ visuals + deterministic production source
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
       - '.github/workflows/deploy-github-pages.yml'
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.6 release candidate
+      - name: Checkout V34.152 R15.7 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.6-native-visual-rebuild
+          ref: feat/v34.152-r15.7-deterministic-visual-assets
           fetch-depth: 1
 
       - name: Configure Pages
@@ -51,19 +51,33 @@ jobs:
           ffmpeg -version | head -1
           ffprobe -version | head -1
 
-      - name: Materialize frozen R15.5 content imagery at 2K
+      - name: Materialize or verify frozen R15.7 homepage hero
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/materialize-r15-2k-assets.py
 
-      - name: Materialize R15.6c native-source WebP assets
+      - name: Materialize or verify R15.7 content-addressed WebP assets
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/materialize-r15-6-native-assets.py
 
-      - name: Build consolidated R15.6c stylesheet
+      - name: Freeze R15.7 visual binaries into release branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "tongjun-release-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/images/logistics-stock.webp assets/images/r15-6-*.webp
+          if git diff --cached --quiet; then
+            echo "R15.7 visual binaries already frozen; no commit required."
+          else
+            git commit -m "assets: freeze R15.7 deterministic 2K visuals"
+            git push origin HEAD:feat/v34.152-r15.7-deterministic-visual-assets
+          fi
+
+      - name: Build consolidated R15.7 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -113,7 +127,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.6c release overlays
+      - name: Apply V34.152 R15.7 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -126,7 +140,7 @@ jobs:
           python3 scripts/apply-r15-2k-visual-freeze.py
           python3 scripts/apply-r15-6-native-visuals.py
 
-      - name: Run full V34.152 R15.6c source gate
+      - name: Run full V34.152 R15.7 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -144,7 +158,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.6c Pages artifact
+      - name: Validate V34.152 R15.7 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
