@@ -148,6 +148,7 @@ def main():
         "X-Tongjun-Webhook-Timestamp",
         "X-Tongjun-Webhook-Signature",
         "X-Tongjun-Webhook-Signature-Version",
+        "RFQ_LEGACY_SECRET_HEADER",
     )
     for marker in api_markers:
         if marker not in api_text:
