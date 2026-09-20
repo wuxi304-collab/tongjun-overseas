@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.8 — deterministic visuals + observable static/API release identity
+# V34.152 R15.8a — deterministic visuals + observable static/API release identity
 
 on:
   workflow_dispatch:
