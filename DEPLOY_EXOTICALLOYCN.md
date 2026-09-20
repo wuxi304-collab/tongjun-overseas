@@ -31,7 +31,7 @@ The source repository still contains a historical `CNAME` file. Neither the Verc
 Production secure RFQ delivery requires:
 
 - `RFQ_WEBHOOK_URL` — **required** for server-side RFQ delivery. The endpoint must accept JSON POSTs and return a 2xx status after it has accepted the record.
-- `RFQ_SHARED_SECRET` — recommended. Sent to the receiving webhook in `X-Tongjun-Webhook-Secret`.
+- `RFQ_SHARED_SECRET` — recommended. Retained in `X-Tongjun-Webhook-Secret` for compatibility and also used to sign each webhook body with HMAC-SHA256.
 - `RFQ_ALLOWED_ORIGINS` — optional comma-separated origin allowlist. Defaults to `https://exoticalloycn.com,https://www.exoticalloycn.com`; the active Vercel preview hostname is accepted automatically through `VERCEL_URL`.
 
 If `RFQ_WEBHOOK_URL` is missing, the API returns `503 rfq_route_not_configured`. If the downstream webhook fails or times out, the API returns `502 rfq_delivery_failed`. The browser then opens the structured email fallback addressed to `ask2205@outlook.com`.
@@ -39,14 +39,14 @@ If `RFQ_WEBHOOK_URL` is missing, the API returns `503 rfq_route_not_configured`.
 ## R14.2 delivery trace contract
 Every RFQ POST attempt receives a trace ID in the form:
 
-`TJ-YYYYMMDD-XXXXXXXX`
+`TJ-YYYYMMDD-XXXXXXXXXXXX`
 
 For accepted and rejected POSTs, the same ID is returned in:
 
 - JSON field `request_id`;
 - response header `X-Tongjun-Request-Id`.
 
-The same ID is forwarded to the downstream webhook in `X-Tongjun-Request-Id` and stored in the webhook JSON record as `request_id`.
+The same ID is forwarded to the downstream webhook in `X-Tongjun-Request-Id` and stored in the webhook JSON record as `request_id`. R15.11 expands the random suffix from 8 to 12 hexadecimal characters (48 bits).
 
 If secure routing fails in the browser and the API returned a trace ID, the email fallback appends:
 
@@ -71,6 +71,22 @@ It contains:
 The production `/api/health` response exposes the same site/visual release plus the Vercel git commit and sends `X-Tongjun-Release: V34.152 R15.10`.
 
 `npm run check:production` now requires the static `release.json` commit to exactly match `/api/health.release`. A mixed CDN/function deployment, stale static artifact or wrong production commit therefore fails the production gate even if the homepage itself returns HTTP 200.
+
+## R15.11 RFQ trust-boundary contract
+
+Browser RFQ submissions must use JSON. The server accepts `application/json` and standards-based `application/*+json` media types; other POST media types return traceable `415 unsupported_media_type`.
+
+The raw request-body budget is enforced as UTF-8 bytes, not JavaScript character count. This matters for multilingual notes and prevents multibyte payloads from bypassing the nominal 24 KB boundary.
+
+When `RFQ_SHARED_SECRET` is configured, each downstream webhook POST carries:
+
+- `X-Tongjun-Webhook-Timestamp` — Unix seconds;
+- `X-Tongjun-Webhook-Signature-Version: v1`;
+- `X-Tongjun-Webhook-Signature: sha256=<hex>`.
+
+The signature is `HMAC-SHA256(secret, timestamp + "." + exact_json_body)`. A receiver should reject stale timestamps and compare the expected signature with a constant-time comparison. The existing `X-Tongjun-Webhook-Secret` header is retained for compatibility during migration, but the HMAC signature is the stronger integrity mechanism.
+
+The Origin allowlist remains a browser-origin guard, not an authentication mechanism. Explicit untrusted Origins are rejected; direct JSON clients without an Origin remain supported. Authentication/authorization of the downstream webhook is provided by the shared secret/HMAC contract, not by the browser Origin header.
 
 ## R15 production readiness endpoint
 Vercel deploys `GET /api/health` from `api/health.js`.
@@ -99,7 +115,8 @@ The API also enforces:
 - POST only;
 - origin allowlist;
 - honeypot handling;
-- request-body size limit;
+- JSON media-type gate;
+- UTF-8 request-body byte limit;
 - server-side field length limits;
 - required field validation;
 - email format validation;
