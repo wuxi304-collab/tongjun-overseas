@@ -1,9 +1,9 @@
-# Deploy exoticalloycn.com — V34.152 R15.1
+# Deploy exoticalloycn.com — V34.152 R15.8
 
-## Current launch status — 2026-09-16
+## Current launch status — 2026-09-20
 **BLOCKED for production traffic until DNS and Vercel project binding are verified.**
 
-From the current engineering environment, `exoticalloycn.com` did not resolve through system DNS and HTTPS requests failed with `Could not resolve host`. GitHub Pages is healthy as a temporary mirror, but that does **not** prove the production apex or the Vercel serverless RFQ route is live.
+From the current engineering environment, the production apex still could not be verified as externally reachable. The connected Vercel accounts currently expose no visible team/project through the connector. GitHub Pages is healthy as a temporary mirror, but that does **not** prove the production apex, Vercel domain binding, environment variables or serverless RFQ route are live.
 
 Do not switch outbound campaigns, SEO promotion or buyer traffic to the apex until `npm run check:production` and the production RFQ smoke both pass.
 
@@ -53,6 +53,24 @@ If secure routing fails in the browser and the API returned a trace ID, the emai
 `Secure Route Attempt: TJ-...`
 
 This lets the customer-facing fallback, Vercel logs and downstream webhook logs be correlated to the same attempt.
+
+## R15.8 release identity contract
+Every built artifact now exposes a non-secret machine-readable identity at:
+
+`/.well-known/release.json`
+
+It contains:
+
+- `site_release: V34.152 R15.8`;
+- source branch and exact 40-character source commit;
+- `visual_release: V34.152 R15.7`;
+- SHA256 of the frozen visual manifest;
+- deployment environment (`production` or `github-pages-mirror`);
+- canonical production origin.
+
+The production `/api/health` response exposes the same site/visual release plus the Vercel git commit and sends `X-Tongjun-Release: V34.152 R15.8`.
+
+`npm run check:production` now requires the static `release.json` commit to exactly match `/api/health.release`. A mixed CDN/function deployment, stale static artifact or wrong production commit therefore fails the production gate even if the homepage itself returns HTTP 200.
 
 ## R15 production readiness endpoint
 Vercel deploys `GET /api/health` from `api/health.js`.
@@ -115,6 +133,8 @@ The preflight does **not** submit an RFQ. It verifies:
 8. `/rfq` returns `200` and contains `#rfqForm`.
 9. `/thank-you` returns `200`.
 10. `/api/health` returns `200`, `ok: true` and `rfq_route_configured: true`.
+11. `/.well-known/release.json` returns R15.8 production identity.
+12. Static release identity and `/api/health` report the exact same 40-character source commit.
 
 Any failure means production remains blocked.
 
@@ -156,8 +176,9 @@ Before switching outbound campaigns to the production domain:
 5. Run `npm run check:production` and require a full pass.
 6. Run `npm run smoke:rfq:production` against `https://exoticalloycn.com/api/rfq`.
 7. Confirm the same `TJ-...` trace ID exists in the downstream receiver.
-8. Verify `/rfq`, `/thank-you`, sitemap/canonical and current runtime one final time.
-9. Only then enable outbound campaigns, buyer traffic or SEO promotion.
+8. Verify `/.well-known/release.json` and `/api/health` expose the same R15.8 source commit.
+9. Verify `/rfq`, `/thank-you`, sitemap/canonical and current runtime one final time.
+10. Only then enable outbound campaigns, buyer traffic or SEO promotion.
 
 ## DNS
 Use the DNS records shown by the **active Vercel Domains screen for the production project**. Do not copy generic DNS values from screenshots, tutorials or an old GitHub Pages setup.
