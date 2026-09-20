@@ -142,6 +142,8 @@ def main():
         "respond(res,400,{ok:false,error:'missing_fields',missing},requestId)",
         "respond(res,400,{ok:false,error:'invalid_email'},requestId)",
         "respond(res,503,{ok:false,error:'rfq_route_not_configured'},requestId)",
+        "respond(res,503,{ok:false,error:'rfq_route_invalid'},requestId)",
+        "respond(res,503,{ok:false,error:'rfq_signature_not_configured'},requestId)",
         "respond(res,502,{ok:false,error:'rfq_delivery_failed'},requestId)",
         "crypto.randomBytes(6)",
         "Buffer.byteLength(rawText,'utf8')",
@@ -149,6 +151,7 @@ def main():
         "X-Tongjun-Webhook-Signature",
         "X-Tongjun-Webhook-Signature-Version",
         "RFQ_LEGACY_SECRET_HEADER",
+        "function validHttpsWebhook(value)",
     )
     for marker in api_markers:
         if marker not in api_text:
