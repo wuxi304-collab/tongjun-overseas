@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.7c — frozen 2K+ binaries, content-addressed gates, no image encoder/network dependency
+# V34.152 R15.7d — deterministic visuals + independent production-build contract
 
 on:
   workflow_dispatch:
@@ -153,8 +153,31 @@ jobs:
           path: _site
           retention-days: 1
 
+
+  production-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout V34.152 R15.7 production candidate
+        uses: actions/checkout@v6
+        with:
+          ref: feat/v34.152-r15.7-deterministic-visual-assets
+          fetch-depth: 1
+
+      - name: Run production build contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build:production
+          test -s _prod/index.html
+          test -s _prod/assets/images/logistics-stock.webp
+          test -s _prod/assets/images/r15-6-titanium.webp
+          test ! -e _prod/VISUAL_MANIFEST_R15_7.json
+          test ! -e _prod/scripts
+          test ! -e _prod/.sync
+          echo "PASS: R15.7 production build completed from frozen repository assets."
+
   deploy:
-    needs: build
+    needs: [build, production-build]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
