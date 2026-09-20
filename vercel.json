@@ -7,26 +7,66 @@
   "redirects": [
     {
       "source": "/(.*)",
-      "has": [{"type": "host", "value": "www.exoticalloycn.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.exoticalloycn.com"
+        }
+      ],
       "destination": "https://exoticalloycn.com/$1",
       "permanent": true
     }
   ],
   "headers": [
     {
+      "source": "/.well-known/release.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
       "source": "/assets/(.*)",
-      "headers": [{"key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400"}]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        {"key": "X-Content-Type-Options", "value": "nosniff"},
-        {"key": "X-Frame-Options", "value": "DENY"},
-        {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
-        {"key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()"},
-        {"key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains"},
-        {"key": "Content-Security-Policy", "value": "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' mailto:"},
-        {"key": "Cross-Origin-Opener-Policy", "value": "same-origin"}
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' mailto:"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        }
       ]
     }
   ]
