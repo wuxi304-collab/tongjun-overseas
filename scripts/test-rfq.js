@@ -1,4 +1,5 @@
 const assert = require('assert');
+const crypto = require('crypto');
 
 function makeRes(){
   let statusCode=200,payload=null;
@@ -12,7 +13,7 @@ function makeRes(){
 }
 
 function requestIdLooksValid(id){
-  return /^TJ-\d{8}-[0-9A-F]{8}$/.test(String(id||''));
+  return /^TJ-\d{8}-[0-9A-F]{12}$/.test(String(id||''));
 }
 function assertTrace(res){
   assert.equal(requestIdLooksValid(res.payload && res.payload.request_id),true);
@@ -22,13 +23,18 @@ function assertTrace(res){
 async function run(){
   process.env.RFQ_WEBHOOK_URL='https://example.invalid/hook';
   process.env.RFQ_ALLOWED_ORIGINS='https://exoticalloycn.com';
+  process.env.RFQ_SHARED_SECRET='unit-test-secret';
 
   let sent=null;
+  let sentBodyText='';
+  let sentHeaders=null;
   let fetchMode='success';
   let fetchCount=0;
   global.fetch=async (_url,opts)=>{
     fetchCount+=1;
-    sent=JSON.parse(opts.body);
+    sentBodyText=String(opts.body||'');
+    sent=JSON.parse(sentBodyText);
+    sentHeaders=opts.headers||{};
     if(fetchMode==='throw') throw new Error('network_down');
     if(fetchMode==='fail') return {ok:false,status:503};
     return {ok:true,status:202};
@@ -48,7 +54,7 @@ async function run(){
   };
   const req=(body=baseBody,headers={})=>({
     method:'POST',
-    headers:{origin:'https://exoticalloycn.com',...headers},
+    headers:{origin:'https://exoticalloycn.com','content-type':'application/json',...headers},
     body:{...body}
   });
 
@@ -80,17 +86,51 @@ async function run(){
   assert.equal(sent.product,'alloy-625');
   assert.equal(sent.first_seen,'2026-09-16T03:00:00.000Z');
 
+  // Shared-secret mode adds an integrity signature over timestamp + exact JSON body.
+  assert.equal(sentHeaders['X-Tongjun-Webhook-Secret'],'unit-test-secret');
+  assert.equal(sentHeaders['X-Tongjun-Webhook-Signature-Version'],'v1');
+  assert.match(String(sentHeaders['X-Tongjun-Webhook-Timestamp']||''),/^\d{10}$/);
+  const expectedSignature=crypto
+    .createHmac('sha256','unit-test-secret')
+    .update(`${sentHeaders['X-Tongjun-Webhook-Timestamp']}.${sentBodyText}`)
+    .digest('hex');
+  assert.equal(sentHeaders['X-Tongjun-Webhook-Signature'],`sha256=${expectedSignature}`);
+  assert.equal(sentHeaders['X-Tongjun-Request-Id'],res.payload.request_id);
+
   // Only POST is accepted.
   res=makeRes();
   await handler({method:'GET',headers:{},body:{}},res);
   assert.equal(res.statusCode,405);
   assert.equal(res.headers.Allow,'POST');
 
-  // Origin gate is fail closed and traceable.
+  // Non-JSON POSTs are rejected before origin/rate/delivery handling, but remain traceable.
+  const beforeMediaTypeFetches=fetchCount;
+  res=makeRes();
+  await handler(req(baseBody,{'content-type':'text/plain','x-forwarded-for':'198.51.100.9'}),res);
+  assert.equal(res.statusCode,415);
+  assert.equal(res.payload.error,'unsupported_media_type');
+  assertTrace(res);
+  assert.equal(fetchCount,beforeMediaTypeFetches);
+
+  // Standards-based +json media types are accepted.
+  res=makeRes();
+  await handler(req(baseBody,{'content-type':'application/vnd.tongjun.rfq+json','x-forwarded-for':'198.51.100.19'}),res);
+  assert.equal(res.statusCode,202);
+  assertTrace(res);
+
+  // Origin gate rejects explicit untrusted browser origins.
   res=makeRes();
   await handler(req(baseBody,{origin:'https://untrusted.example','x-forwarded-for':'198.51.100.10'}),res);
   assert.equal(res.statusCode,403);
   assert.equal(res.payload.error,'origin_not_allowed');
+  assertTrace(res);
+
+  // Direct JSON clients without an Origin remain supported; Origin is not authentication.
+  res=makeRes();
+  const direct=req(baseBody,{'x-forwarded-for':'198.51.100.20'});
+  delete direct.headers.origin;
+  await handler(direct,res);
+  assert.equal(res.statusCode,202);
   assertTrace(res);
 
   // Required-field and email validation are traceable and do not call the webhook.
@@ -118,9 +158,9 @@ async function run(){
   assertTrace(res);
   assert.equal(fetchCount,beforeValidationFetches);
 
-  // Payload guard runs before field validation.
+  // Payload guard is byte-based and runs before field validation.
   res=makeRes();
-  await handler(req({...baseBody,notes:'x'.repeat(25000)},{'x-forwarded-for':'198.51.100.14'}),res);
+  await handler(req({...baseBody,notes:'钢'.repeat(8500)},{'x-forwarded-for':'198.51.100.14'}),res);
   assert.equal(res.statusCode,413);
   assert.equal(res.payload.error,'payload_too_large');
   assertTrace(res);
@@ -173,7 +213,7 @@ async function run(){
     }
   }
 
-  console.log('PASS: RFQ handler — success, trace IDs, origin, validation, honeypot, payload limit, truncation, route failure and rate gate validated.');
+  console.log('PASS: RFQ handler — JSON media gate, 48-bit trace IDs, origin semantics, validation, UTF-8 byte limit, honeypot, HMAC webhook integrity, route failures and rate gate validated.');
 }
 
 run().catch(err=>{ console.error(err); process.exit(1); });
