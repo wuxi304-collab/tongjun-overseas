@@ -120,15 +120,15 @@ def main():
 
     release_path = ROOT / '.well-known' / 'release.json'
     if not release_path.is_file():
-        fail('R15.10 Pages release identity missing')
+        fail('R15.11 Pages release identity missing')
     try:
         release = json.loads(release_path.read_text(encoding='utf-8'))
     except Exception as exc:
-        fail(f'R15.10 Pages release identity is invalid JSON: {exc}')
+        fail(f'R15.11 Pages release identity is invalid JSON: {exc}')
     expected_release = {
         'service': 'tongjun-overseas',
-        'site_release': 'V34.152 R15.10',
-        'source_branch': 'feat/v34.152-r15.10-html-media-conformance',
+        'site_release': 'V34.152 R15.11',
+        'source_branch': 'feat/v34.152-r15.11-rfq-trust-boundary',
         'visual_release': 'V34.152 R15.7',
         'environment': 'github-pages-mirror',
         'canonical_origin': 'https://exoticalloycn.com',
@@ -136,15 +136,15 @@ def main():
     }
     for key, expected in expected_release.items():
         if release.get(key) != expected:
-            fail(f'R15.10 Pages release identity mismatch for {key}: {release.get(key)!r}')
+            fail(f'R15.11 Pages release identity mismatch for {key}: {release.get(key)!r}')
     if not re.fullmatch(r'[0-9a-f]{40}', str(release.get('source_commit') or '')):
-        fail('R15.10 Pages source_commit must be a 40-character git SHA')
+        fail('R15.11 Pages source_commit must be a 40-character git SHA')
     visual_manifest = Path('VISUAL_MANIFEST_R15_7.json')
     if not visual_manifest.is_file():
         fail('R15.7 visual manifest source missing while validating Pages release identity')
     expected_visual_sha = hashlib.sha256(visual_manifest.read_bytes()).hexdigest()
     if release.get('visual_manifest_sha256') != expected_visual_sha:
-        fail('R15.10 Pages visual manifest SHA256 mismatch')
+        fail('R15.11 Pages visual manifest SHA256 mismatch')
 
     core = ['index.html', 'technical-data.html', 'quality.html', 'rfq.html', 'materials.html', 'product-forms.html', 'about.html', 'resources.html', 'industries.html']
     for name in core:
@@ -276,7 +276,7 @@ def main():
         fail(f'{len(broken_anchors)} broken internal deep-link anchor(s): {broken_anchors[:20]}')
 
     print(
-        'PASS: R15.10 Pages release — 50 root pages, staging noindex, observable release identity, keyboard landmarks/focus CSS gated, '
+        'PASS: R15.11 Pages release — 50 root pages, staging noindex, observable release identity, keyboard landmarks/focus CSS gated, '
         'internal/build-only paths excluded, RFQ trace runtime gated, 0 broken assets/routes/anchors and 0 duplicate ids.'
     )
 
