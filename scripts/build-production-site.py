@@ -22,6 +22,7 @@ CSS_PARTS = [
     'assets/brand-v34.152-r13-1-tail.css',
     'assets/brand-v34.152-r14-tail.css',
     'assets/brand-v34.152-r15-tail.css',
+    'assets/brand-v34.152-r15-12-tail.css',
 ]
 OVERLAYS = [
     'scripts/apply-brand-shell-v34-152.py',
@@ -33,6 +34,7 @@ OVERLAYS = [
     'scripts/apply-r15-2k-visual-freeze.py',
     'scripts/apply-r15-6-native-visuals.py',
     'scripts/apply-r15-9-media-performance.py',
+    'scripts/apply-r15-12-mobile-layout.py',
 ]
 PUBLIC_ROOT_FILES = [
     'manifest.webmanifest',
