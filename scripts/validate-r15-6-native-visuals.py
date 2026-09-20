@@ -67,7 +67,7 @@ def main():
     legacy_hits = []
     for path in text_surfaces():
         text = path.read_text(encoding='utf-8')
-        used.update(re.findall(r'assets/images/(r15-6-[A-Za-z0-9._-]+\\.webp)', text))
+        used.update(re.findall(r'assets/images/(r15-6-[A-Za-z0-9._-]+\.webp)', text))
         for old in LEGACY_FORBIDDEN:
             if f'assets/images/{old}' in text:
                 legacy_hits.append((path.name, old))
