@@ -5,139 +5,84 @@ import subprocess
 
 ROOT = Path('.')
 IMAGES = ROOT / 'assets' / 'images'
-VERSION = '20260919-r15-5'
 MIN_LONG_EDGE = 2048
-
-# Content imagery that may be reached by the shipped HTML/CSS/JS.
-CONTENT_ASSETS = [
-    'about-engineering.webp',
-    'engineering-discussion-v2.webp',
-    'engineering-review-v2.webp',
-    'heavy-plate.webp',
-    'hero-port-v2.webp',
-    'hero-special-metals.webp',
-    'invar-lng.webp',
-    'invar-tooling.webp',
-    'logistics-stock.webp',
-    'materials-r8.webp',
-    'materials-warehouse-v2.webp',
-    'nickel-alloys.webp',
-    'og-cover.webp',
-    'precision-strip.webp',
-    'quality-inspection.webp',
-    'quality-lab-v2.webp',
-    'quality-r8.webp',
-    'resources-metal.webp',
-    'standards-rfq.webp',
-    'titanium-zirconium.webp',
-]
-
-# Three legacy files are irrecoverably truncated; other legacy references were
-# never valid production assets. Keep their semantics conservative by deriving
-# them from the closest existing industrial visual rather than inventing a new scene.
-SOURCE_OVERRIDE = {
-    'about-engineering.webp': 'resources-metal.webp',
-    'engineering-discussion-v2.webp': 'titanium-zirconium.webp',
-    'engineering-review-v2.webp': 'quality-r8.webp',
-    'hero-port-v2.webp': 'logistics-stock.webp',
-    'hero-special-metals.webp': 'logistics-stock.webp',
-    'materials-warehouse-v2.webp': 'materials-r8.webp',
-    'quality-lab-v2.webp': 'quality-r8.webp',
-}
-
-# Freeze the exact R15.4 hero source bytes. If anyone replaces the hero source,
-# the build stops before it can silently ship a different visual.
-HERO_SOURCE_SHA256 = '89961367b48e0d8a16df57739c34c4a572e4608968a6a45efcc94cc515327900'
-
-
-def command(name):
-    resolved = shutil.which(name)
-    if not resolved:
-        raise SystemExit(f'ERROR: required binary missing: {name}')
-    return resolved
-
-
-FFMPEG = command('ffmpeg')
-FFPROBE = command('ffprobe')
+LEGACY_HERO_SHA256 = '89961367b48e0d8a16df57739c34c4a572e4608968a6a45efcc94cc515327900'
+FROZEN_HERO_SHA256 = '8692b9d723a0c27dd6776e38c7fb33c3179eaaafafaf7e13637591a857b32a14'
+FROZEN_SIZE = (2048, 1154)
 
 
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
-    with path.open('rb') as f:
-        for chunk in iter(lambda: f.read(1024 * 1024), b''):
+    with path.open('rb') as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b''):
             h.update(chunk)
     return h.hexdigest()
 
 
-def dimensions(path: Path):
-    result = subprocess.run(
-        [
-            FFPROBE, '-v', 'error', '-select_streams', 'v:0',
-            '-show_entries', 'stream=width,height', '-of', 'csv=s=x:p=0',
-            str(path),
-        ],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    width, height = result.stdout.strip().split('x')
-    return int(width), int(height)
-
-
-def transcode_2k(source: Path, target: Path):
-    tmp = target.with_name(target.stem + '.r15-2k-tmp.webp')
-    if tmp.exists():
-        tmp.unlink()
-    subprocess.run(
-        [
-            FFMPEG, '-hide_banner', '-loglevel', 'error', '-err_detect', 'ignore_err',
-            '-i', str(source), '-frames:v', '1',
-            '-vf',
-            "scale='if(gte(iw,ih),2048,-2)':'if(gte(iw,ih),-2,2048)':flags=lanczos,"
-            "unsharp=5:5:0.35:5:5:0.0",
-            '-c:v', 'libwebp', '-quality', '88', '-compression_level', '6',
-            '-y', str(tmp),
-        ],
-        check=True,
-    )
-    width, height = dimensions(tmp)
-    if max(width, height) < MIN_LONG_EDGE:
-        raise SystemExit(f'ERROR: 2K transcode failed for {target.name}: {width}x{height}')
-    # A second decode proves the generated file is not just header-readable.
-    subprocess.run(
-        [FFMPEG, '-hide_banner', '-loglevel', 'error', '-i', str(tmp), '-frames:v', '1', '-f', 'null', '-'],
-        check=True,
-    )
-    tmp.replace(target)
-    return width, height
+def webp_dimensions(path: Path):
+    data = path.read_bytes()
+    if len(data) < 30 or data[:4] != b'RIFF' or data[8:12] != b'WEBP':
+        raise SystemExit(f'ERROR: invalid WebP: {path}')
+    pos = 12
+    while pos + 8 <= len(data):
+        fourcc = data[pos:pos+4]
+        size = int.from_bytes(data[pos+4:pos+8], 'little')
+        payload = data[pos+8:pos+8+size]
+        if fourcc == b'VP8X' and len(payload) >= 10:
+            w = 1 + int.from_bytes(payload[4:7], 'little')
+            h = 1 + int.from_bytes(payload[7:10], 'little')
+            return w, h
+        if fourcc == b'VP8 ' and len(payload) >= 10 and payload[3:6] == b'\x9d\x01\x2a':
+            w = int.from_bytes(payload[6:8], 'little') & 0x3fff
+            h = int.from_bytes(payload[8:10], 'little') & 0x3fff
+            return w, h
+        if fourcc == b'VP8L' and len(payload) >= 5 and payload[0] == 0x2f:
+            bits = int.from_bytes(payload[1:5], 'little')
+            return (bits & 0x3fff) + 1, ((bits >> 14) & 0x3fff) + 1
+        pos += 8 + size + (size & 1)
+    raise SystemExit(f'ERROR: WebP dimensions unavailable: {path}')
 
 
 def main():
     hero = IMAGES / 'logistics-stock.webp'
     if not hero.is_file():
-        raise SystemExit('ERROR: frozen homepage hero source missing')
+        raise SystemExit('ERROR: frozen homepage hero missing')
+
     actual = sha256(hero)
-    if actual != HERO_SOURCE_SHA256:
+    if actual == FROZEN_HERO_SHA256:
+        dims = webp_dimensions(hero)
+        if dims != FROZEN_SIZE:
+            raise SystemExit(f'ERROR: frozen hero dimensions changed: {dims}')
+        print(f'PASS: R15.7 frozen hero already materialized — {dims[0]}x{dims[1]}, SHA256 locked.')
+        return
+
+    if actual != LEGACY_HERO_SHA256:
         raise SystemExit(
-            'ERROR: homepage hero source changed. '
-            f'Expected {HERO_SOURCE_SHA256}, found {actual}. '
-            'Hero replacement requires explicit visual approval.'
+            'ERROR: homepage hero bytes changed without approval. '
+            f'Expected legacy {LEGACY_HERO_SHA256} or frozen {FROZEN_HERO_SHA256}, found {actual}.'
         )
 
-    results = []
-    for name in CONTENT_ASSETS:
-        source_name = SOURCE_OVERRIDE.get(name, name)
-        source = IMAGES / source_name
-        target = IMAGES / name
-        if not source.is_file():
-            raise SystemExit(f'ERROR: source image missing for {name}: {source_name}')
-        width, height = transcode_2k(source, target)
-        results.append((name, width, height, source_name))
+    ffmpeg = shutil.which('ffmpeg')
+    if not ffmpeg:
+        raise SystemExit('ERROR: ffmpeg required only for the one-time R15.7 hero freeze')
 
-    print(f'PASS: R15.5 2K materialization — {len(results)} content rasters generated at long edge >= {MIN_LONG_EDGE}px.')
-    for name, width, height, source_name in results:
-        suffix = '' if source_name == name else f' <- {source_name}'
-        print(f'  {name}: {width}x{height}{suffix}')
+    tmp = hero.with_name('logistics-stock.r15-7-freeze.webp')
+    subprocess.run([
+        ffmpeg, '-hide_banner', '-loglevel', 'error', '-err_detect', 'ignore_err',
+        '-i', str(hero), '-frames:v', '1',
+        '-vf', "scale='if(gte(iw,ih),2048,-2)':'if(gte(iw,ih),-2,2048)':flags=lanczos,unsharp=5:5:0.35:5:5:0.0",
+        '-c:v', 'libwebp', '-quality', '88', '-compression_level', '6',
+        '-y', str(tmp),
+    ], check=True)
+    tmp.replace(hero)
+
+    dims = webp_dimensions(hero)
+    frozen = sha256(hero)
+    if dims != FROZEN_SIZE or frozen != FROZEN_HERO_SHA256:
+        raise SystemExit(
+            f'ERROR: one-time hero freeze is not deterministic: dims={dims}, sha256={frozen}'
+        )
+    print(f'PASS: R15.7 hero frozen deterministically — {dims[0]}x{dims[1]}, SHA256 {frozen}.')
 
 
 if __name__ == '__main__':
