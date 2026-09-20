@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.7b — frozen 2K+ binaries, no image encoder/network dependency
+# V34.152 R15.7c — frozen 2K+ binaries, content-addressed gates, no image encoder/network dependency
 
 on:
   workflow_dispatch:
