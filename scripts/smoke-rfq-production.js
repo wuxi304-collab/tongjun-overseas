@@ -42,7 +42,7 @@ async function run(){
     headers:{
       'Content-Type':'application/json',
       'Origin':origin,
-      'User-Agent':'Tongjun-RFQ-Production-Smoke/1.0'
+      'User-Agent':'Tongjun-RFQ-Production-Smoke/1.1'
     },
     body:JSON.stringify(payload),
     signal:AbortSignal.timeout(12000)
