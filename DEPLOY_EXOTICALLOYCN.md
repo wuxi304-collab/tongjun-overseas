@@ -31,7 +31,8 @@ The source repository still contains a historical `CNAME` file. Neither the Verc
 Production secure RFQ delivery requires:
 
 - `RFQ_WEBHOOK_URL` — **required** for server-side RFQ delivery. The endpoint must accept JSON POSTs and return a 2xx status after it has accepted the record.
-- `RFQ_SHARED_SECRET` — recommended. Retained in `X-Tongjun-Webhook-Secret` for compatibility and also used to sign each webhook body with HMAC-SHA256.
+- `RFQ_SHARED_SECRET` — recommended. Used server-side to sign each webhook body with HMAC-SHA256; it is **not** forwarded in clear text by default.
+- `RFQ_LEGACY_SECRET_HEADER` — optional migration switch. Set to `1`, `true` or `yes` only if an existing receiver still requires `X-Tongjun-Webhook-Secret`; leave unset for the safer HMAC-only default.
 - `RFQ_ALLOWED_ORIGINS` — optional comma-separated origin allowlist. Defaults to `https://exoticalloycn.com,https://www.exoticalloycn.com`; the active Vercel preview hostname is accepted automatically through `VERCEL_URL`.
 
 If `RFQ_WEBHOOK_URL` is missing, the API returns `503 rfq_route_not_configured`. If the downstream webhook fails or times out, the API returns `502 rfq_delivery_failed`. The browser then opens the structured email fallback addressed to `ask2205@outlook.com`.
@@ -84,7 +85,7 @@ When `RFQ_SHARED_SECRET` is configured, each downstream webhook POST carries:
 - `X-Tongjun-Webhook-Signature-Version: v1`;
 - `X-Tongjun-Webhook-Signature: sha256=<hex>`.
 
-The signature is `HMAC-SHA256(secret, timestamp + "." + exact_json_body)`. A receiver should reject stale timestamps and compare the expected signature with a constant-time comparison. The existing `X-Tongjun-Webhook-Secret` header is retained for compatibility during migration, but the HMAC signature is the stronger integrity mechanism.
+The signature is `HMAC-SHA256(secret, timestamp + "." + exact_json_body)`. A receiver should reject stale timestamps and compare the expected signature with a constant-time comparison. The raw secret stays server-side by default. `X-Tongjun-Webhook-Secret` is emitted only when `RFQ_LEGACY_SECRET_HEADER` is explicitly enabled for migration.
 
 The Origin allowlist remains a browser-origin guard, not an authentication mechanism. Explicit untrusted Origins are rejected; direct JSON clients without an Origin remain supported. Authentication/authorization of the downstream webhook is provided by the shared secret/HMAC contract, not by the browser Origin header.
 
@@ -187,7 +188,7 @@ A `503` means the production secure route is not configured. A `502` means Verce
 Before switching outbound campaigns to the production domain:
 
 1. Run `npm run check` on the release source.
-2. Confirm Vercel production environment has `RFQ_WEBHOOK_URL` and, preferably, `RFQ_SHARED_SECRET`.
+2. Confirm Vercel production environment has `RFQ_WEBHOOK_URL` and `RFQ_SHARED_SECRET`; keep `RFQ_LEGACY_SECRET_HEADER` unset unless a legacy receiver explicitly requires it.
 3. Confirm Vercel Domains shows both apex and `www` with valid DNS/SSL state.
 4. Deploy the release to production.
 5. Run `npm run check:production` and require a full pass.
