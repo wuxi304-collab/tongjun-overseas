@@ -71,7 +71,9 @@ function signedWebhookHeaders(secret, bodyText, requestId){
     .createHmac('sha256',secret)
     .update(`${timestamp}.${bodyText}`)
     .digest('hex');
-  headers['X-Tongjun-Webhook-Secret']=secret;
+  if(/^(?:1|true|yes)$/i.test(String(process.env.RFQ_LEGACY_SECRET_HEADER || '').trim())) {
+    headers['X-Tongjun-Webhook-Secret']=secret;
+  }
   headers['X-Tongjun-Webhook-Timestamp']=timestamp;
   headers['X-Tongjun-Webhook-Signature']=`sha256=${signature}`;
   headers['X-Tongjun-Webhook-Signature-Version']='v1';
