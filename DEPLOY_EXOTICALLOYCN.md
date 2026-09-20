@@ -30,8 +30,8 @@ The source repository still contains a historical `CNAME` file. Neither the Verc
 ## RFQ environment variables
 Production secure RFQ delivery requires:
 
-- `RFQ_WEBHOOK_URL` — **required** for server-side RFQ delivery. The endpoint must accept JSON POSTs and return a 2xx status after it has accepted the record.
-- `RFQ_SHARED_SECRET` — recommended. Used server-side to sign each webhook body with HMAC-SHA256; it is **not** forwarded in clear text by default.
+- `RFQ_WEBHOOK_URL` — **required** for server-side RFQ delivery and must be a valid `https://` URL. The endpoint must accept JSON POSTs and return a 2xx status after it has accepted the record.
+- `RFQ_SHARED_SECRET` — **required for production readiness**. Used server-side to sign each webhook body with HMAC-SHA256; it is **not** forwarded in clear text by default.
 - `RFQ_LEGACY_SECRET_HEADER` — optional migration switch. Set to `1`, `true` or `yes` only if an existing receiver still requires `X-Tongjun-Webhook-Secret`; leave unset for the safer HMAC-only default.
 - `RFQ_ALLOWED_ORIGINS` — optional comma-separated origin allowlist. Defaults to `https://exoticalloycn.com,https://www.exoticalloycn.com`; the active Vercel preview hostname is accepted automatically through `VERCEL_URL`.
 
@@ -96,13 +96,15 @@ It returns only non-secret readiness data:
 
 - `service: tongjun-overseas`;
 - `rfq_route_configured: true|false`;
+- `rfq_route_https_valid: true|false`;
+- `rfq_signature_configured: true|false`;
 - a non-secret release identifier;
 - `checked_at` timestamp.
 
 Expected behavior:
 
-- `200` + `ok: true` only when `RFQ_WEBHOOK_URL` is configured;
-- `503` + `ok: false` when the secure RFQ route is not configured;
+- `200` + `ok: true` only when `RFQ_WEBHOOK_URL` is a valid HTTPS URL **and** `RFQ_SHARED_SECRET` is configured;
+- `503` + `ok: false` when the webhook is missing/invalid, uses non-HTTPS transport, or the HMAC secret is absent;
 - `405` for unsupported methods;
 - `Cache-Control: no-store`.
 
@@ -150,7 +152,7 @@ The preflight does **not** submit an RFQ. It verifies:
 7. Current runtime `site.js?v=20260916-r14-2` is active.
 8. `/rfq` returns `200` and contains `#rfqForm`.
 9. `/thank-you` returns `200`.
-10. `/api/health` returns `200`, `ok: true` and `rfq_route_configured: true`.
+10. `/api/health` returns `200`, `ok: true`, `rfq_route_configured: true`, `rfq_route_https_valid: true` and `rfq_signature_configured: true`.
 11. `/.well-known/release.json` returns R15.11 production identity.
 12. Static release identity and `/api/health` report the exact same 40-character source commit.
 
