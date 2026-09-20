@@ -1,0 +1,11 @@
+/* V34.152 R15.13 — restore readable secondary CTAs on light technical heroes. */
+body.brand-v34 :where(.pagehero,.landinghero,.articlehero,.tech-hero) .cta.ghost{
+  background:#fff!important;
+  color:#10263c!important;
+  border-color:#7b8997!important;
+}
+body.brand-v34 :where(.pagehero,.landinghero,.articlehero,.tech-hero) .cta.ghost:hover{
+  background:#10263c!important;
+  color:#fff!important;
+  border-color:#10263c!important;
+}
