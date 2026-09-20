@@ -56,7 +56,7 @@ jobs:
           python3 scripts/materialize-r15-6-native-assets.py
 
 
-      - name: Build consolidated R15.8 stylesheet
+      - name: Build consolidated R15.9 stylesheet
         shell: bash
         run: |
           set -euo pipefail
@@ -193,7 +193,7 @@ jobs:
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
-          echo "PASS: R15.8 production build completed from frozen repository assets with observable identity."
+          echo "PASS: R15.9 production build completed from frozen repository assets with observable identity."
 
   deploy:
     needs: [build, production-build]
