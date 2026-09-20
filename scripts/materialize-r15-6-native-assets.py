@@ -95,7 +95,7 @@ def dimensions(path: Path):
     w, h = result.stdout.strip().split('x')
     return int(w), int(h)
 
-def encode_derivative(source: Path, target: Path):
+def encode_derivative(source: Path, target: Path, source_width: int, source_height: int):
     # Start above 2K for sharper desktop delivery. If a detailed source cannot
     # satisfy the byte budget, reduce dimensions but never below 2048x1152.
     attempts = [
@@ -105,6 +105,10 @@ def encode_derivative(source: Path, target: Path):
     ]
     tmp = target.with_suffix('.tmp.webp')
     for width, height, quality in attempts:
+        # Never enlarge a source to satisfy the delivery target. Both target
+        # dimensions must fit inside the native source before cover/crop.
+        if width > source_width or height > source_height:
+            continue
         if tmp.exists():
             tmp.unlink()
         vf = (
@@ -163,13 +167,13 @@ def main():
         source = CACHE / f'{stem}.jpg'
         source.write_bytes(data)
         target = IMAGES / f'{stem}.webp'
-        dw, dh, quality, size = encode_derivative(source, target)
+        dw, dh, quality, size = encode_derivative(source, target, sw, sh)
         rows.append((stem, sw, sh, dw, dh, quality, size))
 
     print(
         f'PASS: R15.6 optimized native visuals — {len(rows)} real-photo sources validated at >= '
         f'{MIN_SOURCE_LONG_EDGE}px; local WebP delivery kept >= {MIN_DELIVERY_LONG_EDGE}px and <= '
-        f'{TARGET_MAX_BYTES // 1024} KB each.'
+        f'{TARGET_MAX_BYTES // 1024} KB each, with zero upsampling.'
     )
     for stem, sw, sh, dw, dh, quality, size in rows:
         print(
