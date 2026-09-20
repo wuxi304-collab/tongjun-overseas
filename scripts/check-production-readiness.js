@@ -94,9 +94,11 @@ async function run(){
   assert.equal(body.site_release,'V34.152 R15.11','Unexpected health site release');
   assert.equal(body.visual_release,'V34.152 R15.7','Unexpected health visual release');
   assert.equal(body.rfq_route_configured,true,'RFQ secure route is not configured');
+  assert.equal(body.rfq_route_https_valid,true,'RFQ webhook must be a valid HTTPS URL');
+  assert.equal(body.rfq_signature_configured,true,'RFQ HMAC signing secret is not configured');
   assert.match(String(body.release||''),/^[0-9a-f]{40}$/i,'Health response must expose the production commit SHA');
   assert.equal(health.headers.get('x-tongjun-release'),'V34.152 R15.11','Health release header mismatch');
-  console.log(`/api/health: READY · ${body.site_release} · commit ${body.release.slice(0,12)}`);
+  console.log(`/api/health: READY · ${body.site_release} · HTTPS webhook + HMAC · commit ${body.release.slice(0,12)}`);
 
   const releaseResponse=await fetchChecked(`${BASE}/.well-known/release.json`,{headers:{Accept:'application/json'}});
   assert.equal(releaseResponse.status,200,`/.well-known/release.json expected 200, got ${releaseResponse.status}`);
