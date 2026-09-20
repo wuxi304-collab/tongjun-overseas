@@ -1,0 +1,73 @@
+{
+  "release": "V34.152 R15.7",
+  "policy": "frozen-binary-visuals",
+  "hero": {
+    "file": "logistics-stock.webp",
+    "width": 2048,
+    "height": 1154,
+    "bytes": 130636,
+    "sha256": "8692b9d723a0c27dd6776e38c7fb33c3179eaaafafaf7e13637591a857b32a14"
+  },
+  "assets": {
+    "r15-6-about.webp": {
+      "width": 2048,
+      "height": 1152,
+      "bytes": 120708,
+      "sha256": "ab533fbc42704e0a0a5b429902c0ad5e60afeaf56f8929a9f0815094986a2bb7"
+    },
+    "r15-6-heavy.webp": {
+      "width": 2304,
+      "height": 1296,
+      "bytes": 527758,
+      "sha256": "d97c3feeee10d1b9a78a68ff23dac4fb54eb4c7c8c37fd3f25580b8bfff149c3"
+    },
+    "r15-6-lng.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 310698,
+      "sha256": "32af5fbe82c6788ef4ad2c96e264b6d1c34cb5142b50dacd5e5d16d4cdd0a48c"
+    },
+    "r15-6-materials.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 515200,
+      "sha256": "883b9e4a14dc839a0f2516694a4826bf0094f30d8a2811b8f83719b2b2e5f45b"
+    },
+    "r15-6-precision.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 592604,
+      "sha256": "fd53e04916c91d4c1572a3dd21af33e7359acbda5b343c6e51e0fc44e9ff5ae3"
+    },
+    "r15-6-process.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 235708,
+      "sha256": "f79388446b93a596a389cf1a9d73d33674644597778163a9538afbd26f8473fb"
+    },
+    "r15-6-quality.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 247600,
+      "sha256": "589f5e7fbc7fc79cd4d481a9f3d3c9722b4a745377b361c1a6fbfa135b23ed23"
+    },
+    "r15-6-resources.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 271850,
+      "sha256": "80470163ca5920f125eeeddb9bc85da1c66a0bf320a6f3bd7c47edfd38a80545"
+    },
+    "r15-6-titanium.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 323578,
+      "sha256": "03f6f5b85aca5f4aac76c07590cbe0df25c913ccc06d6e5be0bbaacd9657c4e7"
+    },
+    "r15-6-tooling.webp": {
+      "width": 2560,
+      "height": 1440,
+      "bytes": 333178,
+      "sha256": "5981bebea9bc3433bba69c3ac8727224b4212171c3fcb95e9e7c6337267eb64f"
+    }
+  }
+}
