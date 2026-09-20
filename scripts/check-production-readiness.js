@@ -91,11 +91,26 @@ async function run(){
   assert.equal(health.status,200,`/api/health expected 200, got ${health.status} (${body.error||'no JSON error'})`);
   assert.equal(body.ok,true,'/api/health must return ok=true');
   assert.equal(body.service,'tongjun-overseas','Unexpected health service identity');
+  assert.equal(body.site_release,'V34.152 R15.8','Unexpected health site release');
+  assert.equal(body.visual_release,'V34.152 R15.7','Unexpected health visual release');
   assert.equal(body.rfq_route_configured,true,'RFQ secure route is not configured');
-  assert.ok(body.release,'Health response must expose a non-secret release identifier');
-  console.log(`/api/health: READY · release ${body.release}`);
+  assert.match(String(body.release||''),/^[0-9a-f]{40}$/i,'Health response must expose the production commit SHA');
+  assert.equal(health.headers.get('x-tongjun-release'),'V34.152 R15.8','Health release header mismatch');
+  console.log(`/api/health: READY · ${body.site_release} · commit ${body.release.slice(0,12)}`);
 
-  console.log('PASS: production DNS, HTTPS, redirect, indexability, security headers, critical pages and RFQ readiness are all healthy.');
+  const releaseResponse=await fetchChecked(`${BASE}/.well-known/release.json`,{headers:{Accept:'application/json'}});
+  assert.equal(releaseResponse.status,200,`/.well-known/release.json expected 200, got ${releaseResponse.status}`);
+  assert.match(releaseResponse.headers.get('cache-control')||'',/no-store/i,'release.json must be no-store');
+  const release=await releaseResponse.json();
+  assert.equal(release.service,'tongjun-overseas','Static release service identity mismatch');
+  assert.equal(release.site_release,body.site_release,'Static/API site release mismatch');
+  assert.equal(release.visual_release,body.visual_release,'Static/API visual release mismatch');
+  assert.equal(release.environment,'production','Static release environment must be production');
+  assert.match(String(release.visual_manifest_sha256||''),/^[0-9a-f]{64}$/i,'Visual manifest SHA256 missing');
+  assert.equal(release.source_commit,body.release,'Static/API source commit mismatch');
+  console.log(`/.well-known/release.json: ${release.site_release} · ${release.source_commit.slice(0,12)} · visuals ${release.visual_release}`);
+
+  console.log('PASS: production DNS, HTTPS, redirect, indexability, security headers, static/API release identity and RFQ readiness are all healthy.');
 }
 
 run().catch(err=>{
