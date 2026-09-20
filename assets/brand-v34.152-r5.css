@@ -2,7 +2,7 @@
 body.brand-v34 .navin>.brand,body.brand-v34 .tj-brand{width:360px!important;min-width:360px!important;height:68px!important;padding:0!important;position:relative!important;font-size:0!important;line-height:1!important;background:url('/assets/images/columbus-logo-v2.webp') left center/contain no-repeat!important;overflow:hidden!important}
 body.brand-v34 .navin>.brand:before,body.brand-v34 .navin>.brand:after,body.brand-v34 .tj-brand:before,body.brand-v34 .tj-brand:after{content:none!important;display:none!important}
 body.brand-v34 .navin>.brand>span,body.brand-v34 .tj-brand>*{display:none!important}
-body.brand-v34 .hero{min-height:720px!important;background:#071a37 url('/assets/images/hero-port-v2.webp') center 52%/cover no-repeat!important;align-items:center!important}
+body.brand-v34 .hero{min-height:720px!important;background:#071a37 url('/assets/images/logistics-stock.webp') center 52%/cover no-repeat!important;align-items:center!important}
 body.brand-v34 .hero:before{background:linear-gradient(90deg,rgba(4,16,31,.95) 0%,rgba(5,21,40,.88) 35%,rgba(7,26,55,.58) 56%,rgba(7,26,55,.18) 78%,rgba(7,26,55,.05) 100%)!important}
 body.brand-v34 .hero-grid{padding:88px 0 72px!important}
 body.brand-v34 .hero-grid>div:first-child{max-width:760px!important}
