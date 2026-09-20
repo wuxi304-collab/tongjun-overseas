@@ -135,6 +135,7 @@ def main():
         'function respond(res,status,payload,requestId)',
         "res.setHeader('X-Tongjun-Request-Id',requestId)",
         'request_id:requestId',
+        "respond(res,415,{ok:false,error:'unsupported_media_type'},requestId)",
         "respond(res,403,{ok:false,error:'origin_not_allowed'},requestId)",
         "respond(res,429,{ok:false,error:'rate_limited'},requestId)",
         "respond(res,413,{ok:false,error:'payload_too_large'},requestId)",
@@ -142,6 +143,11 @@ def main():
         "respond(res,400,{ok:false,error:'invalid_email'},requestId)",
         "respond(res,503,{ok:false,error:'rfq_route_not_configured'},requestId)",
         "respond(res,502,{ok:false,error:'rfq_delivery_failed'},requestId)",
+        "crypto.randomBytes(6)",
+        "Buffer.byteLength(rawText,'utf8')",
+        "X-Tongjun-Webhook-Timestamp",
+        "X-Tongjun-Webhook-Signature",
+        "X-Tongjun-Webhook-Signature-Version",
     )
     for marker in api_markers:
         if marker not in api_text:
@@ -158,11 +164,11 @@ def main():
             raise SystemExit(f'ERROR: RFQ handler regression suite failed with exit code {test.returncode}')
 
     print(
-        'PASS: RFQ R14.2 contract aligned — '
+        'PASS: RFQ R15.11 contract aligned — '
         f'{len(form_fields)} form fields covered by API, '
         f'{len(form_required)} required fields match backend, '
         f'{len(fallback_required)} non-honeypot fields preserved in email fallback, '
-        f'{len(visible_fields)} visible buyer fields audited, trace IDs and runtime cache version gated.'
+        f'{len(visible_fields)} visible buyer fields audited, JSON media type + 48-bit traces + HMAC integrity + runtime cache version gated.'
     )
 
 
