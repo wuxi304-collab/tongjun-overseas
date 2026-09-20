@@ -145,6 +145,7 @@ def main():
     build_css()
     run_overlays()
     build_output()
+    subprocess.run(['python3', 'scripts/write-release-metadata.py', str(OUT), 'production'], check=True)
 
 
 if __name__ == '__main__':
