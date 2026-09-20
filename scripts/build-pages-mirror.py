@@ -14,7 +14,7 @@ SKIP_TOP_LEVEL = {
     '.git', '.github', '.sync', '.vercel', 'node_modules', 'scripts', 'tests',
     'api', 'ops', 'lib', '_site',
 }
-SKIP_NAMES = {'CNAME', 'R7_TEST.txt', 'package.json', 'vercel.json', 'VISUAL_MANIFEST_R15_7.json', 'RELEASE_R15_9.json'}
+SKIP_NAMES = {'CNAME', 'R7_TEST.txt', 'package.json', 'vercel.json', 'VISUAL_MANIFEST_R15_7.json', 'RELEASE_R15_10.json'}
 TEXT_EXT = {'.html', '.css', '.js', '.json', '.xml', '.txt', '.webmanifest', '.svg'}
 KEEP_EXT = TEXT_EXT | {'.ico', '.png', '.jpg', '.jpeg', '.webp', '.avif', '.woff', '.woff2', '.ttf'}
 KEEP_NAMES = {'robots.txt', 'sitemap.xml', 'manifest.webmanifest', 'llms.txt'}
