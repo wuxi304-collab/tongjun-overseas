@@ -1,21 +1,24 @@
 from pathlib import Path
 import re
+import shutil
+import subprocess
 import sys
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
-VERSION = '20260919-r15-6'
-MIN_LONG_EDGE = 3000
+VERSION = '20260920-r15-6b'
+MIN_DELIVERY_LONG_EDGE = 2048
+MAX_DELIVERY_BYTES = 590 * 1024
 NATIVE = {
-    'r15-6-materials.jpg',
-    'r15-6-quality.jpg',
-    'r15-6-process.jpg',
-    'r15-6-precision.jpg',
-    'r15-6-heavy.jpg',
-    'r15-6-lng.jpg',
-    'r15-6-tooling.jpg',
-    'r15-6-titanium.jpg',
-    'r15-6-resources.jpg',
-    'r15-6-about.jpg',
+    'r15-6-materials.webp',
+    'r15-6-quality.webp',
+    'r15-6-process.webp',
+    'r15-6-precision.webp',
+    'r15-6-heavy.webp',
+    'r15-6-lng.webp',
+    'r15-6-tooling.webp',
+    'r15-6-titanium.webp',
+    'r15-6-resources.webp',
+    'r15-6-about.webp',
 }
 LEGACY_FORBIDDEN = {
     'about-engineering.webp',
@@ -42,34 +45,25 @@ LEGACY_FORBIDDEN = {
 def fail(msg):
     raise SystemExit('ERROR: ' + msg)
 
-def jpeg_dimensions(path: Path):
-    data = path.read_bytes()
-    if len(data) < 4 or data[:2] != b'\xff\xd8':
-        fail(f'not a JPEG: {path}')
-    i = 2
-    while i + 9 < len(data):
-        if data[i] != 0xFF:
-            i += 1
-            continue
-        while i < len(data) and data[i] == 0xFF:
-            i += 1
-        if i >= len(data):
-            break
-        marker = data[i]
-        i += 1
-        if marker in (0xD8, 0xD9):
-            continue
-        if i + 2 > len(data):
-            break
-        seglen = int.from_bytes(data[i:i+2], 'big')
-        if seglen < 2 or i + seglen > len(data):
-            break
-        if marker in {0xC0,0xC1,0xC2,0xC3,0xC5,0xC6,0xC7,0xC9,0xCA,0xCB,0xCD,0xCE,0xCF}:
-            h = int.from_bytes(data[i+3:i+5], 'big')
-            w = int.from_bytes(data[i+5:i+7], 'big')
-            return w, h
-        i += seglen
-    fail(f'cannot read JPEG dimensions: {path}')
+FFPROBE = shutil.which('ffprobe')
+FFMPEG = shutil.which('ffmpeg')
+if not FFPROBE or not FFMPEG:
+    fail('ffprobe/ffmpeg required for R15.6 delivery validation')
+
+def dimensions(path: Path):
+    result = subprocess.run(
+        [
+            FFPROBE, '-v', 'error', '-select_streams', 'v:0',
+            '-show_entries', 'stream=width,height', '-of', 'csv=s=x:p=0',
+            str(path),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0 or 'x' not in result.stdout:
+        fail(f'cannot decode image dimensions: {path}')
+    w, h = result.stdout.strip().split('x')
+    return int(w), int(h)
 
 def text_surfaces():
     items = list(ROOT.glob('*.html'))
@@ -84,7 +78,7 @@ def main():
     legacy_hits = []
     for path in text_surfaces():
         text = path.read_text(encoding='utf-8')
-        used.update(re.findall(r'assets/images/(r15-6-[A-Za-z0-9._-]+\.jpg)', text))
+        used.update(re.findall(r'assets/images/(r15-6-[A-Za-z0-9._-]+\.webp)', text))
         for old in LEGACY_FORBIDDEN:
             if f'assets/images/{old}' in text:
                 legacy_hits.append((path.name, old))
@@ -93,28 +87,38 @@ def main():
     if used != NATIVE:
         fail(f'native visual reference set mismatch; used={sorted(used)} expected={sorted(NATIVE)}')
 
+    total = 0
     for name in sorted(NATIVE):
         path = ROOT / 'assets' / 'images' / name
         if not path.is_file():
-            fail(f'native visual missing: {name}')
-        w, h = jpeg_dimensions(path)
-        if max(w, h) < MIN_LONG_EDGE:
-            fail(f'native visual below 3K source gate: {name} {w}x{h}')
-        if path.stat().st_size < 350_000:
-            fail(f'native visual unexpectedly small: {name} {path.stat().st_size} bytes')
+            fail(f'R15.6 delivery visual missing: {name}')
+        w, h = dimensions(path)
+        size = path.stat().st_size
+        total += size
+        if max(w, h) < MIN_DELIVERY_LONG_EDGE:
+            fail(f'R15.6 delivery visual below 2K gate: {name} {w}x{h}')
+        if size > MAX_DELIVERY_BYTES:
+            fail(f'R15.6 delivery visual over byte budget: {name} {size // 1024} KB')
+        subprocess.run(
+            [FFMPEG, '-hide_banner', '-loglevel', 'error', '-i', str(path), '-frames:v', '1', '-f', 'null', '-'],
+            check=True,
+        )
 
     index = (ROOT / 'index.html').read_text(encoding='utf-8')
     hero = index.split('<section class="hero">',1)[1].split('</section>',1)[0]
     if 'logistics-stock.webp' not in hero:
         fail('frozen homepage hero changed')
     if 'r15-6-' in hero:
-        fail('native visual rewrite touched frozen homepage hero')
+        fail('R15.6 rewrite touched frozen homepage hero')
 
     all_text = '\n'.join(p.read_text(encoding='utf-8') for p in text_surfaces())
     if f'?v={VERSION}' not in all_text:
-        fail('R15.6 cache version missing')
+        fail('R15.6 delivery cache version missing')
 
-    print(f'PASS: R15.6 native visual gate — {len(NATIVE)} locally shipped real-photo masters, every source long edge >= {MIN_LONG_EDGE}px; mapped legacy soft images eliminated; homepage hero remains frozen.')
+    print(
+        f'PASS: R15.6 delivery gate — {len(NATIVE)} optimized real-photo WebPs, each >=2K and '
+        f'<=590 KB; aggregate {total // 1024} KB; mapped soft images eliminated; homepage hero remains frozen.'
+    )
 
 if __name__ == '__main__':
     main()
