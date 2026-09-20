@@ -3,6 +3,8 @@ from html.parser import HTMLParser
 from urllib.parse import urlsplit
 import re
 import sys
+import json
+import hashlib
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '_prod')
 
@@ -150,6 +152,34 @@ def main():
     if broken_anchors:
         fail(f'{len(broken_anchors)} broken production anchor(s): {broken_anchors[:20]}')
 
+    release_path = ROOT / '.well-known' / 'release.json'
+    if not release_path.is_file():
+        fail('R15.8 production release identity missing')
+    try:
+        release = json.loads(release_path.read_text(encoding='utf-8'))
+    except Exception as exc:
+        fail(f'R15.8 production release identity is invalid JSON: {exc}')
+    expected_release = {
+        'service': 'tongjun-overseas',
+        'site_release': 'V34.152 R15.8',
+        'source_branch': 'feat/v34.152-r15.8-release-observability',
+        'visual_release': 'V34.152 R15.7',
+        'environment': 'production',
+        'canonical_origin': 'https://exoticalloycn.com',
+        'release_identity_version': 1,
+    }
+    for key, expected in expected_release.items():
+        if release.get(key) != expected:
+            fail(f'R15.8 production release identity mismatch for {key}: {release.get(key)!r}')
+    if not re.fullmatch(r'[0-9a-f]{40}', str(release.get('source_commit') or '')):
+        fail('R15.8 production release source_commit must be a 40-character git SHA')
+    visual_manifest = Path('VISUAL_MANIFEST_R15_7.json')
+    if not visual_manifest.is_file():
+        fail('R15.7 visual manifest source missing while validating release identity')
+    expected_visual_sha = hashlib.sha256(visual_manifest.read_bytes()).hexdigest()
+    if release.get('visual_manifest_sha256') != expected_visual_sha:
+        fail('R15.8 production release visual manifest SHA256 mismatch')
+
     required = [
         ROOT / 'assets' / 'site.js',
         ROOT / 'assets' / 'brand-v34.152-r14.css',
@@ -165,7 +195,7 @@ def main():
 
     print(
         'PASS: R15 production static release — 50 pages, canonical/indexing consistency, '
-        '0 internal leaks, 0 broken assets/routes/anchors, current RFQ runtime active.'
+        '0 internal leaks, 0 broken assets/routes/anchors, R15.8 release identity and current RFQ runtime active.'
     )
 
 
