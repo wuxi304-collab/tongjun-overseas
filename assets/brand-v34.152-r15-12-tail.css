@@ -1,0 +1,39 @@
+/* V34.152 R15.12 — real-browser mobile overflow fixes. */
+@media(max-width:700px){
+  body.brand-v34[data-page="about"] .visual-frame,
+  body.brand-v34[data-page="materials"] .visual-frame,
+  body.brand-v34[data-page="product-forms"] .visual-frame{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:auto!important;
+    aspect-ratio:16/10!important;
+  }
+
+  body.brand-v34[data-page="about"] .visual-frame img,
+  body.brand-v34[data-page="materials"] .visual-frame img,
+  body.brand-v34[data-page="product-forms"] .visual-frame img{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+  }
+
+  body.brand-v34 .r15-12-table-scroll{
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+
+  body.brand-v34 .r15-12-table-scroll>.data-table.standards{
+    width:720px;
+    min-width:720px;
+    max-width:none;
+    margin:0;
+  }
+}
