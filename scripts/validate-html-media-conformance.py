@@ -60,6 +60,7 @@ def main():
             fail(f'{page.name}: slash-before-attribute malformed void tag detected: {malformed[:3]}')
 
         images = []
+        page_high = []
         for tag in IMG_TAG.findall(text):
             data, dup = attrs(tag)
             if dup:
@@ -81,6 +82,7 @@ def main():
                 if priority == 'high':
                     if loading != 'eager':
                         fail(f'{page.name}: fetchpriority=high image must also be loading=eager: {src}')
+                    page_high.append(data)
                     eager_high += 1
 
         image_preloads = []
@@ -95,6 +97,10 @@ def main():
                     fail(f'{page.name}: image preload missing href')
                 image_preloads.append(href)
 
+        if len(page_high) > 1:
+            fail(f'{page.name}: more than one fetchpriority=high local image creates competing LCP candidates')
+        if page_high and not image_preloads:
+            fail(f'{page.name}: fetchpriority=high local image exists without a matching image preload')
         if len(image_preloads) > 1:
             fail(f'{page.name}: more than one image preload creates competing LCP candidates: {image_preloads}')
         if image_preloads:
@@ -104,11 +110,18 @@ def main():
             for tag, data in images:
                 if normalize_local(data.get('src', '')) == target:
                     matching.append(data)
-            if len(matching) != 1:
-                fail(f'{page.name}: image preload must map to exactly one rendered local image: {image_preloads[0]} -> {len(matching)} matches')
-            data = matching[0]
-            if data.get('loading', '').lower() != 'eager' or data.get('fetchpriority', '').lower() != 'high':
-                fail(f'{page.name}: preloaded image must be eager + fetchpriority=high: {image_preloads[0]}')
+            if len(matching) < 1:
+                fail(f'{page.name}: image preload does not map to a rendered local image: {image_preloads[0]}')
+            high_matching = [
+                data for data in matching
+                if data.get('loading', '').lower() == 'eager'
+                and data.get('fetchpriority', '').lower() == 'high'
+            ]
+            if len(high_matching) != 1:
+                fail(
+                    f'{page.name}: preloaded resource must have exactly one eager/high rendered node: '
+                    f'{image_preloads[0]} -> {len(matching)} rendered matches / {len(high_matching)} eager-high'
+                )
 
         if page.name == 'index.html':
             hero_match = re.search(r'<section class=["\']hero["\']>[\s\S]*?</section>', text, re.I)
