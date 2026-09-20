@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const MAX_BODY_CHARS = 24000;
+const MAX_BODY_BYTES = 24000;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_MAX = 8;
 const rateBuckets = new Map();
@@ -18,14 +18,18 @@ function norm(value, max){
   return String(value ?? '').replace(/\u0000/g,'').trim().slice(0,max);
 }
 function makeRequestId(){
-  return `TJ-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+  return `TJ-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${crypto.randomBytes(6).toString('hex').toUpperCase()}`;
 }
 function respond(res,status,payload,requestId){
   if(requestId) res.setHeader('X-Tongjun-Request-Id',requestId);
   return res.status(status).json(requestId ? {...payload,request_id:requestId} : payload);
 }
+function isJsonRequest(req){
+  const mediaType=String(req.headers['content-type'] || '').split(';',1)[0].trim().toLowerCase();
+  return mediaType === 'application/json' || /^application\/[a-z0-9!#$&^_.+-]+\+json$/.test(mediaType);
+}
 function clientKey(req){
-  const raw=req.headers['x-forwarded-for'] || '';
+  const raw=req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || '';
   return String(raw).split(',')[0].trim().slice(0,80);
 }
 function withinRateLimit(req,res){
@@ -59,13 +63,27 @@ function allowedOrigin(req){
   if (process.env.VERCEL_URL) configured.push(`https://${process.env.VERCEL_URL}`);
   return configured.includes(origin);
 }
+function signedWebhookHeaders(secret, bodyText, requestId){
+  const headers={'Content-Type':'application/json','X-Tongjun-Request-Id':requestId};
+  if(!secret) return headers;
+  const timestamp=String(Math.floor(Date.now()/1000));
+  const signature=crypto
+    .createHmac('sha256',secret)
+    .update(`${timestamp}.${bodyText}`)
+    .digest('hex');
+  headers['X-Tongjun-Webhook-Secret']=secret;
+  headers['X-Tongjun-Webhook-Timestamp']=timestamp;
+  headers['X-Tongjun-Webhook-Signature']=`sha256=${signature}`;
+  headers['X-Tongjun-Webhook-Signature-Version']='v1';
+  return headers;
+}
 async function postWebhook(url, body, requestId){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),8000);
+  const bodyText=JSON.stringify(body);
+  const headers=signedWebhookHeaders(process.env.RFQ_SHARED_SECRET,bodyText,requestId);
   try{
-    const headers={'Content-Type':'application/json','X-Tongjun-Request-Id':requestId};
-    if(process.env.RFQ_SHARED_SECRET) headers['X-Tongjun-Webhook-Secret']=process.env.RFQ_SHARED_SECRET;
-    return await fetch(url,{method:'POST',headers,body:JSON.stringify(body),signal:controller.signal});
+    return await fetch(url,{method:'POST',headers,body:bodyText,signal:controller.signal});
   } finally { clearTimeout(timer); }
 }
 
@@ -79,10 +97,12 @@ module.exports = async function handler(req, res) {
   const requestId=makeRequestId();
   res.setHeader('X-Tongjun-Request-Id',requestId);
 
+  if (!isJsonRequest(req)) return respond(res,415,{ok:false,error:'unsupported_media_type'},requestId);
   if (!allowedOrigin(req)) return respond(res,403,{ok:false,error:'origin_not_allowed'},requestId);
   if (!withinRateLimit(req,res)) return respond(res,429,{ok:false,error:'rate_limited'},requestId);
   const raw = req.body || {};
-  if (JSON.stringify(raw).length > MAX_BODY_CHARS) return respond(res,413,{ok:false,error:'payload_too_large'},requestId);
+  const rawText=JSON.stringify(raw);
+  if (Buffer.byteLength(rawText,'utf8') > MAX_BODY_BYTES) return respond(res,413,{ok:false,error:'payload_too_large'},requestId);
   const b={};
   for(const [key,max] of Object.entries(LIMITS)) b[key]=norm(raw[key],max);
   if (b.website) return respond(res,202,{ok:true},requestId);
