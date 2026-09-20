@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import re
 import shutil
+import subprocess
 
 ROOT = Path('.')
 OUT = Path('_site')
@@ -13,7 +14,7 @@ SKIP_TOP_LEVEL = {
     '.git', '.github', '.sync', '.vercel', 'node_modules', 'scripts', 'tests',
     'api', 'ops', 'lib', '_site',
 }
-SKIP_NAMES = {'CNAME', 'R7_TEST.txt', 'package.json', 'vercel.json', 'VISUAL_MANIFEST_R15_7.json'}
+SKIP_NAMES = {'CNAME', 'R7_TEST.txt', 'package.json', 'vercel.json', 'VISUAL_MANIFEST_R15_7.json', 'RELEASE_R15_8.json'}
 TEXT_EXT = {'.html', '.css', '.js', '.json', '.xml', '.txt', '.webmanifest', '.svg'}
 KEEP_EXT = TEXT_EXT | {'.ico', '.png', '.jpg', '.jpeg', '.webp', '.avif', '.woff', '.woff2', '.ttf'}
 KEEP_NAMES = {'robots.txt', 'sitemap.xml', 'manifest.webmanifest', 'llms.txt'}
@@ -90,6 +91,8 @@ def main():
     stray = [name for name in SKIP_NAMES if (OUT / name).exists()]
     if stray:
         raise SystemExit(f'ERROR: build metadata leaked into Pages artifact: {stray}')
+
+    subprocess.run(['python3', 'scripts/write-release-metadata.py', str(OUT), 'github-pages-mirror'], check=True)
 
     html_count = len(list(OUT.glob('*.html')))
     if html_count != 50:
