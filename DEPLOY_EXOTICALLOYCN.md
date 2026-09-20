@@ -1,4 +1,4 @@
-# Deploy exoticalloycn.com — V34.152 R15.9
+# Deploy exoticalloycn.com — V34.152 R15.10
 
 ## Current launch status — 2026-09-20
 **BLOCKED for production traffic until DNS and Vercel project binding are verified.**
@@ -54,21 +54,21 @@ If secure routing fails in the browser and the API returned a trace ID, the emai
 
 This lets the customer-facing fallback, Vercel logs and downstream webhook logs be correlated to the same attempt.
 
-## R15.9 release identity contract
+## R15.10 release identity contract
 Every built artifact now exposes a non-secret machine-readable identity at:
 
 `/.well-known/release.json`
 
 It contains:
 
-- `site_release: V34.152 R15.9`;
+- `site_release: V34.152 R15.10`;
 - source branch and exact 40-character source commit;
 - `visual_release: V34.152 R15.7`;
 - SHA256 of the frozen visual manifest;
 - deployment environment (`production` or `github-pages-mirror`);
 - canonical production origin.
 
-The production `/api/health` response exposes the same site/visual release plus the Vercel git commit and sends `X-Tongjun-Release: V34.152 R15.9`.
+The production `/api/health` response exposes the same site/visual release plus the Vercel git commit and sends `X-Tongjun-Release: V34.152 R15.10`.
 
 `npm run check:production` now requires the static `release.json` commit to exactly match `/api/health.release`. A mixed CDN/function deployment, stale static artifact or wrong production commit therefore fails the production gate even if the homepage itself returns HTTP 200.
 
@@ -133,7 +133,7 @@ The preflight does **not** submit an RFQ. It verifies:
 8. `/rfq` returns `200` and contains `#rfqForm`.
 9. `/thank-you` returns `200`.
 10. `/api/health` returns `200`, `ok: true` and `rfq_route_configured: true`.
-11. `/.well-known/release.json` returns R15.9 production identity.
+11. `/.well-known/release.json` returns R15.10 production identity.
 12. Static release identity and `/api/health` report the exact same 40-character source commit.
 
 Any failure means production remains blocked.
@@ -176,7 +176,7 @@ Before switching outbound campaigns to the production domain:
 5. Run `npm run check:production` and require a full pass.
 6. Run `npm run smoke:rfq:production` against `https://exoticalloycn.com/api/rfq`.
 7. Confirm the same `TJ-...` trace ID exists in the downstream receiver.
-8. Verify `/.well-known/release.json` and `/api/health` expose the same R15.9 source commit.
+8. Verify `/.well-known/release.json` and `/api/health` expose the same R15.10 source commit.
 9. Verify `/rfq`, `/thank-you`, sitemap/canonical and current runtime one final time.
 10. Only then enable outbound campaigns, buyer traffic or SEO promotion.
 
