@@ -88,9 +88,11 @@ def main():
     if text_fail:
         fail(f'brand copy missing on page(s): {text_fail}')
 
-    css_path=ROOT/'assets'/'brand-v34.152-r14.css'
+    css_path=ROOT/'assets'/'tongjun-site-r15-19.css'
     if not css_path.is_file():
-        fail('consolidated stylesheet missing')
+        css_path=ROOT/'assets'/'brand-v34.152-r14.css'
+    if not css_path.is_file():
+        fail('release stylesheet missing')
     css=css_path.read_text(encoding='utf-8')
     for marker in (
         'V34.152 R15.15',
