@@ -94,6 +94,16 @@ jobs:
           test -s visual-qa/r15-20/contact-sheet.pdf
           file visual-qa/r15-20/contact-sheet.pdf
 
+      - name: Upload visual QA review packet
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: r15-20-visual-qa
+          path: |
+            visual-qa/r15-20/contact-sheet.pdf
+            visual-qa/r15-20/*.png
+          retention-days: 7
+          if-no-files-found: error
+
       - name: Commit visual QA evidence
         shell: bash
         run: |
