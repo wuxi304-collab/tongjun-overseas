@@ -40,6 +40,7 @@ OVERLAYS = [
     'scripts/apply-r15-15-vector-brand.py',
     'scripts/apply-r15-16-runtime-brand.py',
     'scripts/apply-r15-17-static-nav.py',
+    'scripts/apply-r15-18-global-cta.py',
 ]
 PUBLIC_ROOT_FILES = [
     'manifest.webmanifest',
