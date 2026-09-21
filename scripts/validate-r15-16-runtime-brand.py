@@ -3,7 +3,7 @@ import re
 import sys
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
-VERSION = '20260921-r15-16'
+VERSION = '20260921-r15-17'
 
 
 def fail(message):
@@ -62,7 +62,7 @@ def main():
             missing_brand.append((page.name, 'footer'))
 
     if bad_cache:
-        fail(f'R15.16 brand runtime cache key mismatch: {bad_cache[:10]}')
+        fail(f'R15.17 brand runtime cache key mismatch: {bad_cache[:10]}')
     if missing_brand:
         fail(f'R15.16 live vector brand shell missing: {missing_brand[:10]}')
 
@@ -72,7 +72,7 @@ def main():
         fail('R15.16 frozen homepage hero reference changed')
 
     print(
-        'PASS: R15.16 runtime brand integrity — vector lockup survives runtime normalization on all '
+        'PASS: R15.17 runtime brand integrity — vector lockup survives runtime normalization on all '
         'applicable headers/footers, destructive composite text replacement is absent, hero fallback '
         f'swap is disabled, and all 49 runtime-bearing pages use cache key {VERSION}; 404 remains script-free.'
     )
