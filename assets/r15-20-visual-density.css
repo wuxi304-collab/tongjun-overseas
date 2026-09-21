@@ -284,3 +284,85 @@
     max-width:100%;
   }
 }
+
+
+/* R15.20 pass 3 — representative-page QA corrections */
+
+/* Technical Data: make the directory arrive earlier and read as a controlled index. */
+body.page-technical-data main>.section:first-of-type{padding-top:68px}
+body.page-technical-data .tds-directory{border-top-width:5px}
+body.page-technical-data .document-hierarchy>div{min-height:190px}
+
+/* Standards: image supports context on desktop, but must not delay the table on phones. */
+body.page-standards .visual-frame{aspect-ratio:16/5.8}
+body.page-standards main>.section{padding-top:64px}
+body.page-standards .standards{line-height:1.48}
+
+/* Titanium equipment route: reduce card bulk and remove the double-RFQ cadence. */
+body.page-titanium-heat-exchangers .specpanel{padding:24px 26px}
+body.page-titanium-heat-exchangers .cap{min-height:205px;padding:24px}
+body.page-titanium-heat-exchangers .cap .icon{margin-bottom:28px}
+body.page-titanium-heat-exchangers .titanium-rfq-strip{
+  background:#eef1f3;
+  border-top:1px solid #cbd2d7;
+  padding:32px 0;
+}
+body.page-titanium-heat-exchangers .titanium-rfq-strip>.wrap{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:42px;
+}
+body.page-titanium-heat-exchangers .titanium-rfq-strip .eyebrow{margin-bottom:8px}
+body.page-titanium-heat-exchangers .titanium-rfq-strip h2{
+  margin:0 0 7px;
+  font:700 28px/1.05 "Arial Narrow",Arial,sans-serif;
+}
+body.page-titanium-heat-exchangers .titanium-rfq-strip p{
+  margin:0;
+  color:#66727b;
+  font-size:12px;
+}
+
+/* Invar note: treat the resource as an editorial technical note, not another landing page. */
+body.page-invar-lng-tooling .articlehero h1{max-width:820px}
+body.page-invar-lng-tooling .visual-frame{aspect-ratio:16/6.2}
+body.page-invar-lng-tooling .article-prose h2{
+  font-size:32px;
+  line-height:1.08;
+  margin:34px 0 10px;
+}
+body.page-invar-lng-tooling .article-prose h2:first-child{margin-top:0}
+
+@media (max-width:640px){
+  body.page-technical-data main>.section:first-of-type{padding-top:42px}
+  body.page-technical-data .tds-directory{margin-top:2px}
+  body.page-technical-data .document-hierarchy>div{min-height:auto}
+
+  body.page-standards .visual-band{display:none}
+  body.page-standards main>.section{padding-top:38px}
+  body.page-standards .standards{
+    min-width:720px;
+    font-size:12px;
+  }
+  body.page-standards .standards th,
+  body.page-standards .standards td{padding:10px 11px}
+
+  body.page-titanium-heat-exchangers .landing-grid{gap:24px}
+  body.page-titanium-heat-exchangers .specpanel{padding:20px}
+  body.page-titanium-heat-exchangers .cap{min-height:auto;padding:20px}
+  body.page-titanium-heat-exchangers .cap .icon{margin-bottom:18px}
+  body.page-titanium-heat-exchangers .titanium-rfq-strip{padding:28px 0}
+  body.page-titanium-heat-exchangers .titanium-rfq-strip>.wrap{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+  body.page-titanium-heat-exchangers .titanium-rfq-strip h2{font-size:26px}
+
+  body.page-invar-lng-tooling .articlehero h1{font-size:38px}
+  body.page-invar-lng-tooling .visual-frame{aspect-ratio:16/10}
+  body.page-invar-lng-tooling .article-prose h2{
+    font-size:28px;
+    margin-top:28px;
+  }
+}
