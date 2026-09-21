@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.15 — native vector brand lockup + zero raster-logo exemptions + prior QA gates
+# V34.152 R15.15a — native vector brand lockup + zero raster-logo exemptions + exact 404 shell model
 
 on:
   workflow_dispatch:
@@ -56,7 +56,7 @@ jobs:
           python3 scripts/materialize-r15-6-native-assets.py
 
 
-      - name: Build consolidated R15.14 stylesheet
+      - name: Build consolidated R15.15 stylesheet
         shell: bash
         run: |
           set -euo pipefail
