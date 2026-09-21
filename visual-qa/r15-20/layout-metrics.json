@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T11:44:01.189Z",
+  "generatedAt": "2026-09-21T11:47:08.010Z",
   "desktop": {
     "home": {
       "url": "https://wuxi304-collab.github.io/tongjun-overseas/",
@@ -2736,7 +2736,7 @@
       "document": {
         "scrollWidth": 375,
         "clientWidth": 375,
-        "scrollHeight": 4937
+        "scrollHeight": 4685
       },
       "header": {
         "x": 0,
@@ -2749,29 +2749,29 @@
         "x": 0,
         "y": 77,
         "width": 375,
-        "height": 613,
-        "bottom": 690
+        "height": 361.6,
+        "bottom": 438.6
       },
-      "heroViewportRatio": 0.726,
+      "heroViewportRatio": 0.428,
       "h1": {
         "text": "Titanium and zirconium for corrosion-critical equipment.",
         "rect": {
           "x": 15,
-          "y": 150.8,
+          "y": 138.8,
           "width": 345,
-          "height": 187.2,
-          "bottom": 338
+          "height": 116.3,
+          "bottom": 255.1
         },
-        "fontSize": 46.8,
-        "lineHeight": 46.8,
-        "lines": 4
+        "fontSize": 38,
+        "lineHeight": 38.8,
+        "lines": 3
       },
       "lead": {
         "x": 15,
-        "y": 354,
+        "y": 267.1,
         "width": 345,
-        "height": 99,
-        "bottom": 453
+        "height": 85.1,
+        "bottom": 352.1
       },
       "sections": [
         {
@@ -2781,8 +2781,8 @@
             "x": 0,
             "y": 77,
             "width": 375,
-            "height": 613,
-            "bottom": 690
+            "height": 361.6,
+            "bottom": 438.6
           }
         },
         {
@@ -2790,10 +2790,10 @@
           "className": "visual-band page-specific-visual",
           "rect": {
             "x": 0,
-            "y": 690,
+            "y": 438.6,
             "width": 375,
             "height": 250,
-            "bottom": 940
+            "bottom": 688.6
           }
         },
         {
@@ -2801,10 +2801,10 @@
           "className": "section",
           "rect": {
             "x": 0,
-            "y": 940,
+            "y": 688.6,
             "width": 375,
             "height": 1463,
-            "bottom": 2403.1
+            "bottom": 2151.6
           }
         },
         {
@@ -2812,10 +2812,10 @@
           "className": "section soft",
           "rect": {
             "x": 0,
-            "y": 2403.1,
+            "y": 2151.6,
             "width": 375,
             "height": 1052.6,
-            "bottom": 3455.7
+            "bottom": 3204.2
           }
         },
         {
@@ -2823,26 +2823,26 @@
           "className": "titanium-rfq-strip",
           "rect": {
             "x": 0,
-            "y": 3455.7,
+            "y": 3204.2,
             "width": 375,
             "height": 219.4,
-            "bottom": 3675.1
+            "bottom": 3423.6
           }
         }
       ],
       "prefooter": {
         "x": 0,
-        "y": 3675.1,
+        "y": 3423.6,
         "width": 375,
         "height": 463.2,
-        "bottom": 4138.3
+        "bottom": 3886.9
       },
       "footer": {
         "x": 0,
-        "y": 4138.3,
+        "y": 3886.9,
         "width": 375,
         "height": 726.4,
-        "bottom": 4864.7
+        "bottom": 4613.3
       },
       "footerComputed": {
         "paddingTop": "44px",
@@ -2853,10 +2853,10 @@
       "footerGrid": {
         "rect": {
           "x": 15,
-          "y": 4189.3,
+          "y": 3937.9,
           "width": 345,
           "height": 486.8,
-          "bottom": 4676.2
+          "bottom": 4424.7
         },
         "gridTemplateColumns": "163.5px 163.5px",
         "gridTemplateRows": "124.188px 123.562px 195.094px",
@@ -2868,10 +2868,10 @@
             "className": "footer-brand",
             "rect": {
               "x": 15,
-              "y": 4189.3,
+              "y": 3937.9,
               "width": 345,
               "height": 124.2,
-              "bottom": 4313.5
+              "bottom": 4062
             },
             "display": "block",
             "minHeight": "auto",
@@ -2882,10 +2882,10 @@
             "className": "",
             "rect": {
               "x": 15,
-              "y": 4335.5,
+              "y": 4084,
               "width": 163.5,
               "height": 123.6,
-              "bottom": 4459.1
+              "bottom": 4207.6
             },
             "display": "block",
             "minHeight": "auto",
@@ -2896,10 +2896,10 @@
             "className": "",
             "rect": {
               "x": 196.5,
-              "y": 4335.5,
+              "y": 4084,
               "width": 163.5,
               "height": 123.6,
-              "bottom": 4459.1
+              "bottom": 4207.6
             },
             "display": "block",
             "minHeight": "auto",
@@ -2910,10 +2910,10 @@
             "className": "",
             "rect": {
               "x": 15,
-              "y": 4481.1,
+              "y": 4229.6,
               "width": 163.5,
               "height": 195.1,
-              "bottom": 4676.2
+              "bottom": 4424.7
             },
             "display": "block",
             "minHeight": "auto",
@@ -2924,10 +2924,10 @@
             "className": "",
             "rect": {
               "x": 196.5,
-              "y": 4481.1,
+              "y": 4229.6,
               "width": 163.5,
               "height": 195.1,
-              "bottom": 4676.2
+              "bottom": 4424.7
             },
             "display": "block",
             "minHeight": "auto",
@@ -2938,17 +2938,17 @@
       "footerBrand": {
         "root": {
           "x": 15,
-          "y": 4189.3,
+          "y": 3937.9,
           "width": 345,
           "height": 124.2,
-          "bottom": 4313.5
+          "bottom": 4062
         },
         "brand": {
           "x": 15,
-          "y": 4189.3,
+          "y": 3937.9,
           "width": 345,
           "height": 52,
-          "bottom": 4241.3
+          "bottom": 3989.9
         },
         "mark": {
           "x": 0,
@@ -2959,25 +2959,25 @@
         },
         "copy": {
           "x": 15,
-          "y": 4251.3,
+          "y": 3999.9,
           "width": 345,
           "height": 36,
-          "bottom": 4287.3
+          "bottom": 4035.9
         },
         "location": {
           "x": 15,
-          "y": 4297.3,
+          "y": 4045.9,
           "width": 345,
           "height": 16.2,
-          "bottom": 4313.5
+          "bottom": 4062
         }
       },
       "footerLegal": {
         "x": 15,
-        "y": 4696.2,
+        "y": 4444.7,
         "width": 345,
         "height": 80.6,
-        "bottom": 4776.7
+        "bottom": 4525.3
       },
       "actionbar": {
         "x": 0,
@@ -2992,10 +2992,10 @@
           "text": "Send the Requirement ↗",
           "rect": {
             "x": 15,
-            "y": 469,
+            "y": 368.1,
             "width": 218.6,
             "height": 45.4,
-            "bottom": 514.4
+            "bottom": 413.6
           },
           "display": "flex",
           "visibility": "visible"
@@ -3028,7 +3028,7 @@
       "totalCTAcount": 6,
       "horizontalOverflow": false,
       "overflowElements": [],
-      "firstViewportTextChars": 292
+      "firstViewportTextChars": 376
     },
     "invar": {
       "url": "https://wuxi304-collab.github.io/tongjun-overseas/resource-invar-lng-vs-tooling.html",
