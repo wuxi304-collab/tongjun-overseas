@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.16a — runtime-safe vector branding + script-free 404 + frozen hero runtime
+# V34.152 R15.17 — static first-frame navigation + runtime-safe vector brand + frozen hero
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.16 release candidate
+      - name: Checkout V34.152 R15.17 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.16-runtime-brand-integrity
+          ref: feat/v34.152-r15.17-static-nav-consistency
           fetch-depth: 1
 
       - name: Configure Pages
@@ -109,7 +109,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.16 release overlays
+      - name: Apply V34.152 R15.17 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -125,8 +125,9 @@ jobs:
           python3 scripts/apply-r15-12-mobile-layout.py
           python3 scripts/apply-r15-15-vector-brand.py
           python3 scripts/apply-r15-16-runtime-brand.py
+          python3 scripts/apply-r15-17-static-nav.py
 
-      - name: Run full V34.152 R15.16 source gate
+      - name: Run full V34.152 R15.17 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -139,6 +140,7 @@ jobs:
           python3 scripts/validate-r15-13-cta-contrast.py .
           python3 scripts/validate-r15-15-vector-brand.py .
           python3 scripts/validate-r15-16-runtime-brand.py .
+          python3 scripts/validate-r15-17-static-nav.py .
 
       - name: Build hardened temporary Pages mirror
         shell: bash
@@ -148,7 +150,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.16 Pages artifact
+      - name: Validate V34.152 R15.17 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
@@ -161,6 +163,7 @@ jobs:
           python3 scripts/validate-r15-13-cta-contrast.py _site
           python3 scripts/validate-r15-15-vector-brand.py _site
           python3 scripts/validate-r15-16-runtime-brand.py _site
+          python3 scripts/validate-r15-17-static-nav.py _site
           python3 scripts/validate-public-raster-assets.py _site
           python3 scripts/validate-pages-release.py _site
 
@@ -190,10 +193,10 @@ jobs:
   production-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.16 production candidate
+      - name: Checkout V34.152 R15.17 production candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.16-runtime-brand-integrity
+          ref: feat/v34.152-r15.17-static-nav-consistency
           fetch-depth: 1
 
       - name: Run production build contract
@@ -205,11 +208,11 @@ jobs:
           test -s _prod/assets/images/logistics-stock.webp
           test -s _prod/assets/images/r15-6-titanium.webp
           test -s _prod/.well-known/release.json
-          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.16"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
+          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.17"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
-          echo "PASS: R15.16 production build completed with runtime-safe vector branding, frozen hero runtime, observable identity, and dead-free 2K image delivery."
+          echo "PASS: R15.17 production build completed with static first-frame navigation, runtime-safe vector branding, frozen hero runtime, and dead-free 2K image delivery."
 
   deploy:
     needs: [build, production-build]
