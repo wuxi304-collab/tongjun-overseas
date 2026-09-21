@@ -94,6 +94,165 @@ jobs:
           test -s visual-qa/r15-20/contact-sheet.pdf
           file visual-qa/r15-20/contact-sheet.pdf
 
+      - name: Collect real-browser layout metrics
+        shell: bash
+        env:
+          CHROME: ${{ steps.chrome.outputs.path }}
+          BASE: https://wuxi304-collab.github.io/tongjun-overseas
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/measure-layout.mjs" <<'JS'
+          import fs from 'node:fs/promises';
+
+          const base = process.env.BASE;
+          const pages = {
+            home: '/',
+            technicalData: '/technical-data.html',
+            standards: '/standards.html',
+            titanium: '/titanium-heat-exchangers.html',
+            invar: '/resource-invar-lng-vs-tooling.html'
+          };
+
+          const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+          class CDP {
+            constructor(ws) {
+              this.ws = ws;
+              this.id = 0;
+              this.pending = new Map();
+              ws.onmessage = ev => {
+                const msg = JSON.parse(ev.data);
+                if (msg.id && this.pending.has(msg.id)) {
+                  const {resolve, reject} = this.pending.get(msg.id);
+                  this.pending.delete(msg.id);
+                  msg.error ? reject(new Error(JSON.stringify(msg.error))) : resolve(msg.result);
+                }
+              };
+            }
+            send(method, params={}) {
+              return new Promise((resolve, reject) => {
+                const id = ++this.id;
+                this.pending.set(id, {resolve, reject});
+                this.ws.send(JSON.stringify({id, method, params}));
+              });
+            }
+          }
+
+          async function connect() {
+            const tabs = await fetch('http://127.0.0.1:9222/json').then(r => r.json());
+            const tab = tabs.find(t => t.type === 'page');
+            const ws = new WebSocket(tab.webSocketDebuggerUrl);
+            await new Promise((resolve, reject) => {
+              ws.onopen = resolve;
+              ws.onerror = reject;
+            });
+            return new CDP(ws);
+          }
+
+          const expr = String.raw`(() => {
+            const R = el => {
+              if (!el) return null;
+              const r = el.getBoundingClientRect();
+              return {x:+r.x.toFixed(1), y:+r.y.toFixed(1), width:+r.width.toFixed(1), height:+r.height.toFixed(1), bottom:+r.bottom.toFixed(1)};
+            };
+            const S = el => el ? getComputedStyle(el) : null;
+            const hero = document.querySelector('main > .hero, main > .pagehero, main > .tech-hero, main section.hero, main section.pagehero, main section.tech-hero');
+            const h1 = document.querySelector('h1');
+            const lead = hero?.querySelector('.lead, p');
+            const hs = S(h1);
+            const hr = R(h1);
+            const fs = hs ? parseFloat(hs.fontSize) : 0;
+            let lh = hs ? parseFloat(hs.lineHeight) : 0;
+            if (!Number.isFinite(lh)) lh = fs * 1.08;
+            const allSections = [...document.querySelectorAll('main > section')].map((el,i) => ({
+              i,
+              className: el.className,
+              rect: R(el)
+            }));
+            const actionbar = document.querySelector('.mobile-actionbar');
+            const prefooter = document.querySelector('.prefooter');
+            const footer = document.querySelector('footer.footer');
+            const header = document.querySelector('.site-header');
+            const ctas = [...document.querySelectorAll('a.cta, button.cta, .rfq-btn, .route-btn')].map(el => ({
+              text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,80),
+              rect:R(el),
+              display:S(el)?.display,
+              visibility:S(el)?.visibility
+            }));
+            const visibleCtas = ctas.filter(x => x.rect && x.rect.bottom > 0 && x.rect.y < innerHeight && x.display !== 'none' && x.visibility !== 'hidden');
+            const overflow = [...document.querySelectorAll('body *')].filter(el => {
+              const r = el.getBoundingClientRect();
+              return r.right > innerWidth + 1 || r.left < -1;
+            }).slice(0,20).map(el => ({
+              tag:el.tagName,
+              className:el.className,
+              rect:R(el)
+            }));
+            const firstViewportText = [...document.querySelectorAll('main *')].filter(el => {
+              const r = el.getBoundingClientRect();
+              const s = getComputedStyle(el);
+              return r.height > 0 && r.bottom > 0 && r.top < innerHeight && s.display !== 'none' && s.visibility !== 'hidden' && el.children.length === 0;
+            }).reduce((n,el)=>n+((el.textContent||'').trim().length),0);
+            return {
+              url: location.href,
+              viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio},
+              document:{scrollWidth:document.documentElement.scrollWidth, clientWidth:document.documentElement.clientWidth, scrollHeight:document.documentElement.scrollHeight},
+              header:R(header),
+              hero:R(hero),
+              heroViewportRatio: hero ? +(hero.getBoundingClientRect().height/innerHeight).toFixed(3) : null,
+              h1:{text:(h1?.textContent||'').trim().replace(/\s+/g,' '), rect:hr, fontSize:fs, lineHeight:+lh.toFixed(1), lines:hr&&lh?+((hr.height/lh).toFixed(2)):null},
+              lead:R(lead),
+              sections:allSections,
+              prefooter:R(prefooter),
+              footer:R(footer),
+              actionbar:R(actionbar),
+              visibleCTAcount:visibleCtas.length,
+              visibleCTAs:visibleCtas,
+              totalCTAcount:ctas.length,
+              horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+              overflowElements:overflow,
+              firstViewportTextChars:firstViewportText
+            };
+          })()`;
+
+          async function collect(width, height) {
+            const cdp = await connect();
+            await cdp.send('Page.enable');
+            await cdp.send('Runtime.enable');
+            await cdp.send('Emulation.setDeviceMetricsOverride', {width,height,deviceScaleFactor:1,mobile:false});
+            const out = {};
+            for (const [name,path] of Object.entries(pages)) {
+              await cdp.send('Page.navigate', {url: base + path});
+              await sleep(2200);
+              const res = await cdp.send('Runtime.evaluate', {expression:expr, returnByValue:true, awaitPromise:true});
+              out[name] = res.result.value;
+            }
+            return out;
+          }
+
+          const result = {
+            generatedAt:new Date().toISOString(),
+            desktop:await collect(1440,1000),
+            mobile:await collect(390,844)
+          };
+          await fs.writeFile('visual-qa/r15-20/layout-metrics.json', JSON.stringify(result,null,2));
+          JS
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-gpu             --remote-debugging-port=9222             --remote-allow-origins='*'             --user-data-dir="$RUNNER_TEMP/chrome-metrics"             about:blank >"$RUNNER_TEMP/chrome-metrics.log" 2>&1 &
+          CHROME_PID=$!
+          trap 'kill "$CHROME_PID" 2>/dev/null || true' EXIT
+
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:9222/json/version >/dev/null; then break; fi
+            sleep 0.2
+          done
+
+          node "$RUNNER_TEMP/measure-layout.mjs"
+          test -s visual-qa/r15-20/layout-metrics.json
+          python3 -m json.tool visual-qa/r15-20/layout-metrics.json >/dev/null
+          kill "$CHROME_PID" 2>/dev/null || true
+          trap - EXIT
+
       - name: Upload visual QA review packet
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
