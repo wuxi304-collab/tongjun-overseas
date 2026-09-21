@@ -11,10 +11,6 @@ permissions:
   contents: write
 
 concurrency:
-  group: r15-20-browser-visual-qa
-  cancel-in-progress: true
-
-concurrency:
   group: r15-20-browser-qa
   cancel-in-progress: true
 
