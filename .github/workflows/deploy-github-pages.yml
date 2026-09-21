@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.16 — runtime-safe vector branding + frozen hero runtime + dead-free image directory
+# V34.152 R15.16a — runtime-safe vector branding + script-free 404 + frozen hero runtime
 
 on:
   workflow_dispatch:
