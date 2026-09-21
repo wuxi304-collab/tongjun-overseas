@@ -53,23 +53,22 @@ def main():
         fail(f'public image directory missing: {images}')
 
     refs = collect_refs()
-    rasters = sorted(
-        p for p in images.iterdir()
-        if p.is_file() and p.suffix.lower() in RASTER
-    )
-    names = {p.name for p in rasters}
+    all_files = sorted(p for p in images.iterdir() if p.is_file())
+    rasters = [p for p in all_files if p.suffix.lower() in RASTER]
+    names = {p.name for p in all_files}
 
-    referenced_rasters = {
-        name for name in refs
-        if Path(name).suffix.lower() in RASTER
-    }
-    missing = sorted(referenced_rasters - names)
+    referenced_assets = {name for name in refs if (images / name).is_file()}
+    missing = sorted(name for name in refs if not (images / name).is_file())
     if missing:
-        fail(f'referenced public raster(s) missing: {missing}')
+        fail(f'referenced public image asset(s) missing: {missing}')
 
-    dead = sorted(names - referenced_rasters)
+    dead = sorted(names - referenced_assets)
     if dead:
-        fail(f'unreferenced raster(s) leaked into public artifact: {dead}')
+        fail(f'unreferenced file(s) leaked into public image directory: {dead}')
+
+    non_raster = sorted(name for name in names if Path(name).suffix.lower() not in RASTER)
+    if non_raster:
+        fail(f'R15.16 public image directory must contain only referenced 2K raster delivery assets: {non_raster}')
 
     bad = []
     content = []
@@ -89,7 +88,7 @@ def main():
 
     total = sum(p.stat().st_size for p in rasters)
     print(
-        f'PASS: R15.15 public raster hygiene — {len(rasters)} referenced public raster(s) only; '
+        f'PASS: R15.16 public image hygiene — {len(rasters)} referenced public raster(s) only; '
         f'{len(content)} public raster images all >=2K; zero raster-logo exemptions; '
         f'aggregate raster payload {total // 1024} KB.'
     )
