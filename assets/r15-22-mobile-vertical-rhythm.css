@@ -1,0 +1,297 @@
+/* V34.152 R15.22 — mobile vertical rhythm compression
+   Measured against real Chrome at 390×844. Preserve buyer routes; remove duplicated vertical mass. */
+
+@media (max-width:640px){
+  /* Global close: sticky actions already carry conversion, so prefooter/footer should be informational, not another landing page. */
+  body.brand-v34 .prefooter{
+    padding:28px 0 24px;
+  }
+  body.brand-v34 .prefooter-grid{
+    gap:14px;
+  }
+  body.brand-v34 .prefooter h2{
+    font-size:29px;
+    line-height:1.02;
+    margin:0;
+  }
+  body.brand-v34 .prefooter p{
+    font-size:12.5px;
+    line-height:1.48;
+    margin:0;
+  }
+  body.brand-v34 .prefooter .buttonrow{
+    display:none;
+  }
+
+  body.brand-v34 .footer{
+    padding:28px 0 76px;
+  }
+  body.brand-v34 .v13-footgrid{
+    column-gap:16px;
+    row-gap:14px;
+  }
+  body.brand-v34 .footer-brand{
+    min-height:0;
+  }
+  body.brand-v34 .footer-brand .brand{
+    min-height:40px;
+    height:40px;
+  }
+  body.brand-v34 .footer-brand p,
+  body.brand-v34 .footer-location{
+    display:none;
+  }
+  body.brand-v34 .footer h4{
+    margin:0 0 6px;
+    font-size:10px;
+    line-height:1.2;
+  }
+  body.brand-v34 .footer a{
+    margin:2px 0;
+    font-size:11.5px;
+    line-height:1.3;
+  }
+  body.brand-v34 .footer .legal{
+    margin-top:16px;
+    padding-top:12px;
+    gap:5px;
+    font-size:10px;
+    line-height:1.35;
+  }
+
+  /* Homepage: preserve all six product routes while shortening every row. */
+  body.brand-v34[data-page="home"] main>.section{
+    padding-top:40px;
+    padding-bottom:40px;
+  }
+  body.brand-v34[data-page="home"] main>.section .sec-head{
+    margin-bottom:19px;
+  }
+  body.brand-v34[data-page="home"] main>.section .sec-head h2{
+    font-size:30px;
+  }
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile,
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(1),
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(2){
+    grid-template-columns:88px minmax(0,1fr);
+    min-height:154px;
+  }
+  body.brand-v34[data-page="home"] .product-media{
+    min-height:154px;
+  }
+  body.brand-v34[data-page="home"] .product-copy{
+    padding:10px 11px 11px;
+  }
+  body.brand-v34[data-page="home"] .product-copy h3{
+    font-size:17px;
+    margin:4px 0 5px;
+  }
+  body.brand-v34[data-page="home"] .product-copy p{
+    font-size:10.5px;
+    line-height:1.38;
+    margin-bottom:7px;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+  }
+  body.brand-v34[data-page="home"] .product-meta{
+    padding-top:6px;
+    font-size:7.5px;
+    line-height:1.28;
+  }
+
+  body.brand-v34[data-page="home"] .portfolio-index{
+    padding:36px 0;
+  }
+  body.brand-v34[data-page="home"] .portfolio-grid{
+    gap:20px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-copy h2{
+    font-size:31px;
+    margin-bottom:9px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-copy p{
+    font-size:12px;
+    line-height:1.45;
+  }
+  body.brand-v34[data-page="home"] .quick-finder{
+    margin-top:13px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns>div{
+    padding:12px 11px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns h3{
+    font-size:16px;
+    margin:4px 0 7px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns a{
+    padding:5px 0;
+    font-size:10px;
+  }
+
+  body.brand-v34[data-page="home"] .industries{
+    gap:1px;
+  }
+  body.brand-v34[data-page="home"] .industry{
+    min-height:150px;
+    padding:0 12px 12px;
+  }
+  body.brand-v34[data-page="home"] .industry h3{
+    font-size:16px;
+  }
+  body.brand-v34[data-page="home"] .industry p{
+    font-size:9.5px;
+    line-height:1.35;
+  }
+
+  body.brand-v34[data-page="home"] .feature{
+    gap:16px!important;
+  }
+  body.brand-v34[data-page="home"] .feature h2{
+    font-size:31px;
+  }
+  body.brand-v34[data-page="home"] .feature p{
+    font-size:12.5px;
+    line-height:1.5;
+  }
+  body.brand-v34[data-page="home"] .bigspec{
+    padding:18px 16px;
+  }
+  body.brand-v34[data-page="home"] .bigspec .num{
+    font-size:54px;
+  }
+  body.brand-v34[data-page="home"] .bigspec .mono{
+    margin-top:10px;
+    padding-top:10px;
+    font-size:9px;
+    line-height:1.4;
+  }
+
+  body.brand-v34[data-page="home"] .cap{
+    min-height:150px;
+    padding:14px 12px;
+  }
+  body.brand-v34[data-page="home"] .cap .icon{
+    margin-bottom:12px;
+    padding-top:6px;
+  }
+  body.brand-v34[data-page="home"] .cap h3{
+    font-size:15px;
+    margin-bottom:5px;
+  }
+  body.brand-v34[data-page="home"] .cap p{
+    font-size:9.5px;
+    line-height:1.38;
+  }
+
+  body.brand-v34[data-page="home"] .route-protocol{
+    padding:40px 0;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-head{
+    gap:10px;
+    margin-bottom:18px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-head h2{
+    font-size:31px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid>div{
+    min-height:162px;
+    padding:14px 12px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid b{
+    margin:14px 0 5px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid strong{
+    font-size:15px;
+    margin-bottom:6px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid p{
+    font-size:8.8px;
+    line-height:1.4;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-actions{
+    padding-top:12px;
+  }
+
+  body.brand-v34[data-page="home"] .decision-spine-home{
+    padding:40px 0!important;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-head{
+    gap:10px;
+    margin-bottom:18px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-head h2{
+    font-size:31px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-head p{
+    font-size:11.5px;
+    line-height:1.45;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid>div{
+    min-height:172px;
+    padding:14px 12px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid b{
+    margin:13px 0 5px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid strong{
+    font-size:15px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid p{
+    margin:7px 0 10px;
+    font-size:8.8px;
+    line-height:1.4;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid span{
+    padding-top:6px;
+    font-size:7px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-offer>div,
+  body.brand-v34[data-page="home"] .decision-spine-offer>a{
+    min-height:50px;
+    padding:8px 9px;
+  }
+
+  body.brand-v34[data-page="home"] .flagship-grid>a{
+    min-height:172px;
+    padding:14px 12px;
+  }
+  body.brand-v34[data-page="home"] .flagship-id b{
+    font-size:21px;
+  }
+  body.brand-v34[data-page="home"] .flagship-grid>a>p{
+    font-size:8.8px;
+    line-height:1.4;
+    margin:8px 0 auto;
+  }
+  body.brand-v34[data-page="home"] .flagship-grid>a>div:last-child{
+    margin-top:10px;
+    padding-top:8px;
+  }
+
+  body.brand-v34[data-page="home"] .rfq-section{
+    padding:24px 0!important;
+  }
+  body.brand-v34[data-page="home"] .rfq-section .rfqbox{
+    gap:10px;
+    padding:16px;
+  }
+  body.brand-v34[data-page="home"] .rfq-section h2{
+    font-size:25px;
+  }
+  body.brand-v34[data-page="home"] .rfq-section p{
+    font-size:11.5px;
+    line-height:1.45;
+  }
+  body.brand-v34[data-page="home"] .home-rfq-direct{
+    padding:14px;
+  }
+  body.brand-v34[data-page="home"] .home-rfq-direct>b{
+    font-size:16px;
+    margin:7px 0 5px;
+  }
+  body.brand-v34[data-page="home"] .home-rfq-direct p{
+    margin-bottom:10px;
+  }
+}
