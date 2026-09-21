@@ -30,21 +30,21 @@ for(const file of htmls){
   }
 }
 
-for(const required of ['api/rfq.js','api/health.js','vercel.json','.vercelignore','robots.txt','sitemap.xml','RELEASE_R15_17.json','VISUAL_MANIFEST_R15_7.json','scripts/write-release-metadata.py','scripts/check-production-readiness.js','scripts/smoke-rfq-production.js']){
+for(const required of ['api/rfq.js','api/health.js','vercel.json','.vercelignore','robots.txt','sitemap.xml','RELEASE_R15_18.json','VISUAL_MANIFEST_R15_7.json','scripts/write-release-metadata.py','scripts/check-production-readiness.js','scripts/smoke-rfq-production.js']){
   if(!fs.existsSync(path.join(root,required))) failures.push(`missing production release file ${required}`);
 }
 
 const vi=fs.readFileSync(path.join(root,'.vercelignore'),'utf8');
 if(/!ops(?:\/|\b)/.test(vi)) failures.push('.vercelignore exposes ops');
 if(!vi.includes('!api/**')) failures.push('.vercelignore must deploy serverless API');
-if(!vi.includes('!RELEASE_R15_17.json')) failures.push('.vercelignore must include R15.17 release descriptor for build identity');
+if(!vi.includes('!RELEASE_R15_18.json')) failures.push('.vercelignore must include R15.18 release descriptor for build identity');
 if(!vi.includes('!VISUAL_MANIFEST_R15_7.json')) failures.push('.vercelignore must include frozen visual manifest for build identity');
 
 const robotsTxt=fs.readFileSync(path.join(root,'robots.txt'),'utf8');
 if(/Disallow:\s*\/$/m.test(robotsTxt)) failures.push('production robots.txt blocks the entire site');
 
 const health=fs.readFileSync(path.join(root,'api','health.js'),'utf8');
-for(const marker of ['rfq_route_configured','rfq_route_https_valid','rfq_signature_configured','Cache-Control','RFQ_WEBHOOK_URL','RFQ_SHARED_SECRET','V34.152 R15.17','X-Tongjun-Release','visual_release']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
+for(const marker of ['rfq_route_configured','rfq_route_https_valid','rfq_signature_configured','Cache-Control','RFQ_WEBHOOK_URL','RFQ_SHARED_SECRET','V34.152 R15.18','X-Tongjun-Release','visual_release']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
 if(/X-Tongjun-Webhook-Secret/.test(health)) failures.push('api/health.js must never expose the raw webhook secret header');
 if(/RFQ_SHARED_SECRET\s*[:=]\s*process\.env\.RFQ_SHARED_SECRET/.test(health)) failures.push('api/health.js must not serialize RFQ_SHARED_SECRET into the response payload');
 
