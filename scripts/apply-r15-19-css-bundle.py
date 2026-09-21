@@ -14,6 +14,7 @@ PARTS = [
     'assets/brand-v34.152-r14.css',
     'assets/r15-20-visual-density.css',
     'assets/r15-21-home-mobile-density.css',
+    'assets/r15-22-mobile-vertical-rhythm.css',
 ]
 TARGET_NAMES = {Path(p).name for p in PARTS}
 LINK_RE = re.compile(r'<link\b[^>]*>', re.I)
@@ -42,7 +43,7 @@ def is_target_stylesheet(tag: str) -> bool:
 
 def build_bundle():
     chunks = [
-        '/* V34.152 R15.19 base + V34.152 R15.20 visual candidate + V34.152 R15.21 home mobile candidate — production CSS bundle. Source order is release-critical. */\n'
+        '/* V34.152 R15.19 base + V34.152 R15.20 visual candidate + V34.152 R15.21 home mobile candidate + V34.152 R15.22 mobile vertical candidate — production CSS bundle. Source order is release-critical. */\n'
     ]
     for rel in PARTS:
         path = ROOT / rel
@@ -105,7 +106,7 @@ def rewrite_html():
 def main():
     size = build_bundle()
     rewrite_html()
-    print(f'PASS: R15.21 home mobile candidate bundle materialized — {BUNDLE.name}, {size // 1024} KB, {len(PARTS)} ordered source parts.')
+    print(f'PASS: R15.22 mobile vertical candidate bundle materialized — {BUNDLE.name}, {size // 1024} KB, {len(PARTS)} ordered source parts.')
 
 
 if __name__ == '__main__':
