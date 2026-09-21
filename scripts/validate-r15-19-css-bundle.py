@@ -15,6 +15,7 @@ PARTS = [
     'assets/brand-v34.152-r14.css',
     'assets/r15-20-visual-density.css',
     'assets/r15-21-home-mobile-density.css',
+    'assets/r15-22-mobile-vertical-rhythm.css',
 ]
 
 
@@ -64,6 +65,7 @@ def main():
         'V34.152 R15.19',
         'V34.152 R15.20',
         'V34.152 R15.21',
+        'V34.152 R15.22',
         'V34.152 R15.12',
         'V34.152 R15.13',
         'body.brand-v34 .skip-link',
@@ -92,7 +94,7 @@ def main():
             fail(f'R15.19 final artifact must ship exactly one CSS file: {public_css}')
 
     print(
-        f'PASS: R15.19 CSS bundle gate — 50 pages use one versioned stylesheet; eight source layers preserve release order'
+        f'PASS: R15.19 CSS bundle gate — 50 pages use one versioned stylesheet; nine source layers preserve release order'
         + ('; final artifact contains no source-only CSS.' if strict_artifact else '.')
     )
 
