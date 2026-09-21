@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.18b — global buyer CTA consistency + duplicate actionbar cleanup + frozen hero
+# V34.152 R15.19 — single release stylesheet + public CSS hygiene + frozen visual/RFQ contracts
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.18 release candidate
+      - name: Checkout V34.152 R15.19 release candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.18-global-cta-consistency
+          ref: feat/v34.152-r15.19-css-bundle-hygiene
           fetch-depth: 1
 
       - name: Configure Pages
@@ -109,7 +109,7 @@ jobs:
             exit 1
           fi
 
-      - name: Apply V34.152 R15.18 release overlays
+      - name: Apply V34.152 R15.19 release overlays
         shell: bash
         run: |
           set -euo pipefail
@@ -127,8 +127,9 @@ jobs:
           python3 scripts/apply-r15-16-runtime-brand.py
           python3 scripts/apply-r15-17-static-nav.py
           python3 scripts/apply-r15-18-global-cta.py
+          python3 scripts/apply-r15-19-css-bundle.py
 
-      - name: Run full V34.152 R15.18 source gate
+      - name: Run full V34.152 R15.19 source gate
         shell: bash
         run: |
           set -euo pipefail
@@ -143,6 +144,7 @@ jobs:
           python3 scripts/validate-r15-16-runtime-brand.py .
           python3 scripts/validate-r15-17-static-nav.py .
           python3 scripts/validate-r15-18-global-cta.py .
+          python3 scripts/validate-r15-19-css-bundle.py .
 
       - name: Build hardened temporary Pages mirror
         shell: bash
@@ -152,7 +154,7 @@ jobs:
           set -euo pipefail
           python3 scripts/build-pages-mirror.py
 
-      - name: Validate V34.152 R15.18 Pages artifact
+      - name: Validate V34.152 R15.19 Pages artifact
         shell: bash
         run: |
           set -euo pipefail
@@ -167,6 +169,7 @@ jobs:
           python3 scripts/validate-r15-16-runtime-brand.py _site
           python3 scripts/validate-r15-17-static-nav.py _site
           python3 scripts/validate-r15-18-global-cta.py _site
+          python3 scripts/validate-r15-19-css-bundle.py _site
           python3 scripts/validate-public-raster-assets.py _site
           python3 scripts/validate-pages-release.py _site
 
@@ -196,10 +199,10 @@ jobs:
   production-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.18 production candidate
+      - name: Checkout V34.152 R15.19 production candidate
         uses: actions/checkout@v6
         with:
-          ref: feat/v34.152-r15.18-global-cta-consistency
+          ref: feat/v34.152-r15.19-css-bundle-hygiene
           fetch-depth: 1
 
       - name: Run production build contract
@@ -210,8 +213,10 @@ jobs:
           test -s _prod/index.html
           test -s _prod/assets/images/logistics-stock.webp
           test -s _prod/assets/images/r15-6-titanium.webp
+          test -s _prod/assets/tongjun-site-r15-19.css
+          test "$(find _prod/assets -maxdepth 1 -name '*.css' | wc -l)" -eq 1
           test -s _prod/.well-known/release.json
-          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.18"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
+          python3 -c 'import json; p=json.load(open("_prod/.well-known/release.json")); assert p["site_release"]=="V34.152 R15.19"; assert p["environment"]=="production"; assert len(p["source_commit"])==40'
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
