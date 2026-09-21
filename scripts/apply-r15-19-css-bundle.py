@@ -20,7 +20,7 @@ HREF_RE = re.compile(r'\bhref=["\']([^"\']+)["\']', re.I)
 REL_RE = re.compile(r'\brel=["\']([^"\']+)["\']', re.I)
 FOOTER_BRAND_FIX_RE = re.compile(
     r'(<div class="footer-brand"><div class="brand tj-footer-brand">.*?</div>)</div>'
-    r'(<p>High-performance materials sourcing, source qualification and non-standard supply-route development from China\\.</p>'
+    r'(<p>High-performance materials sourcing, source qualification and non-standard supply-route development from China[.]</p>'
     r'<span class="footer-location">Wuxi · Jiangsu · China</span></div>)',
     re.S,
 )
