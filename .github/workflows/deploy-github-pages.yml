@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.19b — Node24 Actions chain + single release stylesheet
+# V34.152 R15.20 visual candidate — previewing on the R15.19 release contract
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.19 release candidate
+      - name: Checkout V34.152 R15.20 visual candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: feat/v34.152-r15.19-css-bundle-hygiene
+          ref: feat/v34.152-r15.20-visual-density-rhythm
           fetch-depth: 1
 
       - name: Configure Pages
@@ -199,10 +199,10 @@ jobs:
   production-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.19 production candidate
+      - name: Checkout V34.152 R15.20 visual candidate for production-contract validation
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: feat/v34.152-r15.19-css-bundle-hygiene
+          ref: feat/v34.152-r15.20-visual-density-rhythm
           fetch-depth: 1
 
       - name: Run production build contract
