@@ -1,0 +1,79 @@
+/* V34.152 R15.23 — homepage mobile final density
+   Real-browser follow-up: convert six product routes from six image rows to a compact 2×3 technical directory. */
+
+@media (max-width:640px){
+  body.brand-v34[data-page="home"] .product-editorial-grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:1px;
+    background:#cfd6db;
+    border:1px solid #cfd6db;
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile,
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(1),
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(2),
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(n+3){
+    grid-column:auto!important;
+    display:block;
+    min-height:154px;
+    background:#fff;
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-media{
+    display:none;
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-copy{
+    height:100%;
+    min-height:154px;
+    padding:14px 12px 12px;
+    border-left:0;
+    border-top:3px solid var(--blue);
+    display:flex;
+    flex-direction:column;
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(even) .product-copy{
+    border-left:0;
+    border-top-color:var(--orange);
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-kicker{
+    font-size:7.5px;
+    line-height:1.25;
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-copy h3{
+    font-size:16px;
+    line-height:1.04;
+    margin:5px 0 6px;
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-copy p{
+    font-size:9.5px;
+    line-height:1.38;
+    margin:0 0 auto;
+    -webkit-line-clamp:3;
+  }
+
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-meta{
+    margin-top:8px;
+    padding-top:7px;
+    font-size:7.2px;
+    line-height:1.25;
+  }
+
+  /* The final RFQ already has a persistent mobile actionbar below it; keep the content, reduce duplicate framing. */
+  body.brand-v34[data-page="home"] .rfq-section{
+    padding:20px 0!important;
+  }
+  body.brand-v34[data-page="home"] .rfq-section .rfqbox{
+    padding:14px;
+  }
+  body.brand-v34[data-page="home"] .rfq-section h2{
+    font-size:24px;
+  }
+  body.brand-v34[data-page="home"] .home-rfq-direct{
+    padding:12px;
+  }
+}
