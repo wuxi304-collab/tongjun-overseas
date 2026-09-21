@@ -182,7 +182,7 @@ def main():
 
     required = [
         ROOT / 'assets' / 'site.js',
-        ROOT / 'assets' / 'brand-v34.152-r14.css',
+        ROOT / 'assets' / 'tongjun-site-r15-19.css',
         ROOT / 'assets' / 'tongjun-logo.svg',
         ROOT / '.well-known' / 'security.txt',
         ROOT / 'manifest.webmanifest',
