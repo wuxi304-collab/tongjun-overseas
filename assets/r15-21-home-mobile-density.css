@@ -1,0 +1,316 @@
+/* V34.152 R15.21 — homepage mobile density pass
+   Preserve every buyer entry point while replacing long single-column card trains with compact engineering matrices. */
+
+@media (max-width:640px){
+  body.brand-v34[data-page="home"] main>.section{
+    padding-top:48px;
+    padding-bottom:48px;
+  }
+
+  body.brand-v34[data-page="home"] main>.section .sec-head{
+    padding-top:0;
+    margin-bottom:24px;
+  }
+  body.brand-v34[data-page="home"] main>.section .sec-head h2{
+    font-size:32px;
+    line-height:1.04;
+  }
+
+  /* Materials + product forms: keep all six routes, cut image and copy mass. */
+  body.brand-v34[data-page="home"] .product-editorial-grid{
+    gap:1px;
+  }
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile,
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(1),
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(2){
+    grid-column:1/-1;
+  }
+  body.brand-v34[data-page="home"] .product-media{
+    aspect-ratio:16/6;
+  }
+  body.brand-v34[data-page="home"] .product-copy{
+    padding:15px 17px 17px;
+    border-top-width:3px;
+  }
+  body.brand-v34[data-page="home"] .product-kicker{
+    font-size:9px;
+  }
+  body.brand-v34[data-page="home"] .product-copy h3{
+    font-size:21px;
+    margin:5px 0 7px;
+  }
+  body.brand-v34[data-page="home"] .product-copy p{
+    font-size:12px;
+    line-height:1.48;
+    margin-bottom:10px;
+  }
+  body.brand-v34[data-page="home"] .product-meta{
+    padding-top:9px;
+    font-size:9px;
+  }
+
+  /* Portfolio navigator: two compact columns plus a full-width market block. */
+  body.brand-v34[data-page="home"] .portfolio-index{
+    padding:46px 0;
+  }
+  body.brand-v34[data-page="home"] .portfolio-grid{
+    grid-template-columns:1fr;
+    gap:28px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-copy h2{
+    font-size:34px;
+    margin-bottom:12px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-copy p{
+    font-size:13px;
+    line-height:1.55;
+  }
+  body.brand-v34[data-page="home"] .quick-finder{
+    margin-top:18px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns{
+    grid-template-columns:1fr 1fr;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns>div{
+    padding:16px 14px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns>div:nth-child(2){
+    border-right:0;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns>div:nth-child(3){
+    grid-column:1/-1;
+    border-right:0;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:16px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns>div:nth-child(3)>span,
+  body.brand-v34[data-page="home"] .portfolio-columns>div:nth-child(3)>h3{
+    grid-column:1/-1;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns h3{
+    font-size:18px;
+    margin:6px 0 10px;
+  }
+  body.brand-v34[data-page="home"] .portfolio-columns a{
+    padding:7px 0;
+    font-size:10.5px;
+  }
+
+  /* Markets: photo-led 2×2 instead of four full-width image cards. */
+  body.brand-v34[data-page="home"] .industries{
+    grid-template-columns:1fr 1fr!important;
+    gap:1px;
+  }
+  body.brand-v34[data-page="home"] .industry{
+    min-height:188px;
+    padding:0 14px 16px;
+  }
+  body.brand-v34[data-page="home"] .industry h3{
+    font-size:18px;
+    line-height:1.04;
+    margin-bottom:5px;
+  }
+  body.brand-v34[data-page="home"] .industry p{
+    font-size:10.5px;
+    line-height:1.4;
+  }
+  body.brand-v34[data-page="home"] .market-linkbar{
+    flex-wrap:wrap;
+  }
+  body.brand-v34[data-page="home"] .market-linkbar a{
+    padding:10px 12px;
+    font-size:9.5px;
+  }
+
+  /* Spotlight: keep the numeric proof, reduce its presentation bulk. */
+  body.brand-v34[data-page="home"] .feature{
+    gap:22px!important;
+  }
+  body.brand-v34[data-page="home"] .feature h2{
+    font-size:34px;
+  }
+  body.brand-v34[data-page="home"] .feature p{
+    font-size:14px;
+    line-height:1.6;
+  }
+  body.brand-v34[data-page="home"] .bigspec{
+    padding:24px 20px;
+  }
+  body.brand-v34[data-page="home"] .bigspec .num{
+    font-size:62px;
+  }
+  body.brand-v34[data-page="home"] .bigspec .mono{
+    margin-top:14px;
+    padding-top:14px;
+    font-size:10px;
+    line-height:1.5;
+  }
+
+  /* Capabilities: 2×3 engineering matrix. */
+  body.brand-v34[data-page="home"] .capgrid{
+    grid-template-columns:1fr 1fr!important;
+    gap:1px;
+  }
+  body.brand-v34[data-page="home"] .cap{
+    min-height:184px;
+    padding:17px 14px;
+  }
+  body.brand-v34[data-page="home"] .cap .icon{
+    width:auto;
+    height:auto;
+    margin-bottom:17px;
+    padding-top:8px;
+    border:0;
+    border-top:3px solid var(--blue);
+    display:block;
+  }
+  body.brand-v34[data-page="home"] .cap h3{
+    font-size:16px;
+    line-height:1.08;
+    margin-bottom:7px;
+  }
+  body.brand-v34[data-page="home"] .cap p{
+    font-size:10.5px;
+    line-height:1.45;
+  }
+
+  /* Operating protocol: 2×2 gates. */
+  body.brand-v34[data-page="home"] .route-protocol{
+    padding:50px 0;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-head{
+    grid-template-columns:1fr;
+    gap:14px;
+    margin-bottom:24px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-head h2{
+    font-size:34px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid>div{
+    min-height:198px;
+    padding:17px 14px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid b{
+    margin:20px 0 7px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid strong{
+    font-size:17px;
+    margin-bottom:8px;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-grid p{
+    font-size:9.5px;
+    line-height:1.48;
+  }
+  body.brand-v34[data-page="home"] .route-protocol-actions{
+    justify-content:flex-start;
+    gap:8px 14px;
+    flex-wrap:wrap;
+    padding-top:16px;
+    font-size:9px;
+  }
+
+  /* Buyer decision spine: preserve four gates, make them scan as a matrix. */
+  body.brand-v34[data-page="home"] .decision-spine-home{
+    padding:48px 0!important;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-head{
+    grid-template-columns:1fr;
+    gap:14px;
+    margin-bottom:24px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-head h2{
+    font-size:34px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-head p{
+    font-size:12.5px;
+    line-height:1.55;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid>div{
+    min-height:214px;
+    padding:17px 14px;
+    border-right:1px solid #d2d9de;
+    border-bottom:1px solid #d2d9de;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid>div:nth-child(2n){
+    border-right:0;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid b{
+    margin:18px 0 7px;
+    font-size:9px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid strong{
+    font-size:16px;
+    line-height:1.1;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid p{
+    font-size:9.5px;
+    line-height:1.48;
+    margin:9px 0 14px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-grid span{
+    padding-top:9px;
+    font-size:7.5px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-offer{
+    grid-template-columns:1fr 1fr;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-offer>div,
+  body.brand-v34[data-page="home"] .decision-spine-offer>a{
+    min-height:58px;
+    padding:10px 11px;
+  }
+  body.brand-v34[data-page="home"] .decision-spine-offer>a{
+    grid-column:1/-1;
+  }
+
+  /* Flagship references: 2×2 technical index rather than four stacked cards. */
+  body.brand-v34[data-page="home"] .flagship-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  body.brand-v34[data-page="home"] .flagship-grid>a{
+    min-height:205px;
+    padding:17px 14px;
+  }
+  body.brand-v34[data-page="home"] .flagship-id b{
+    font-size:24px;
+  }
+  body.brand-v34[data-page="home"] .flagship-grid>a>p{
+    font-size:9.5px;
+    line-height:1.45;
+    margin:11px 0 auto;
+  }
+  body.brand-v34[data-page="home"] .flagship-grid>a>div:last-child{
+    margin-top:14px;
+    padding-top:10px;
+  }
+
+  /* Final RFQ: one compact decision strip before the global prefooter. */
+  body.brand-v34[data-page="home"] .rfq-section{
+    padding:32px 0!important;
+  }
+  body.brand-v34[data-page="home"] .rfq-section .rfqbox{
+    gap:14px;
+    padding:19px 18px;
+  }
+  body.brand-v34[data-page="home"] .rfq-section h2{
+    font-size:28px;
+  }
+  body.brand-v34[data-page="home"] .home-rfq-direct{
+    min-height:auto;
+    padding:18px 16px;
+  }
+  body.brand-v34[data-page="home"] .home-rfq-direct>b{
+    font-size:18px;
+    margin:10px 0 7px;
+  }
+  body.brand-v34[data-page="home"] .home-rfq-direct p{
+    margin-bottom:14px;
+  }
+}
