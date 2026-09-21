@@ -1,10 +1,10 @@
 /* V34.152 R4 — legacy brand layer; raster lockup neutralized by R15.15 vector brand migration. */
 body.brand-v34 .tj-brand,body.brand-v34 .navin>.brand{min-width:300px!important;padding-left:74px!important;position:relative!important;font-size:0!important;line-height:1!important;background:none!important}
-body.brand-v34 .tj-brand:before,body.brand-v34 .navin>.brand:before{content:""!important;position:absolute!important;left:0!important;top:50%!important;transform:translateY(-50%)!important;width:58px!important;height:58px!important;background:url('/assets/images/columbus-mark.webp') center/contain no-repeat!important;display:block!important}
+body.brand-v34 .tj-brand:before,body.brand-v34 .navin>.brand:before{content:none!important;display:none!important;background:none!important}
 body.brand-v34 .tj-brand:after,body.brand-v34 .navin>.brand:after{content:"TONGJUN\A METAL TECH · EST. 2026"!important;white-space:pre!important;display:block!important;margin:0!important;font-family:Georgia,'Times New Roman',serif!important;font-size:26px!important;line-height:.95!important;font-weight:600!important;letter-spacing:.06em!important;color:#071a37!important}
 body.brand-v34 .tj-brand:after{padding-top:2px!important}
 body.brand-v34 .footer .brand{position:relative!important;padding-left:62px!important;min-height:52px!important}
-body.brand-v34 .footer .brand:before{content:""!important;position:absolute!important;left:0!important;top:0!important;width:48px!important;height:48px!important;background:url('/assets/images/columbus-mark.webp') center/contain no-repeat!important;filter:grayscale(1) brightness(0) invert(1)!important;opacity:.92!important}
+body.brand-v34 .footer .brand:before{content:none!important;display:none!important;background:none!important}
 body.brand-v34 .footer .brand:after{content:"TONGJUN\A METAL TECH · EST. 2026"!important;white-space:pre!important;display:block!important;margin:0!important;font:600 19px/.95 Georgia,'Times New Roman',serif!important;letter-spacing:.06em!important;color:#fff!important}
 body.brand-v34 .visual-frame img[src*="materials-overview-gen"]{filter:saturate(.78) contrast(1.04)!important}
 @media(max-width:1200px){body.brand-v34 .tj-brand,body.brand-v34 .navin>.brand{min-width:252px!important;padding-left:62px!important}body.brand-v34 .tj-brand:before,body.brand-v34 .navin>.brand:before{width:50px!important;height:50px!important}body.brand-v34 .tj-brand:after,body.brand-v34 .navin>.brand:after{font-size:21px!important}}
