@@ -468,3 +468,83 @@ main>.section:has(.rfqbox:not(.full-rfq)){padding:42px 0}
     line-height:1.55;
   }
 }
+
+
+/* R15.20 pass 6 — Chrome QA fixes: restore footer grid + compress titanium mobile hero. */
+@media (min-width:981px){
+  body.brand-v34 .footer .v13-footgrid{
+    grid-template-columns:1.5fr repeat(4,minmax(0,1fr));
+    gap:26px;
+  }
+}
+
+@media (max-width:640px){
+  body.brand-v34 .footer{
+    padding-top:32px;
+  }
+  body.brand-v34 .footer .v13-footgrid{
+    grid-template-columns:1fr 1fr;
+    column-gap:18px;
+    row-gap:22px;
+  }
+  body.brand-v34 .footer .v13-footgrid .footer-brand{
+    grid-column:1/-1;
+  }
+  body.brand-v34 .footer .v13-footgrid>div:last-child{
+    grid-column:auto;
+  }
+  body.brand-v34 .footer .footer-brand p{
+    margin:10px 0 0;
+    font-size:12px;
+    line-height:1.5;
+  }
+  body.brand-v34 .footer .footer-location{
+    margin-top:10px;
+    font-size:10px;
+  }
+  body.brand-v34 .footer .legal{
+    margin-top:20px;
+    padding-top:14px;
+  }
+
+  body.page-titanium-heat-exchangers .landinghero{
+    padding:34px 0 28px!important;
+  }
+  body.page-titanium-heat-exchangers .landing-grid{
+    gap:16px;
+  }
+  body.page-titanium-heat-exchangers .landinghero h1{
+    font-size:38px!important;
+    line-height:1.02!important;
+    margin-bottom:12px;
+  }
+  body.page-titanium-heat-exchangers .landinghero p{
+    font-size:14px;
+    line-height:1.52;
+  }
+  body.page-titanium-heat-exchangers .landinghero .buttonrow{
+    margin-top:16px;
+  }
+  body.page-titanium-heat-exchangers .landinghero .buttonrow .ghost{
+    display:none;
+  }
+  body.page-titanium-heat-exchangers .specpanel{
+    padding:14px 16px;
+    border-radius:0;
+    box-shadow:none;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:0 12px;
+    align-items:baseline;
+  }
+  body.page-titanium-heat-exchangers .specpanel .num{
+    margin:0;
+    font-size:28px;
+  }
+  body.page-titanium-heat-exchangers .specpanel .unit{
+    margin:0;
+  }
+  body.page-titanium-heat-exchangers .specpanel .mono{
+    display:none;
+  }
+}
