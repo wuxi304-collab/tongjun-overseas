@@ -41,6 +41,7 @@ OVERLAYS = [
     'scripts/apply-r15-16-runtime-brand.py',
     'scripts/apply-r15-17-static-nav.py',
     'scripts/apply-r15-18-global-cta.py',
+    'scripts/apply-r15-19-css-bundle.py',
 ]
 PUBLIC_ROOT_FILES = [
     'manifest.webmanifest',
@@ -155,6 +156,7 @@ def main():
     run_overlays()
     build_output()
     subprocess.run(['python3', 'scripts/prune-public-raster-assets.py', str(OUT)], check=True)
+    subprocess.run(['python3', 'scripts/prune-public-css-assets.py', str(OUT)], check=True)
     subprocess.run(['python3', 'scripts/write-release-metadata.py', str(OUT), 'production'], check=True)
 
 
