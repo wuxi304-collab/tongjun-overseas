@@ -6,7 +6,6 @@ ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
 RASTER = {'.webp', '.jpg', '.jpeg', '.png', '.avif'}
 TEXT_EXT = {'.html', '.css', '.js', '.json', '.xml', '.txt', '.webmanifest', '.svg'}
 REF_RE = re.compile(r'assets/images/([A-Za-z0-9._-]+)')
-LOGO_EXEMPT = {'columbus-logo-v2.webp', 'columbus-mark.webp'}
 MIN_CONTENT_LONG_EDGE = 2048
 EXPECTED_CONTENT_RASTERS = 11
 
@@ -75,8 +74,6 @@ def main():
     bad = []
     content = []
     for path in rasters:
-        if path.name in LOGO_EXEMPT:
-            continue
         if path.suffix.lower() != '.webp':
             bad.append((path.name, 'non-WebP content raster'))
             continue
@@ -86,14 +83,14 @@ def main():
             bad.append((path.name, f'{w}x{h}'))
 
     if bad:
-        fail(f'public content raster(s) below 2K or invalid: {bad}')
+        fail(f'public raster(s) below 2K or invalid: {bad}')
     if len(content) != EXPECTED_CONTENT_RASTERS:
-        fail(f'expected {EXPECTED_CONTENT_RASTERS} public content rasters, found {len(content)}: {content}')
+        fail(f'expected {EXPECTED_CONTENT_RASTERS} public rasters, found {len(content)}: {content}')
 
     total = sum(p.stat().st_size for p in rasters)
     print(
-        f'PASS: R15.14 public raster hygiene — {len(rasters)} referenced public raster(s) only; '
-        f'{len(content)} content images all >=2K; {len(LOGO_EXEMPT)} explicit logo exemptions; '
+        f'PASS: R15.15 public raster hygiene — {len(rasters)} referenced public raster(s) only; '
+        f'{len(content)} public raster images all >=2K; zero raster-logo exemptions; '
         f'aggregate raster payload {total // 1024} KB.'
     )
 
