@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path('.')
-DESCRIPTOR = ROOT / 'RELEASE_R15_18.json'
+DESCRIPTOR = ROOT / 'RELEASE_R15_19.json'
 VISUAL_MANIFEST = ROOT / 'VISUAL_MANIFEST_R15_7.json'
 
 
@@ -51,8 +51,8 @@ def main():
     visual = json.loads(VISUAL_MANIFEST.read_text(encoding='utf-8'))
     required = {
         'service': 'tongjun-overseas',
-        'site_release': 'V34.152 R15.18',
-        'source_branch': 'feat/v34.152-r15.18-global-cta-consistency',
+        'site_release': 'V34.152 R15.19',
+        'source_branch': 'feat/v34.152-r15.19-css-bundle-hygiene',
         'visual_release': 'V34.152 R15.7',
         'release_identity_version': 1,
     }
