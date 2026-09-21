@@ -24,6 +24,7 @@ CSS_PARTS = [
     'assets/brand-v34.152-r15-tail.css',
     'assets/brand-v34.152-r15-12-tail.css',
     'assets/brand-v34.152-r15-13-tail.css',
+    'assets/brand-v34.152-r15-15-tail.css',
 ]
 OVERLAYS = [
     'scripts/apply-brand-shell-v34-152.py',
