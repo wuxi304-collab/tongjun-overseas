@@ -3,7 +3,6 @@ import re
 import sys
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
-RASTER = {'.webp', '.jpg', '.jpeg', '.png', '.avif'}
 TEXT_EXT = {'.html', '.css', '.js', '.json', '.xml', '.txt', '.webmanifest', '.svg'}
 REF_RE = re.compile(r'assets/images/([A-Za-z0-9._-]+)')
 
@@ -31,17 +30,14 @@ def main():
         fail(f'public image directory missing: {images}')
 
     refs = collect_refs()
-    missing = sorted(
-        name for name in refs
-        if Path(name).suffix.lower() in RASTER and not (images / name).is_file()
-    )
+    missing = sorted(name for name in refs if not (images / name).is_file())
     if missing:
-        fail(f'referenced raster(s) missing before prune: {missing}')
+        fail(f'referenced public image asset(s) missing before prune: {missing}')
 
     removed = []
     kept = []
     for path in sorted(images.iterdir()):
-        if not path.is_file() or path.suffix.lower() not in RASTER:
+        if not path.is_file():
             continue
         if path.name in refs:
             kept.append(path.name)
@@ -49,19 +45,16 @@ def main():
             removed.append(path.name)
             path.unlink()
 
-    remaining = sorted(
-        p.name for p in images.iterdir()
-        if p.is_file() and p.suffix.lower() in RASTER
-    )
+    remaining = sorted(p.name for p in images.iterdir() if p.is_file())
     if set(remaining) != set(kept):
-        fail('public raster prune produced an unexpected remaining set')
+        fail('public image prune produced an unexpected remaining set')
 
     print(
-        f'PASS: public raster prune — kept {len(kept)} referenced raster(s), '
-        f'removed {len(removed)} unreferenced legacy raster(s).'
+        f'PASS: R15.16 public image prune — kept {len(kept)} referenced asset(s), '
+        f'removed {len(removed)} unreferenced legacy/recovery file(s).'
     )
     if removed:
-        print('Removed legacy raster(s): ' + ', '.join(removed))
+        print('Removed public image-dir file(s): ' + ', '.join(removed))
 
 
 if __name__ == '__main__':
