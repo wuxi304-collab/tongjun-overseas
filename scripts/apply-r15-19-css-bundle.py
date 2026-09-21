@@ -59,6 +59,7 @@ def rewrite_html():
     counts = []
     for page in htmls:
         text = page.read_text(encoding='utf-8')
+        text, footer_fixes = FOOTER_BRAND_FIX_RE.subn(r'\\1\\2', text, count=1)
         tags = list(LINK_RE.finditer(text))
         targets = [m for m in tags if is_target_stylesheet(m.group(0))]
         expected = 6 if page.name == 'thank-you.html' else 5
@@ -91,7 +92,7 @@ def rewrite_html():
         page.write_text(updated, encoding='utf-8')
         counts.append((page.name, len(targets)))
 
-    print(f'PASS: R15.19 CSS bundle overlay — 50 pages now load one release stylesheet; replaced {sum(c for _, c in counts)} source stylesheet links.')
+    print(f'PASS: R15.19 CSS bundle overlay — 50 pages now load one release stylesheet; replaced {sum(c for _, c in counts)} source stylesheet links; malformed footer-brand closure normalized where present.')
 
 
 def main():
