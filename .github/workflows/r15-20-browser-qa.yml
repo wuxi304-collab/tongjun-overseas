@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: r15-20-browser-qa
+  cancel-in-progress: true
+
 jobs:
   capture:
     runs-on: ubuntu-latest
@@ -236,6 +240,7 @@ jobs:
             mobile:await collect(390,844)
           };
           await fs.writeFile('visual-qa/r15-20/layout-metrics.json', JSON.stringify(result,null,2));
+          process.exit(0);
           JS
 
           "$CHROME"             --headless=new             --no-sandbox             --disable-gpu             --remote-debugging-port=9222             --remote-allow-origins='*'             --user-data-dir="$RUNNER_TEMP/chrome-metrics"             about:blank >"$RUNNER_TEMP/chrome-metrics.log" 2>&1 &
