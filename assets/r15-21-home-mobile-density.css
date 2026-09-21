@@ -314,3 +314,87 @@
     margin-bottom:14px;
   }
 }
+
+
+/* R15.21 pass 2 — product portfolio hierarchy at 1440 and compact directory rows at 390. */
+@media (min-width:981px){
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(1),
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(2){
+    grid-column:span 6;
+  }
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(n+3){
+    grid-column:span 3;
+  }
+  body.brand-v34[data-page="home"] .product-media{
+    aspect-ratio:16/6.6;
+  }
+  body.brand-v34[data-page="home"] .product-copy{
+    padding:19px 20px 20px;
+  }
+  body.brand-v34[data-page="home"] .product-copy h3{
+    font-size:23px;
+    margin:6px 0 8px;
+  }
+  body.brand-v34[data-page="home"] .product-copy p{
+    font-size:13px;
+    line-height:1.5;
+    margin-bottom:13px;
+  }
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(n+3) .product-copy h3{
+    font-size:20px;
+  }
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(n+3) .product-copy p{
+    font-size:12px;
+  }
+}
+
+@media (max-width:640px){
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile,
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(1),
+  body.brand-v34[data-page="home"] .product-editorial-grid .product-tile:nth-child(2){
+    display:grid;
+    grid-template-columns:108px minmax(0,1fr);
+    min-height:188px;
+  }
+  body.brand-v34[data-page="home"] .product-media{
+    aspect-ratio:auto!important;
+    min-height:188px;
+    height:100%;
+  }
+  body.brand-v34[data-page="home"] .product-media img{
+    height:100%;
+    object-fit:cover;
+  }
+  body.brand-v34[data-page="home"] .product-copy{
+    min-width:0;
+    padding:13px 14px 14px;
+    border-top:0;
+    border-left:3px solid var(--blue);
+  }
+  body.brand-v34[data-page="home"] .product-tile:nth-child(even) .product-copy{
+    border-left-color:var(--orange);
+  }
+  body.brand-v34[data-page="home"] .product-kicker{
+    font-size:8px;
+    line-height:1.3;
+    letter-spacing:.1em;
+  }
+  body.brand-v34[data-page="home"] .product-copy h3{
+    font-size:18px;
+    line-height:1.06;
+    margin:5px 0 7px;
+  }
+  body.brand-v34[data-page="home"] .product-copy p{
+    font-size:11px;
+    line-height:1.42;
+    margin:0 0 9px;
+  }
+  body.brand-v34[data-page="home"] .product-meta{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:3px;
+    padding-top:8px;
+    font-size:8px;
+    line-height:1.35;
+  }
+}
