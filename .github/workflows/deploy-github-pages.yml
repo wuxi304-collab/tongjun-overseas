@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.20 visual candidate — previewing on the R15.19 release contract
+# V34.152 R15.20 visual candidate retry — marker-compatible preview on the R15.19 release contract
 
 on:
   workflow_dispatch:
