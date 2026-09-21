@@ -49,7 +49,8 @@ def main():
     for page in htmls:
         text = page.read_text(encoding='utf-8')
         refs = re.findall(r'assets/brand-v34\.152\.js(?:\?v=([A-Za-z0-9._-]+))?', text)
-        if refs != [VERSION]:
+        expected_refs = [] if page.name == '404.html' else [VERSION]
+        if refs != expected_refs:
             bad_cache.append((page.name, refs))
 
         if page.name != '404.html':
@@ -73,7 +74,7 @@ def main():
     print(
         'PASS: R15.16 runtime brand integrity — vector lockup survives runtime normalization on all '
         'applicable headers/footers, destructive composite text replacement is absent, hero fallback '
-        f'swap is disabled, and all 50 pages use runtime cache key {VERSION}.'
+        f'swap is disabled, and all 49 runtime-bearing pages use cache key {VERSION}; 404 remains script-free.'
     )
 
 
