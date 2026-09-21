@@ -1,4 +1,5 @@
 name: R15.20 browser visual QA
+# QA refresh: R15.20 post-footer-fix
 
 on:
   push:
