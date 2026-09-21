@@ -1,5 +1,5 @@
-name: R15.22 browser visual QA
-# QA refresh: R15.22 homepage mobile density verification
+name: R15.23 browser visual QA
+# QA refresh: R15.23 homepage mobile density verification
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: r15-22-browser-qa
+  group: r15-23-browser-qa
   cancel-in-progress: true
 
 jobs:
@@ -42,16 +42,16 @@ jobs:
           BASE: https://wuxi304-collab.github.io/tongjun-overseas
         run: |
           set -euo pipefail
-          rm -rf visual-qa/r15-22
-          mkdir -p visual-qa/r15-22
+          rm -rf visual-qa/r15-23
+          mkdir -p visual-qa/r15-23
 
           capture() {
             slug="$1"
             url="$2"
 
-            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --force-device-scale-factor=1               --run-all-compositor-stages-before-draw               --virtual-time-budget=2500               --window-size=1440,1000               --screenshot="visual-qa/r15-22/${slug}-1440.png"               "$url"
+            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --force-device-scale-factor=1               --run-all-compositor-stages-before-draw               --virtual-time-budget=2500               --window-size=1440,1000               --screenshot="visual-qa/r15-23/${slug}-1440.png"               "$url"
 
-            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --force-device-scale-factor=1               --run-all-compositor-stages-before-draw               --virtual-time-budget=2500               --window-size=390,844               --screenshot="visual-qa/r15-22/${slug}-390.png"               "$url"
+            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --force-device-scale-factor=1               --run-all-compositor-stages-before-draw               --virtual-time-budget=2500               --window-size=390,844               --screenshot="visual-qa/r15-23/${slug}-390.png"               "$url"
           }
 
           capture home "$BASE/"
@@ -60,7 +60,7 @@ jobs:
           capture titanium "$BASE/titanium-heat-exchangers.html"
           capture invar "$BASE/resource-invar-lng-vs-tooling.html"
 
-          for f in visual-qa/r15-22/*.png; do
+          for f in visual-qa/r15-23/*.png; do
             test -s "$f"
             file "$f"
           done
@@ -80,7 +80,7 @@ jobs:
           m=re.search(r'(<footer class="footer">.*?</footer>)',s,re.S)
           if not m:
               raise SystemExit("footer not found")
-          out=Path("visual-qa/r15-22/footer-dom.html")
+          out=Path("visual-qa/r15-23/footer-dom.html")
           out.write_text(m.group(1),encoding="utf-8")
           print(m.group(1))
           PY
@@ -102,7 +102,7 @@ jobs:
         run: |
           set -euo pipefail
           ROOT="$(pwd)"
-          cat > "$RUNNER_TEMP/r15-22-contact.html" <<'HTML'
+          cat > "$RUNNER_TEMP/r15-23-contact.html" <<'HTML'
           <!doctype html>
           <meta charset="utf-8">
           <style>
@@ -118,17 +118,17 @@ jobs:
           </style>
           HTML
           for slug in home technical-data standards titanium invar; do
-            cat >> "$RUNNER_TEMP/r15-22-contact.html" <<HTML
+            cat >> "$RUNNER_TEMP/r15-23-contact.html" <<HTML
           <section class="page">
-            <h1>${slug} · R15.22 actual Chrome capture</h1>
-            <figure><img src="file://$ROOT/visual-qa/r15-22/${slug}-1440.png"><figcaption>1440 × 1000</figcaption></figure>
-            <figure class="mobile"><img src="file://$ROOT/visual-qa/r15-22/${slug}-390.png"><figcaption>390 × 844</figcaption></figure>
+            <h1>${slug} · R15.23 actual Chrome capture</h1>
+            <figure><img src="file://$ROOT/visual-qa/r15-23/${slug}-1440.png"><figcaption>1440 × 1000</figcaption></figure>
+            <figure class="mobile"><img src="file://$ROOT/visual-qa/r15-23/${slug}-390.png"><figcaption>390 × 844</figcaption></figure>
           </section>
           HTML
           done
-          "$CHROME"             --headless=new             --no-sandbox             --disable-gpu             --allow-file-access-from-files             --print-to-pdf-no-header             --print-to-pdf="visual-qa/r15-22/contact-sheet.pdf"             "file://$RUNNER_TEMP/r15-22-contact.html"
-          test -s visual-qa/r15-22/contact-sheet.pdf
-          file visual-qa/r15-22/contact-sheet.pdf
+          "$CHROME"             --headless=new             --no-sandbox             --disable-gpu             --allow-file-access-from-files             --print-to-pdf-no-header             --print-to-pdf="visual-qa/r15-23/contact-sheet.pdf"             "file://$RUNNER_TEMP/r15-23-contact.html"
+          test -s visual-qa/r15-23/contact-sheet.pdf
+          file visual-qa/r15-23/contact-sheet.pdf
 
       - name: Collect real-browser layout metrics
         shell: bash
@@ -307,7 +307,7 @@ jobs:
             desktop:await collect(1440,1000),
             mobile:await collect(390,844)
           };
-          await fs.writeFile('visual-qa/r15-22/layout-metrics.json', JSON.stringify(result,null,2));
+          await fs.writeFile('visual-qa/r15-23/layout-metrics.json', JSON.stringify(result,null,2));
           process.exit(0);
           JS
 
@@ -321,18 +321,18 @@ jobs:
           done
 
           node "$RUNNER_TEMP/measure-layout.mjs"
-          test -s visual-qa/r15-22/layout-metrics.json
-          python3 -m json.tool visual-qa/r15-22/layout-metrics.json >/dev/null
+          test -s visual-qa/r15-23/layout-metrics.json
+          python3 -m json.tool visual-qa/r15-23/layout-metrics.json >/dev/null
           kill "$CHROME_PID" 2>/dev/null || true
           trap - EXIT
 
       - name: Upload visual QA review packet
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: r15-22-visual-qa
+          name: r15-23-visual-qa
           path: |
-            visual-qa/r15-22/contact-sheet.pdf
-            visual-qa/r15-22/*.png
+            visual-qa/r15-23/contact-sheet.pdf
+            visual-qa/r15-23/*.png
           retention-days: 7
           if-no-files-found: error
 
@@ -342,6 +342,6 @@ jobs:
           set -euo pipefail
           git config user.name "tongjun-visual-qa-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add visual-qa/r15-22
-          git commit -m "qa: capture R15.22 1440 and 390 browser screenshots"
+          git add visual-qa/r15-23
+          git commit -m "qa: capture R15.23 1440 and 390 browser screenshots"
           git push origin HEAD:qa/r15.20-browser-screenshots
