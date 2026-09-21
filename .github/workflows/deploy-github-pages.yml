@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.20 visual candidate retry — marker-compatible preview on the R15.19 release contract
+# V34.152 R15.20 visual candidate QA2 — footer structure + titanium mobile hero
 
 on:
   workflow_dispatch:
