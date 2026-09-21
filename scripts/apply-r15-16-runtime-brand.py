@@ -19,8 +19,9 @@ def main():
     for page in htmls:
         text = page.read_text(encoding='utf-8')
         updated, count = pattern.subn(rf'\1?v={VERSION}', text)
-        if count != 1:
-            fail(f'{page.name}: expected exactly one brand runtime reference, found {count}')
+        expected = 0 if page.name == '404.html' else 1
+        if count != expected:
+            fail(f'{page.name}: expected {expected} brand runtime reference(s), found {count}')
         if updated != text:
             page.write_text(updated, encoding='utf-8')
             changed += 1
