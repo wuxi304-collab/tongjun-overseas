@@ -425,3 +425,46 @@ body.page-invar-lng-tooling .article-prose h2:first-child{margin-top:0}
     line-height:1.35;
   }
 }
+
+
+/* R15.20 pass 5 — collapse duplicate closing-CTA mass without touching the RFQ form. */
+main>.section:has(.rfqbox:not(.full-rfq)){padding:42px 0}
+.rfqbox:not(.full-rfq){
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:42px;
+  padding:30px 32px;
+  border-radius:0;
+  box-shadow:none;
+}
+.rfqbox:not(.full-rfq) h2{
+  font-size:34px;
+  margin-bottom:10px;
+}
+.rfqbox:not(.full-rfq) p{
+  font-size:14px;
+  line-height:1.58;
+  margin-bottom:0;
+}
+.rfqbox:not(.full-rfq)>.buttonrow,
+.rfqbox:not(.full-rfq)>div:last-child{
+  align-self:center;
+}
+
+@media (max-width:640px){
+  main>.section:has(.rfqbox:not(.full-rfq)){padding:24px 0}
+  .rfqbox:not(.full-rfq){
+    grid-template-columns:1fr;
+    gap:16px;
+    padding:22px 20px;
+  }
+  .rfqbox:not(.full-rfq) h2{
+    font-size:28px;
+    line-height:1.04;
+    margin-bottom:8px;
+  }
+  .rfqbox:not(.full-rfq) p{
+    font-size:13px;
+    line-height:1.55;
+  }
+}
