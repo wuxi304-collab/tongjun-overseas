@@ -15,8 +15,7 @@ function cleanUrl(value){return String(value||'').split('#')[0];}
 
 const budgets={
   'assets/site.js':120*1024,
-  'assets/brand-v34.152-r14.css':300*1024,
-  'assets/site.css':180*1024,
+  'assets/tongjun-site-r15-19.css':360*1024,
 };
 for(const [rel,max] of Object.entries(budgets)){
   const fp=path.join(root,rel);
@@ -32,6 +31,9 @@ for(const file of htmls){
   const text=fs.readFileSync(path.join(root,file),'utf8');
   if(/<(?:img|script)\b[^>]*(?:src)=["']https?:\/\//i.test(text)) failures.push(`${file}: external runtime image/script dependency detected`);
   if(/<link\b[^>]*rel=["']stylesheet["'][^>]*href=["']https?:\/\//i.test(text) || /<link\b[^>]*href=["']https?:\/\/[^"']+["'][^>]*rel=["']stylesheet["']/i.test(text)) failures.push(`${file}: external stylesheet dependency detected`);
+  const stylesheetTags=[...text.matchAll(/<link\b[^>]*>/gi)].map(m=>m[0]).filter(tag=>attr(tag,'rel').toLowerCase().split(/\s+/).includes('stylesheet'));
+  if(stylesheetTags.length!==1) failures.push(`${file}: expected one release stylesheet request, found ${stylesheetTags.length}`);
+  else if(!/tongjun-site-r15-19\.css\?v=20260921-r15-19/.test(attr(stylesheetTags[0],'href'))) failures.push(`${file}: R15.19 release stylesheet href missing or stale`);
 
   const imageTags=[...text.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]);
   const contentImages=[];
@@ -101,4 +103,4 @@ if(brandJs.includes('images.unsplash.com')) failures.push('brand runtime contain
 
 if(failures.length){console.error('FAIL: performance + LCP contract audit');failures.forEach(x=>console.error(' - '+x));process.exit(1);}
 for(const w of warnings) console.warn('WARN: '+w);
-console.log(`PASS: performance + LCP audit (${htmls.length} HTML; ${preloadPages} image-preload pages / ${lcpCandidates} unique eager-high LCP candidates; all content images dimensioned + loading-explicit; ${referencedImages.size} referenced images / ${kb(imageTotal)} KB; no external runtime dependencies).`);
+console.log(`PASS: performance + LCP audit (${htmls.length} HTML; one release stylesheet request/page; ${preloadPages} image-preload pages / ${lcpCandidates} unique eager-high LCP candidates; all content images dimensioned + loading-explicit; ${referencedImages.size} referenced images / ${kb(imageTotal)} KB; no external runtime dependencies).`);
