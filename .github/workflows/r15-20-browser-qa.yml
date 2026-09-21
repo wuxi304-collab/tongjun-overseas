@@ -73,8 +73,8 @@ jobs:
           "$CHROME" --headless=new --no-sandbox --disable-gpu --dump-dom "$BASE/" > "$RUNNER_TEMP/home-dom.html"
           python3 - <<'PY'
           from pathlib import Path
-          import re
-          s=Path("$RUNNER_TEMP/home-dom.html").read_text(encoding="utf-8")
+          import os,re
+          s=(Path(os.environ["RUNNER_TEMP"])/"home-dom.html").read_text(encoding="utf-8")
           m=re.search(r'(<footer class="footer">.*?</footer>)',s,re.S)
           if not m:
               raise SystemExit("footer not found")
