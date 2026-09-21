@@ -1,5 +1,5 @@
 name: R15.20 browser visual QA
-# QA refresh: R15.20 post-footer-fix
+# QA refresh: R15.20 titanium data-page verification
 
 on:
   push:
