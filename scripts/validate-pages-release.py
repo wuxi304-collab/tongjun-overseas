@@ -149,8 +149,8 @@ def main():
     core = ['index.html', 'technical-data.html', 'quality.html', 'rfq.html', 'materials.html', 'product-forms.html', 'about.html', 'resources.html', 'industries.html']
     for name in core:
         text = (ROOT / name).read_text(encoding='utf-8')
-        if 'brand-v34.152-r14.css?v=20260916-r15-4' not in text:
-            fail(f'R15.4 stylesheet cache version missing in {name}')
+        if 'tongjun-site-r15-19.css?v=20260921-r15-19' not in text:
+            fail(f'R15.19 stylesheet cache version missing in {name}')
         if 'assets/site.js?v=20260916-r14-2' not in text:
             fail(f'R14.2 site.js cache version missing in {name}')
 
@@ -201,7 +201,7 @@ def main():
         if marker not in runtime:
             fail(f'R14.2 RFQ runtime marker missing: {marker}')
 
-    css = (ROOT / 'assets' / 'brand-v34.152-r14.css').read_text(encoding='utf-8')
+    css = (ROOT / 'assets' / 'tongjun-site-r15-19.css').read_text(encoding='utf-8')
     for marker in (
         'V34.152 R14.1',
         'V34.152 R15.4',
