@@ -35,7 +35,7 @@ def is_target_stylesheet(tag: str) -> bool:
 
 def build_bundle():
     chunks = [
-        '/* V34.152 R15.20 candidate — production CSS bundle. Source order is release-critical. */\n'
+        '/* V34.152 R15.19 base + V34.152 R15.20 visual candidate — production CSS bundle. Source order is release-critical. */\n'
     ]
     for rel in PARTS:
         path = ROOT / rel
