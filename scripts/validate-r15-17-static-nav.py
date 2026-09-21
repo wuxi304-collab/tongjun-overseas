@@ -11,6 +11,15 @@ EXPECTED_NAV = [
     ('/about', 'About'),
 ]
 EXPECTED_CTA = ('/rfq', 'Request a Quote →')
+BASE_PREFIX = '/tongjun-overseas'
+
+
+def normalize_href(value: str) -> str:
+    if value == BASE_PREFIX:
+        return '/'
+    if value.startswith(BASE_PREFIX + '/'):
+        return value[len(BASE_PREFIX):]
+    return value
 VOID = {'img','input','br','hr','meta','link','source','area','base','col','embed','param','track','wbr'}
 
 
@@ -110,8 +119,8 @@ def main():
 
         parser = HeaderParser()
         parser.feed(text)
-        nav = [(x['href'], x['text'].strip()) for x in parser.direct_nav]
-        ctas = [(x['href'], x['text'].strip()) for x in parser.ctas]
+        nav = [(normalize_href(x['href']), x['text'].strip()) for x in parser.direct_nav]
+        ctas = [(normalize_href(x['href']), x['text'].strip()) for x in parser.ctas]
 
         if nav != EXPECTED_NAV:
             bad.append((page.name, 'direct-primary-nav', nav))
