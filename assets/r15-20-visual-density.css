@@ -231,3 +231,56 @@
     gap:8px;
   }
 }
+
+
+/* R15.20 pass 2 — technical reading density + compact mobile footer */
+@media (min-width:981px){
+  body.brand-v34 .landinghero{
+    padding-top:80px;
+  }
+  body.brand-v34 .article-layout{
+    gap:64px;
+  }
+  body.brand-v34 .article-prose p{
+    font-size:16px;
+    line-height:1.72;
+  }
+  body.brand-v34 .data-table th,
+  body.brand-v34 .data-table td{
+    padding:12px 13px;
+  }
+  body.brand-v34 .callout{
+    padding:22px 24px;
+    margin:22px 0;
+  }
+}
+
+@media (max-width:640px){
+  body.brand-v34 .landinghero{
+    padding-top:52px;
+  }
+  body.brand-v34 .section-nav a{
+    padding:11px 14px;
+    font-size:10px;
+  }
+  body.brand-v34 .callout{
+    padding:20px 18px;
+    margin:20px 0;
+  }
+  body.brand-v34 .v13-footgrid{
+    grid-template-columns:1fr 1fr;
+    column-gap:20px;
+    row-gap:24px;
+  }
+  body.brand-v34 .v13-footgrid .footer-brand{
+    grid-column:1/-1;
+  }
+  body.brand-v34 .v13-footgrid>div:last-child{
+    grid-column:1/-1;
+  }
+  body.brand-v34 .footer-brand p{
+    font-size:12.5px;
+    line-height:1.58;
+    max-width:100%;
+  }
+}
