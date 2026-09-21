@@ -1,0 +1,70 @@
+name: R15.20 browser visual QA
+
+on:
+  push:
+    branches: [qa/r15.20-browser-screenshots]
+    paths:
+      - '.github/workflows/r15-20-browser-qa.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout QA branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: qa/r15.20-browser-screenshots
+          fetch-depth: 1
+
+      - name: Locate Chrome
+        id: chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME"
+          echo "path=$CHROME" >> "$GITHUB_OUTPUT"
+          "$CHROME" --version
+
+      - name: Capture 1440 and 390 viewport screenshots
+        shell: bash
+        env:
+          CHROME: ${{ steps.chrome.outputs.path }}
+          BASE: https://wuxi304-collab.github.io/tongjun-overseas
+        run: |
+          set -euo pipefail
+          rm -rf visual-qa/r15-20
+          mkdir -p visual-qa/r15-20
+
+          capture() {
+            slug="$1"
+            url="$2"
+
+            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --force-device-scale-factor=1               --run-all-compositor-stages-before-draw               --virtual-time-budget=2500               --window-size=1440,1000               --screenshot="visual-qa/r15-20/${slug}-1440.png"               "$url"
+
+            "$CHROME"               --headless=new               --no-sandbox               --disable-gpu               --hide-scrollbars               --force-device-scale-factor=1               --run-all-compositor-stages-before-draw               --virtual-time-budget=2500               --window-size=390,844               --screenshot="visual-qa/r15-20/${slug}-390.png"               "$url"
+          }
+
+          capture home "$BASE/"
+          capture technical-data "$BASE/technical-data.html"
+          capture standards "$BASE/standards.html"
+          capture titanium "$BASE/titanium-heat-exchangers.html"
+          capture invar "$BASE/resource-invar-lng-vs-tooling.html"
+
+          for f in visual-qa/r15-20/*.png; do
+            test -s "$f"
+            file "$f"
+          done
+
+      - name: Commit visual QA evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "tongjun-visual-qa-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add visual-qa/r15-20
+          git commit -m "qa: capture R15.20 1440 and 390 browser screenshots"
+          git push origin HEAD:qa/r15.20-browser-screenshots
