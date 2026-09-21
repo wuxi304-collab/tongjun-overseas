@@ -38,6 +38,7 @@ OVERLAYS = [
     'scripts/apply-r15-9-media-performance.py',
     'scripts/apply-r15-12-mobile-layout.py',
     'scripts/apply-r15-15-vector-brand.py',
+    'scripts/apply-r15-16-runtime-brand.py',
 ]
 PUBLIC_ROOT_FILES = [
     'manifest.webmanifest',
