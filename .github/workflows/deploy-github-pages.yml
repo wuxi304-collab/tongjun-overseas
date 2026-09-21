@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.17b — direct-primary-nav static consistency + runtime-safe vector brand + frozen hero
+# V34.152 R15.17c — direct-primary-nav consistency + current runtime cache + frozen hero
 
 on:
   workflow_dispatch:
