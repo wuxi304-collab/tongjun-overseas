@@ -59,6 +59,41 @@ jobs:
             file "$f"
           done
 
+      - name: Build screenshot contact-sheet PDF
+        shell: bash
+        env:
+          CHROME: ${{ steps.chrome.outputs.path }}
+        run: |
+          set -euo pipefail
+          ROOT="$(pwd)"
+          cat > "$RUNNER_TEMP/r15-20-contact.html" <<'HTML'
+          <!doctype html>
+          <meta charset="utf-8">
+          <style>
+            @page { size: A4 landscape; margin: 10mm; }
+            * { box-sizing: border-box; }
+            body { margin: 0; font-family: Arial, sans-serif; background: white; color: #111; }
+            .page { page-break-after: always; display:grid; grid-template-columns: 1fr 310px; gap: 12mm; align-items:start; }
+            h1 { grid-column:1/-1; font-size:18px; margin:0 0 4mm; }
+            figure { margin:0; }
+            img { width:100%; height:auto; border:1px solid #bbb; display:block; }
+            .mobile img { width:260px; margin:0 auto; }
+            figcaption { font-size:10px; margin-top:2mm; color:#555; }
+          </style>
+          HTML
+          for slug in home technical-data standards titanium invar; do
+            cat >> "$RUNNER_TEMP/r15-20-contact.html" <<HTML
+          <section class="page">
+            <h1>${slug} · R15.20 actual Chrome capture</h1>
+            <figure><img src="file://$ROOT/visual-qa/r15-20/${slug}-1440.png"><figcaption>1440 × 1000</figcaption></figure>
+            <figure class="mobile"><img src="file://$ROOT/visual-qa/r15-20/${slug}-390.png"><figcaption>390 × 844</figcaption></figure>
+          </section>
+          HTML
+          done
+          "$CHROME"             --headless=new             --no-sandbox             --disable-gpu             --allow-file-access-from-files             --print-to-pdf-no-header             --print-to-pdf="visual-qa/r15-20/contact-sheet.pdf"             "file://$RUNNER_TEMP/r15-20-contact.html"
+          test -s visual-qa/r15-20/contact-sheet.pdf
+          file visual-qa/r15-20/contact-sheet.pdf
+
       - name: Commit visual QA evidence
         shell: bash
         run: |
