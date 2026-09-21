@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.15a — native vector brand lockup + zero raster-logo exemptions + exact 404 shell model
+# V34.152 R15.15b — vector header/footer lockup + zero raster-logo exemptions
 
 on:
   workflow_dispatch:
@@ -123,6 +123,7 @@ jobs:
           python3 scripts/apply-r15-6-native-visuals.py
           python3 scripts/apply-r15-9-media-performance.py
           python3 scripts/apply-r15-12-mobile-layout.py
+          python3 scripts/apply-r15-15-vector-brand.py
 
       - name: Run full V34.152 R15.15 source gate
         shell: bash
