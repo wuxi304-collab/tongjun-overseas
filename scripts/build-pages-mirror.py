@@ -93,6 +93,7 @@ def main():
         raise SystemExit(f'ERROR: build metadata leaked into Pages artifact: {stray}')
 
     subprocess.run(['python3', 'scripts/prune-public-raster-assets.py', str(OUT)], check=True)
+    subprocess.run(['python3', 'scripts/prune-public-css-assets.py', str(OUT)], check=True)
     subprocess.run(['python3', 'scripts/write-release-metadata.py', str(OUT), 'github-pages-mirror'], check=True)
 
     html_count = len(list(OUT.glob('*.html')))
