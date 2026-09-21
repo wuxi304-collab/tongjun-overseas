@@ -1,0 +1,1954 @@
+{
+  "generatedAt": "2026-09-21T11:07:15.599Z",
+  "desktop": {
+    "home": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 1425,
+        "clientWidth": 1425,
+        "scrollHeight": 9257
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1425,
+        "height": 89,
+        "bottom": 89
+      },
+      "hero": {
+        "x": 0,
+        "y": 89,
+        "width": 1425,
+        "height": 660,
+        "bottom": 749
+      },
+      "heroViewportRatio": 0.66,
+      "h1": {
+        "text": "Special Metals.Precisely Sourced.",
+        "rect": {
+          "x": 92.5,
+          "y": 246.9,
+          "width": 690,
+          "height": 142.5,
+          "bottom": 389.4
+        },
+        "fontSize": 72.72,
+        "lineHeight": 71.3,
+        "lines": 2
+      },
+      "lead": {
+        "x": 92.5,
+        "y": 411.4,
+        "width": 650,
+        "height": 56.9,
+        "bottom": 468.3
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "hero",
+          "rect": {
+            "x": 0,
+            "y": 89,
+            "width": 1425,
+            "height": 660,
+            "bottom": 749
+          }
+        },
+        {
+          "i": 1,
+          "className": "statband",
+          "rect": {
+            "x": 0,
+            "y": 749,
+            "width": 1425,
+            "height": 102,
+            "bottom": 851
+          }
+        },
+        {
+          "i": 2,
+          "className": "performance-rail",
+          "rect": {
+            "x": 0,
+            "y": 851,
+            "width": 1425,
+            "height": 139.7,
+            "bottom": 990.7
+          }
+        },
+        {
+          "i": 3,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 990.7,
+            "width": 1425,
+            "height": 2009.6,
+            "bottom": 3000.2
+          }
+        },
+        {
+          "i": 4,
+          "className": "portfolio-index",
+          "rect": {
+            "x": 0,
+            "y": 3000.2,
+            "width": 1425,
+            "height": 505.1,
+            "bottom": 3505.4
+          }
+        },
+        {
+          "i": 5,
+          "className": "section dark",
+          "rect": {
+            "x": 0,
+            "y": 3505.4,
+            "width": 1425,
+            "height": 720.8,
+            "bottom": 4226.1
+          }
+        },
+        {
+          "i": 6,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 4226.1,
+            "width": 1425,
+            "height": 539.4,
+            "bottom": 4765.6
+          }
+        },
+        {
+          "i": 7,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 4765.6,
+            "width": 1425,
+            "height": 832,
+            "bottom": 5597.5
+          }
+        },
+        {
+          "i": 8,
+          "className": "route-protocol",
+          "rect": {
+            "x": 0,
+            "y": 5597.5,
+            "width": 1425,
+            "height": 682.2,
+            "bottom": 6279.8
+          }
+        },
+        {
+          "i": 9,
+          "className": "section decision-spine-home",
+          "rect": {
+            "x": 0,
+            "y": 6279.8,
+            "width": 1425,
+            "height": 749.2,
+            "bottom": 7029
+          }
+        },
+        {
+          "i": 10,
+          "className": "section flagship-intelligence",
+          "rect": {
+            "x": 0,
+            "y": 7029,
+            "width": 1425,
+            "height": 623,
+            "bottom": 7652
+          }
+        },
+        {
+          "i": 11,
+          "className": "section rfq-section",
+          "rect": {
+            "x": 0,
+            "y": 7652,
+            "width": 1425,
+            "height": 459.9,
+            "bottom": 8111.9
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 8111.9,
+        "width": 1425,
+        "height": 271.2,
+        "bottom": 8383
+      },
+      "footer": {
+        "x": 0,
+        "y": 8383,
+        "width": 1425,
+        "height": 873.6,
+        "bottom": 9256.6
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0
+      },
+      "visibleCTAcount": 3,
+      "visibleCTAs": [
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 1206.8,
+            "y": 20,
+            "width": 182.2,
+            "height": 48,
+            "bottom": 68
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Start Technical Review ↗",
+          "rect": {
+            "x": 92.5,
+            "y": 583.3,
+            "width": 214.9,
+            "height": 48,
+            "bottom": 631.3
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Review Evidence Model",
+          "rect": {
+            "x": 319.4,
+            "y": 583.3,
+            "width": 197.9,
+            "height": 48,
+            "bottom": 631.3
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 8,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 797
+    },
+    "technicalData": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/technical-data.html",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 1425,
+        "clientWidth": 1425,
+        "scrollHeight": 4547
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1425,
+        "height": 89,
+        "bottom": 89
+      },
+      "hero": {
+        "x": 0,
+        "y": 89,
+        "width": 1425,
+        "height": 409.2,
+        "bottom": 498.2
+      },
+      "heroViewportRatio": 0.409,
+      "h1": {
+        "text": "Technical data for sourcing decisions.",
+        "rect": {
+          "x": 92.5,
+          "y": 229.6,
+          "width": 840,
+          "height": 141.1,
+          "bottom": 370.7
+        },
+        "fontSize": 72,
+        "lineHeight": 70.6,
+        "lines": 2
+      },
+      "lead": {
+        "x": 92.5,
+        "y": 386.7,
+        "width": 760,
+        "height": 58.5,
+        "bottom": 445.2
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero tech-center-hero",
+          "rect": {
+            "x": 0,
+            "y": 89,
+            "width": 1425,
+            "height": 409.2,
+            "bottom": 498.2
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band page-specific-visual",
+          "rect": {
+            "x": 0,
+            "y": 629.2,
+            "width": 1425,
+            "height": 446.4,
+            "bottom": 1075.6
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 1075.6,
+            "width": 1425,
+            "height": 1234.1,
+            "bottom": 2309.7
+          }
+        },
+        {
+          "i": 3,
+          "className": "technical-tools-band",
+          "rect": {
+            "x": 0,
+            "y": 2309.7,
+            "width": 1425,
+            "height": 222,
+            "bottom": 2531.7
+          }
+        },
+        {
+          "i": 4,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 2531.7,
+            "width": 1425,
+            "height": 477.9,
+            "bottom": 3009.5
+          }
+        },
+        {
+          "i": 5,
+          "className": "section dark",
+          "rect": {
+            "x": 0,
+            "y": 3009.5,
+            "width": 1425,
+            "height": 393,
+            "bottom": 3402.5
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 3402.5,
+        "width": 1425,
+        "height": 271.2,
+        "bottom": 3673.7
+      },
+      "footer": {
+        "x": 0,
+        "y": 3673.7,
+        "width": 1425,
+        "height": 873.6,
+        "bottom": 4547.3
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0
+      },
+      "visibleCTAcount": 1,
+      "visibleCTAs": [
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 1206.8,
+            "y": 20,
+            "width": 182.2,
+            "height": 48,
+            "bottom": 68
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 4,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 342
+    },
+    "standards": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/standards.html",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 1425,
+        "clientWidth": 1425,
+        "scrollHeight": 3315
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1425,
+        "height": 89,
+        "bottom": 89
+      },
+      "hero": {
+        "x": 0,
+        "y": 89,
+        "width": 1425,
+        "height": 372.4,
+        "bottom": 461.4
+      },
+      "heroViewportRatio": 0.372,
+      "h1": {
+        "text": "A grade name is not a complete specification.",
+        "rect": {
+          "x": 92.5,
+          "y": 192.8,
+          "width": 840,
+          "height": 141.1,
+          "bottom": 333.9
+        },
+        "fontSize": 72,
+        "lineHeight": 70.6,
+        "lines": 2
+      },
+      "lead": {
+        "x": 92.5,
+        "y": 349.9,
+        "width": 760,
+        "height": 58.5,
+        "bottom": 408.4
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero",
+          "rect": {
+            "x": 0,
+            "y": 89,
+            "width": 1425,
+            "height": 372.4,
+            "bottom": 461.4
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band",
+          "rect": {
+            "x": 0,
+            "y": 461.4,
+            "width": 1425,
+            "height": 446.4,
+            "bottom": 907.8
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 907.8,
+            "width": 1425,
+            "height": 887.6,
+            "bottom": 1795.4
+          }
+        },
+        {
+          "i": 3,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 1795.4,
+            "width": 1425,
+            "height": 374.4,
+            "bottom": 2169.8
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 2169.8,
+        "width": 1425,
+        "height": 271.2,
+        "bottom": 2441
+      },
+      "footer": {
+        "x": 0,
+        "y": 2441,
+        "width": 1425,
+        "height": 873.6,
+        "bottom": 3314.6
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0
+      },
+      "visibleCTAcount": 1,
+      "visibleCTAs": [
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 1206.8,
+            "y": 20,
+            "width": 182.2,
+            "height": 48,
+            "bottom": 68
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 6,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 352
+    },
+    "titanium": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/titanium-heat-exchangers.html",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 1425,
+        "clientWidth": 1425,
+        "scrollHeight": 3771
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1425,
+        "height": 89,
+        "bottom": 89
+      },
+      "hero": {
+        "x": 0,
+        "y": 89,
+        "width": 1425,
+        "height": 470.4,
+        "bottom": 559.4
+      },
+      "heroViewportRatio": 0.47,
+      "h1": {
+        "text": "Titanium and zirconium for corrosion-critical equipment.",
+        "rect": {
+          "x": 92.5,
+          "y": 178.8,
+          "width": 731.6,
+          "height": 211.6,
+          "bottom": 390.5
+        },
+        "fontSize": 72,
+        "lineHeight": 70.6,
+        "lines": 3
+      },
+      "lead": {
+        "x": 92.5,
+        "y": 406.5,
+        "width": 731.6,
+        "height": 58.5,
+        "bottom": 464.9
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero landinghero",
+          "rect": {
+            "x": 0,
+            "y": 89,
+            "width": 1425,
+            "height": 470.4,
+            "bottom": 559.4
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band page-specific-visual",
+          "rect": {
+            "x": 0,
+            "y": 559.4,
+            "width": 1425,
+            "height": 446.4,
+            "bottom": 1005.8
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 1005.8,
+            "width": 1425,
+            "height": 733,
+            "bottom": 1738.7
+          }
+        },
+        {
+          "i": 3,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 1738.7,
+            "width": 1425,
+            "height": 741,
+            "bottom": 2479.7
+          }
+        },
+        {
+          "i": 4,
+          "className": "titanium-rfq-strip",
+          "rect": {
+            "x": 0,
+            "y": 2479.7,
+            "width": 1425,
+            "height": 146.6,
+            "bottom": 2626.3
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 2626.3,
+        "width": 1425,
+        "height": 271.2,
+        "bottom": 2897.5
+      },
+      "footer": {
+        "x": 0,
+        "y": 2897.5,
+        "width": 1425,
+        "height": 873.6,
+        "bottom": 3771.1
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0
+      },
+      "visibleCTAcount": 2,
+      "visibleCTAs": [
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 1206.8,
+            "y": 20,
+            "width": 182.2,
+            "height": 48,
+            "bottom": 68
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Send the Requirement ↗",
+          "rect": {
+            "x": 92.5,
+            "y": 464.9,
+            "width": 218.6,
+            "height": 45.4,
+            "bottom": 510.4
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 6,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 437
+    },
+    "invar": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/resource-invar-lng-vs-tooling.html",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 1425,
+        "clientWidth": 1425,
+        "scrollHeight": 2932
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1425,
+        "height": 89,
+        "bottom": 89
+      },
+      "hero": {
+        "x": 0,
+        "y": 89,
+        "width": 1425,
+        "height": 379.9,
+        "bottom": 468.9
+      },
+      "heroViewportRatio": 0.38,
+      "h1": {
+        "text": "Invar 36: LNG strip vs tooling plate",
+        "rect": {
+          "x": 92.5,
+          "y": 229.6,
+          "width": 840,
+          "height": 141.1,
+          "bottom": 370.7
+        },
+        "fontSize": 72,
+        "lineHeight": 70.6,
+        "lines": 2
+      },
+      "lead": {
+        "x": 92.5,
+        "y": 386.7,
+        "width": 760,
+        "height": 29.2,
+        "bottom": 415.9
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero articlehero",
+          "rect": {
+            "x": 0,
+            "y": 89,
+            "width": 1425,
+            "height": 379.9,
+            "bottom": 468.9
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band",
+          "rect": {
+            "x": 0,
+            "y": 468.9,
+            "width": 1425,
+            "height": 446.4,
+            "bottom": 915.3
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 915.3,
+            "width": 1425,
+            "height": 872,
+            "bottom": 1787.4
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 1787.4,
+        "width": 1425,
+        "height": 271.2,
+        "bottom": 2058.5
+      },
+      "footer": {
+        "x": 0,
+        "y": 2058.5,
+        "width": 1425,
+        "height": 873.6,
+        "bottom": 2932.1
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0
+      },
+      "visibleCTAcount": 1,
+      "visibleCTAs": [
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 1206.8,
+            "y": 20,
+            "width": 182.2,
+            "height": 48,
+            "bottom": 68
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 5,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 172
+    }
+  },
+  "mobile": {
+    "home": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "scrollHeight": 16466
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 77,
+        "bottom": 77
+      },
+      "hero": {
+        "x": 0,
+        "y": 77,
+        "width": 375,
+        "height": 514.3,
+        "bottom": 591.3
+      },
+      "heroViewportRatio": 0.609,
+      "h1": {
+        "text": "Special Metals.Precisely Sourced.",
+        "rect": {
+          "x": 15,
+          "y": 213.4,
+          "width": 345,
+          "height": 95.5,
+          "bottom": 308.9
+        },
+        "fontSize": 48.75,
+        "lineHeight": 47.8,
+        "lines": 2
+      },
+      "lead": {
+        "x": 15,
+        "y": 325.9,
+        "width": 345,
+        "height": 74.4,
+        "bottom": 400.3
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "hero",
+          "rect": {
+            "x": 0,
+            "y": 77,
+            "width": 375,
+            "height": 514.3,
+            "bottom": 591.3
+          }
+        },
+        {
+          "i": 1,
+          "className": "statband",
+          "rect": {
+            "x": 0,
+            "y": 591.3,
+            "width": 375,
+            "height": 240.5,
+            "bottom": 831.8
+          }
+        },
+        {
+          "i": 2,
+          "className": "performance-rail",
+          "rect": {
+            "x": 0,
+            "y": 831.8,
+            "width": 375,
+            "height": 2,
+            "bottom": 833.8
+          }
+        },
+        {
+          "i": 3,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 833.8,
+            "width": 375,
+            "height": 3029.5,
+            "bottom": 3863.3
+          }
+        },
+        {
+          "i": 4,
+          "className": "portfolio-index",
+          "rect": {
+            "x": 0,
+            "y": 3863.3,
+            "width": 375,
+            "height": 1367.7,
+            "bottom": 5231
+          }
+        },
+        {
+          "i": 5,
+          "className": "section dark",
+          "rect": {
+            "x": 0,
+            "y": 5231,
+            "width": 375,
+            "height": 1853.1,
+            "bottom": 7084.1
+          }
+        },
+        {
+          "i": 6,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 7084.1,
+            "width": 375,
+            "height": 996.8,
+            "bottom": 8080.9
+          }
+        },
+        {
+          "i": 7,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 8080.9,
+            "width": 375,
+            "height": 1896.8,
+            "bottom": 9977.6
+          }
+        },
+        {
+          "i": 8,
+          "className": "route-protocol",
+          "rect": {
+            "x": 0,
+            "y": 9977.6,
+            "width": 375,
+            "height": 1280.2,
+            "bottom": 11257.9
+          }
+        },
+        {
+          "i": 9,
+          "className": "section decision-spine-home",
+          "rect": {
+            "x": 0,
+            "y": 11257.9,
+            "width": 375,
+            "height": 1708.5,
+            "bottom": 12966.4
+          }
+        },
+        {
+          "i": 10,
+          "className": "section flagship-intelligence",
+          "rect": {
+            "x": 0,
+            "y": 12966.4,
+            "width": 375,
+            "height": 1314.8,
+            "bottom": 14281.2
+          }
+        },
+        {
+          "i": 11,
+          "className": "section rfq-section",
+          "rect": {
+            "x": 0,
+            "y": 14281.2,
+            "width": 375,
+            "height": 603.1,
+            "bottom": 14884.3
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 14884.3,
+        "width": 375,
+        "height": 463.2,
+        "bottom": 15347.5
+      },
+      "footer": {
+        "x": 0,
+        "y": 15347.5,
+        "width": 375,
+        "height": 1046.1,
+        "bottom": 16393.7
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 779,
+        "width": 375,
+        "height": 65,
+        "bottom": 844
+      },
+      "visibleCTAcount": 4,
+      "visibleCTAs": [
+        {
+          "text": "Start Technical Review ↗",
+          "rect": {
+            "x": 15,
+            "y": 422.3,
+            "width": 345,
+            "height": 46,
+            "bottom": 468.3
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Review Evidence Model",
+          "rect": {
+            "x": 15,
+            "y": 477.3,
+            "width": 345,
+            "height": 46,
+            "bottom": 523.3
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Build route",
+          "rect": {
+            "x": 12,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 192,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 8,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 491
+    },
+    "technicalData": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/technical-data.html",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "scrollHeight": 5954
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 77,
+        "bottom": 77
+      },
+      "hero": {
+        "x": 0,
+        "y": 77,
+        "width": 375,
+        "height": 371.7,
+        "bottom": 448.7
+      },
+      "heroViewportRatio": 0.44,
+      "h1": {
+        "text": "Technical data for sourcing decisions.",
+        "rect": {
+          "x": 15,
+          "y": 214.4,
+          "width": 345,
+          "height": 84.3,
+          "bottom": 298.7
+        },
+        "fontSize": 42.12,
+        "lineHeight": 42.1,
+        "lines": 2
+      },
+      "lead": {
+        "x": 15,
+        "y": 314.7,
+        "width": 345,
+        "height": 99,
+        "bottom": 413.7
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero tech-center-hero",
+          "rect": {
+            "x": 0,
+            "y": 77,
+            "width": 375,
+            "height": 371.7,
+            "bottom": 448.7
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band page-specific-visual",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 580.7,
+            "width": 375,
+            "height": 1395.9,
+            "bottom": 1976.6
+          }
+        },
+        {
+          "i": 3,
+          "className": "technical-tools-band",
+          "rect": {
+            "x": 0,
+            "y": 1976.6,
+            "width": 375,
+            "height": 648.3,
+            "bottom": 2624.8
+          }
+        },
+        {
+          "i": 4,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 2624.8,
+            "width": 375,
+            "height": 1023.3,
+            "bottom": 3648.1
+          }
+        },
+        {
+          "i": 5,
+          "className": "section dark",
+          "rect": {
+            "x": 0,
+            "y": 3648.1,
+            "width": 375,
+            "height": 724.2,
+            "bottom": 4372.3
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 4372.3,
+        "width": 375,
+        "height": 463.2,
+        "bottom": 4835.5
+      },
+      "footer": {
+        "x": 0,
+        "y": 4835.5,
+        "width": 375,
+        "height": 1046.1,
+        "bottom": 5881.7
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 779,
+        "width": 375,
+        "height": 65,
+        "bottom": 844
+      },
+      "visibleCTAcount": 2,
+      "visibleCTAs": [
+        {
+          "text": "Build route",
+          "rect": {
+            "x": 12,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 192,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 4,
+      "horizontalOverflow": false,
+      "overflowElements": [
+        {
+          "tag": "DIV",
+          "className": "wrap",
+          "rect": {
+            "x": 0,
+            "y": 449.7,
+            "width": 515.3,
+            "height": 60,
+            "bottom": 509.7
+          }
+        },
+        {
+          "tag": "A",
+          "className": "",
+          "rect": {
+            "x": 343.5,
+            "y": 449.7,
+            "width": 171.8,
+            "height": 60,
+            "bottom": 509.7
+          }
+        },
+        {
+          "tag": "A",
+          "className": "",
+          "rect": {
+            "x": 362.4,
+            "y": 525.7,
+            "width": 36.6,
+            "height": 54,
+            "bottom": 579.7
+          }
+        }
+      ],
+      "firstViewportTextChars": 591
+    },
+    "standards": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/standards.html",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "scrollHeight": 3851
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 77,
+        "bottom": 77
+      },
+      "hero": {
+        "x": 0,
+        "y": 77,
+        "width": 375,
+        "height": 374.2,
+        "bottom": 451.2
+      },
+      "heroViewportRatio": 0.443,
+      "h1": {
+        "text": "A grade name is not a complete specification.",
+        "rect": {
+          "x": 15,
+          "y": 160.8,
+          "width": 345,
+          "height": 140.4,
+          "bottom": 301.2
+        },
+        "fontSize": 46.8,
+        "lineHeight": 46.8,
+        "lines": 3
+      },
+      "lead": {
+        "x": 15,
+        "y": 317.2,
+        "width": 345,
+        "height": 99,
+        "bottom": 416.2
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero",
+          "rect": {
+            "x": 0,
+            "y": 77,
+            "width": 375,
+            "height": 374.2,
+            "bottom": 451.2
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 451.2,
+            "width": 375,
+            "height": 1325.5,
+            "bottom": 1776.8
+          }
+        },
+        {
+          "i": 3,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 1776.8,
+            "width": 375,
+            "height": 492.6,
+            "bottom": 2269.4
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 2269.4,
+        "width": 375,
+        "height": 463.2,
+        "bottom": 2732.6
+      },
+      "footer": {
+        "x": 0,
+        "y": 2732.6,
+        "width": 375,
+        "height": 1046.1,
+        "bottom": 3778.7
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 779,
+        "width": 375,
+        "height": 65,
+        "bottom": 844
+      },
+      "visibleCTAcount": 2,
+      "visibleCTAs": [
+        {
+          "text": "Build route",
+          "rect": {
+            "x": 12,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 192,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 6,
+      "horizontalOverflow": false,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "className": "data-table standards",
+          "rect": {
+            "x": 15,
+            "y": 515.2,
+            "width": 720,
+            "height": 748.3,
+            "bottom": 1263.5
+          }
+        },
+        {
+          "tag": "THEAD",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 515.7,
+            "width": 719,
+            "height": 35.3,
+            "bottom": 551
+          }
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 515.7,
+            "width": 719,
+            "height": 35.3,
+            "bottom": 551
+          }
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "rect": {
+            "x": 370.6,
+            "y": 515.7,
+            "width": 113.7,
+            "height": 35.3,
+            "bottom": 551
+          }
+        },
+        {
+          "tag": "TH",
+          "className": "",
+          "rect": {
+            "x": 484.3,
+            "y": 515.7,
+            "width": 250.2,
+            "height": 35.3,
+            "bottom": 551
+          }
+        },
+        {
+          "tag": "TBODY",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 551,
+            "width": 719,
+            "height": 712,
+            "bottom": 1263
+          }
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 551,
+            "width": 719,
+            "height": 98.5,
+            "bottom": 649.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 370.6,
+            "y": 551,
+            "width": 113.7,
+            "height": 98.5,
+            "bottom": 649.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 484.3,
+            "y": 551,
+            "width": 250.2,
+            "height": 98.5,
+            "bottom": 649.5
+          }
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 649.5,
+            "width": 719,
+            "height": 99,
+            "bottom": 748.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 370.6,
+            "y": 649.5,
+            "width": 113.7,
+            "height": 99,
+            "bottom": 748.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 484.3,
+            "y": 649.5,
+            "width": 250.2,
+            "height": 99,
+            "bottom": 748.5
+          }
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 748.5,
+            "width": 719,
+            "height": 99,
+            "bottom": 847.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 370.6,
+            "y": 748.5,
+            "width": 113.7,
+            "height": 99,
+            "bottom": 847.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 484.3,
+            "y": 748.5,
+            "width": 250.2,
+            "height": 99,
+            "bottom": 847.5
+          }
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 847.5,
+            "width": 719,
+            "height": 99,
+            "bottom": 946.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 370.6,
+            "y": 847.5,
+            "width": 113.7,
+            "height": 99,
+            "bottom": 946.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 484.3,
+            "y": 847.5,
+            "width": 250.2,
+            "height": 99,
+            "bottom": 946.5
+          }
+        },
+        {
+          "tag": "TR",
+          "className": "",
+          "rect": {
+            "x": 15.5,
+            "y": 946.5,
+            "width": 719,
+            "height": 99,
+            "bottom": 1045.5
+          }
+        },
+        {
+          "tag": "TD",
+          "className": "",
+          "rect": {
+            "x": 370.6,
+            "y": 946.5,
+            "width": 113.7,
+            "height": 99,
+            "bottom": 1045.5
+          }
+        }
+      ],
+      "firstViewportTextChars": 890
+    },
+    "titanium": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/titanium-heat-exchangers.html",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "scrollHeight": 5383
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 77,
+        "bottom": 77
+      },
+      "hero": {
+        "x": 0,
+        "y": 77,
+        "width": 375,
+        "height": 739.1,
+        "bottom": 816.1
+      },
+      "heroViewportRatio": 0.876,
+      "h1": {
+        "text": "Titanium and zirconium for corrosion-critical equipment.",
+        "rect": {
+          "x": 15,
+          "y": 150.8,
+          "width": 345,
+          "height": 187.2,
+          "bottom": 338
+        },
+        "fontSize": 46.8,
+        "lineHeight": 46.8,
+        "lines": 4
+      },
+      "lead": {
+        "x": 15,
+        "y": 354,
+        "width": 345,
+        "height": 99,
+        "bottom": 453
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero landinghero",
+          "rect": {
+            "x": 0,
+            "y": 77,
+            "width": 375,
+            "height": 739.1,
+            "bottom": 816.1
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band page-specific-visual",
+          "rect": {
+            "x": 0,
+            "y": 816.1,
+            "width": 375,
+            "height": 250,
+            "bottom": 1066.1
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 1066.1,
+            "width": 375,
+            "height": 1463,
+            "bottom": 2529.1
+          }
+        },
+        {
+          "i": 3,
+          "className": "section soft",
+          "rect": {
+            "x": 0,
+            "y": 2529.1,
+            "width": 375,
+            "height": 1052.6,
+            "bottom": 3581.7
+          }
+        },
+        {
+          "i": 4,
+          "className": "titanium-rfq-strip",
+          "rect": {
+            "x": 0,
+            "y": 3581.7,
+            "width": 375,
+            "height": 219.4,
+            "bottom": 3801.1
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 3801.1,
+        "width": 375,
+        "height": 463.2,
+        "bottom": 4264.4
+      },
+      "footer": {
+        "x": 0,
+        "y": 4264.4,
+        "width": 375,
+        "height": 1046.1,
+        "bottom": 5310.5
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 779,
+        "width": 375,
+        "height": 65,
+        "bottom": 844
+      },
+      "visibleCTAcount": 3,
+      "visibleCTAs": [
+        {
+          "text": "Send the Requirement ↗",
+          "rect": {
+            "x": 15,
+            "y": 453,
+            "width": 218.6,
+            "height": 45.4,
+            "bottom": 498.4
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Build route",
+          "rect": {
+            "x": 12,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 192,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 6,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 384
+    },
+    "invar": {
+      "url": "https://wuxi304-collab.github.io/tongjun-overseas/resource-invar-lng-vs-tooling.html",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 1
+      },
+      "document": {
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "scrollHeight": 3542
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 77,
+        "bottom": 77
+      },
+      "hero": {
+        "x": 0,
+        "y": 77,
+        "width": 375,
+        "height": 290,
+        "bottom": 367
+      },
+      "heroViewportRatio": 0.344,
+      "h1": {
+        "text": "Invar 36: LNG strip vs tooling plate",
+        "rect": {
+          "x": 15,
+          "y": 197.6,
+          "width": 345,
+          "height": 93.6,
+          "bottom": 291.2
+        },
+        "fontSize": 46.8,
+        "lineHeight": 46.8,
+        "lines": 2
+      },
+      "lead": {
+        "x": 15,
+        "y": 307.2,
+        "width": 345,
+        "height": 24.8,
+        "bottom": 332
+      },
+      "sections": [
+        {
+          "i": 0,
+          "className": "pagehero articlehero",
+          "rect": {
+            "x": 0,
+            "y": 77,
+            "width": 375,
+            "height": 290,
+            "bottom": 367
+          }
+        },
+        {
+          "i": 1,
+          "className": "visual-band",
+          "rect": {
+            "x": 0,
+            "y": 367,
+            "width": 375,
+            "height": 250,
+            "bottom": 617
+          }
+        },
+        {
+          "i": 2,
+          "className": "section",
+          "rect": {
+            "x": 0,
+            "y": 617,
+            "width": 375,
+            "height": 1343.9,
+            "bottom": 1960.8
+          }
+        }
+      ],
+      "prefooter": {
+        "x": 0,
+        "y": 1960.8,
+        "width": 375,
+        "height": 463.2,
+        "bottom": 2424.1
+      },
+      "footer": {
+        "x": 0,
+        "y": 2424.1,
+        "width": 375,
+        "height": 1046.1,
+        "bottom": 3470.2
+      },
+      "actionbar": {
+        "x": 0,
+        "y": 779,
+        "width": 375,
+        "height": 65,
+        "bottom": 844
+      },
+      "visibleCTAcount": 2,
+      "visibleCTAs": [
+        {
+          "text": "Build route",
+          "rect": {
+            "x": 12,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        },
+        {
+          "text": "Request a Quote →",
+          "rect": {
+            "x": 192,
+            "y": 790,
+            "width": 171,
+            "height": 44,
+            "bottom": 834
+          },
+          "display": "flex",
+          "visibility": "visible"
+        }
+      ],
+      "totalCTAcount": 5,
+      "horizontalOverflow": false,
+      "overflowElements": [],
+      "firstViewportTextChars": 381
+    }
+  }
+}
