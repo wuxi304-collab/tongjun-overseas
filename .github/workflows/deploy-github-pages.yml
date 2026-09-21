@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.20 visual candidate QA3 — footer regex correction
+# V34.152 R15.20 visual candidate QA4 — titanium canonical data-page fix
 
 on:
   workflow_dispatch:
