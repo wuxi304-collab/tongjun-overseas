@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.21 homepage mobile density candidate
+# V34.152 R15.21 QA2 — compact homepage product portfolio
 
 on:
   workflow_dispatch:
