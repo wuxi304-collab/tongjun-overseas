@@ -5,8 +5,8 @@ import sys
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
 EXPECTED_PAGES = 50
-EXPECTED_HEADER_LOCKUPS = 50
-EXPECTED_FOOTER_LOCKUPS_MIN = 49
+EXPECTED_HEADER_LOCKUPS = 49
+EXPECTED_FOOTER_LOCKUPS = 50
 
 
 def fail(message):
@@ -69,16 +69,20 @@ def main():
         parser.feed(text)
         header_total += parser.header_lockups
         footer_total += parser.footer_lockups
+        expected_header = 0 if page.name == '404.html' else 1
+        if parser.header_lockups != expected_header:
+            fail(f'{page.name}: expected {expected_header} header vector lockup(s), found {parser.header_lockups}')
+        if parser.footer_lockups != 1:
+            fail(f'{page.name}: expected exactly one footer vector lockup, found {parser.footer_lockups}')
         if parser.bad_srcs:
             bad.append((page.name, parser.bad_srcs))
-        if page.name!='404.html':
-            if '<strong>TONGJUN</strong>' not in text or 'METAL TECH · EST. 2026' not in text:
-                text_fail.append(page.name)
+        if '<strong>TONGJUN</strong>' not in text or 'METAL TECH · EST. 2026' not in text:
+            text_fail.append(page.name)
 
     if header_total!=EXPECTED_HEADER_LOCKUPS:
         fail(f'expected {EXPECTED_HEADER_LOCKUPS} header vector lockups, found {header_total}')
-    if footer_total<EXPECTED_FOOTER_LOCKUPS_MIN:
-        fail(f'expected at least {EXPECTED_FOOTER_LOCKUPS_MIN} footer vector lockups, found {footer_total}')
+    if footer_total!=EXPECTED_FOOTER_LOCKUPS:
+        fail(f'expected {EXPECTED_FOOTER_LOCKUPS} footer vector lockups, found {footer_total}')
     if bad:
         fail(f'brand mark image does not use native SVG: {bad[:10]}')
     if text_fail:
