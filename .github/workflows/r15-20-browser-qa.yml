@@ -6,6 +6,7 @@ on:
     branches: [qa/r15.20-browser-screenshots]
     paths:
       - '.github/workflows/r15-20-browser-qa.yml'
+      - 'scripts/r15-20-browser-metrics.mjs'
 
 permissions:
   contents: write
@@ -83,6 +84,16 @@ jobs:
           out.write_text(m.group(1),encoding="utf-8")
           print(m.group(1))
           PY
+
+      - name: Measure real-browser layout
+        shell: bash
+        env:
+          CHROME: ${{ steps.chrome.outputs.path }}
+          BASE: https://wuxi304-collab.github.io/tongjun-overseas
+        run: |
+          set -euo pipefail
+          node scripts/r15-20-browser-metrics.mjs
+          test -s visual-qa/r15-20/browser-metrics.json
 
       - name: Build screenshot contact-sheet PDF
         shell: bash
