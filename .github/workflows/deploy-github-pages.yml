@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.19 — single release stylesheet + public CSS hygiene + frozen visual/RFQ contracts
+# V34.152 R15.19a — single release stylesheet + public CSS hygiene + frozen visual/RFQ contracts
 
 on:
   workflow_dispatch:
@@ -56,7 +56,7 @@ jobs:
           python3 scripts/materialize-r15-6-native-assets.py
 
 
-      - name: Build consolidated R15.15 stylesheet
+      - name: Build source-layer stylesheet for R15.19 bundle
         shell: bash
         run: |
           set -euo pipefail
@@ -220,7 +220,7 @@ jobs:
           test ! -e _prod/VISUAL_MANIFEST_R15_7.json
           test ! -e _prod/scripts
           test ! -e _prod/.sync
-          echo "PASS: R15.18 production build completed with static first-frame navigation, runtime-safe vector branding, frozen hero runtime, and dead-free 2K image delivery."
+          echo "PASS: R15.19 production build completed with static first-frame navigation, runtime-safe vector branding, frozen hero runtime, and dead-free 2K image delivery."
 
   deploy:
     needs: [build, production-build]
