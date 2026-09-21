@@ -38,16 +38,6 @@
       brand.setAttribute('aria-label','Tongjun Metal Tech home');
       normalizeBrandLockup(brand);
     }
-    const cta=document.querySelector('.site-header .nav-cta');
-    if(cta){cta.href='/rfq';cta.innerHTML='Request a Quote <span>→</span>';}
-    const nav=document.querySelector('.site-header .navlinks');
-    if(nav){
-      const direct=[...nav.children];
-      const cap=direct.find(x=>x.matches('a')&&/Capabilities/i.test(x.textContent));
-      if(cap){cap.textContent='Quality';cap.href='/quality';}
-      const res=direct.find(x=>x.matches('a')&&/Resources/i.test(x.textContent));
-      if(res){res.textContent='Technical Data';res.href='/technical-data';}
-    }
   }
 
   function normalizeFooter(){
