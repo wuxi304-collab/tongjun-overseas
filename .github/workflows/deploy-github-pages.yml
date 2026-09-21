@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.21 QA2 — compact homepage product portfolio
+# V34.152 R15.22 QA — mobile vertical rhythm compression
 
 on:
   workflow_dispatch:
@@ -21,10 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.21 homepage mobile candidate
+      - name: Checkout V34.152 R15.22 mobile vertical candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: feat/v34.152-r15.21-home-mobile-density
+          ref: feat/v34.152-r15.22-mobile-vertical-rhythm
           fetch-depth: 1
 
       - name: Configure Pages
@@ -199,10 +199,10 @@ jobs:
   production-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout V34.152 R15.21 homepage mobile candidate for production-contract validation
+      - name: Checkout V34.152 R15.22 mobile vertical candidate for production-contract validation
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: feat/v34.152-r15.21-home-mobile-density
+          ref: feat/v34.152-r15.22-mobile-vertical-rhythm
           fetch-depth: 1
 
       - name: Run production build contract
