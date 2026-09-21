@@ -1,5 +1,5 @@
 name: Deploy temporary GitHub Pages mirror
-# V34.152 R15.18 — global buyer CTA consistency + direct-primary-nav stability + frozen hero
+# V34.152 R15.18a — global buyer CTA consistency + structural CTA exceptions + frozen hero
 
 on:
   workflow_dispatch:
