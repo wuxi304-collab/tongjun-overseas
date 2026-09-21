@@ -18,6 +18,12 @@ TARGET_NAMES = {Path(p).name for p in PARTS}
 LINK_RE = re.compile(r'<link\b[^>]*>', re.I)
 HREF_RE = re.compile(r'\bhref=["\']([^"\']+)["\']', re.I)
 REL_RE = re.compile(r'\brel=["\']([^"\']+)["\']', re.I)
+FOOTER_BRAND_FIX_RE = re.compile(
+    r'(<div class="footer-brand"><div class="brand tj-footer-brand">.*?</div>)</div>'
+    r'(<p>High-performance materials sourcing, source qualification and non-standard supply-route development from China\\.</p>'
+    r'<span class="footer-location">Wuxi · Jiangsu · China</span></div>)',
+    re.S,
+)
 
 
 def fail(message):
@@ -59,7 +65,7 @@ def rewrite_html():
     counts = []
     for page in htmls:
         text = page.read_text(encoding='utf-8')
-        text, footer_fixes = FOOTER_BRAND_FIX_RE.subn(r'\\1\\2', text, count=1)
+        text, footer_fixes = FOOTER_BRAND_FIX_RE.subn(lambda m: m.group(1) + m.group(2), text, count=1)
         tags = list(LINK_RE.finditer(text))
         targets = [m for m in tags if is_target_stylesheet(m.group(0))]
         expected = 6 if page.name == 'thank-you.html' else 5
