@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T11:36:36.280Z",
+  "generatedAt": "2026-09-21T11:44:01.189Z",
   "desktop": {
     "home": {
       "url": "https://wuxi304-collab.github.io/tongjun-overseas/",
@@ -11,7 +11,7 @@
       "document": {
         "scrollWidth": 1425,
         "clientWidth": 1425,
-        "scrollHeight": 9257
+        "scrollHeight": 8744
       },
       "header": {
         "x": 0,
@@ -193,27 +193,27 @@
         "x": 0,
         "y": 8383,
         "width": 1425,
-        "height": 873.6,
-        "bottom": 9256.6
+        "height": 361.3,
+        "bottom": 8744.3
       },
       "footerComputed": {
         "paddingTop": "58px",
         "paddingBottom": "24px",
         "minHeight": "0px",
-        "height": "873.594px"
+        "height": "361.281px"
       },
       "footerGrid": {
         "rect": {
           "x": 92.5,
           "y": 8448,
           "width": 1240,
-          "height": 135.6,
-          "bottom": 8583.6
+          "height": 202.1,
+          "bottom": 8650.1
         },
-        "gridTemplateColumns": "412.297px 219.906px 219.891px 219.891px",
-        "gridTemplateRows": "135.625px",
-        "columnGap": "56px",
-        "rowGap": "56px",
+        "gridTemplateColumns": "309.812px 206.547px 206.547px 206.547px 206.547px",
+        "gridTemplateRows": "202.094px",
+        "columnGap": "26px",
+        "rowGap": "26px",
         "children": [
           {
             "tag": "DIV",
@@ -221,41 +221,69 @@
             "rect": {
               "x": 92.5,
               "y": 8448,
-              "width": 412.3,
-              "height": 135.6,
-              "bottom": 8583.6
+              "width": 309.8,
+              "height": 202.1,
+              "bottom": 8650.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "135.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
-              "x": 560.8,
-              "y": 8464,
-              "width": 219.9,
-              "height": 103.6,
-              "bottom": 8567.6
+              "x": 428.3,
+              "y": 8448,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 8650.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "103.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 836.7,
-              "y": 8466,
-              "width": 219.9,
-              "height": 117.6,
-              "bottom": 8583.6
+              "x": 660.9,
+              "y": 8448,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 8650.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "117.625px"
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 893.4,
+              "y": 8448,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 8650.1
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 1126,
+              "y": 8448,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 8650.1
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
           }
         ]
       },
@@ -263,14 +291,14 @@
         "root": {
           "x": 92.5,
           "y": 8448,
-          "width": 412.3,
-          "height": 135.6,
-          "bottom": 8583.6
+          "width": 309.8,
+          "height": 202.1,
+          "bottom": 8650.1
         },
         "brand": {
           "x": 92.5,
           "y": 8448,
-          "width": 412.3,
+          "width": 309.8,
           "height": 52,
           "bottom": 8500
         },
@@ -281,15 +309,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 92.5,
+          "y": 8513,
+          "width": 309.8,
+          "height": 63.1,
+          "bottom": 8576.2
+        },
+        "location": {
+          "x": 92.5,
+          "y": 8594.2,
+          "width": 309.8,
+          "height": 17.8,
+          "bottom": 8612
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 9194.4,
-        "width": 1425,
+        "x": 92.5,
+        "y": 8682.1,
+        "width": 1240,
         "height": 38.2,
-        "bottom": 9232.6
+        "bottom": 8720.3
       },
       "actionbar": {
         "x": 0,
@@ -352,7 +392,7 @@
       "document": {
         "scrollWidth": 1425,
         "clientWidth": 1425,
-        "scrollHeight": 4547
+        "scrollHeight": 4035
       },
       "header": {
         "x": 0,
@@ -468,27 +508,27 @@
         "x": 0,
         "y": 3673.7,
         "width": 1425,
-        "height": 873.6,
-        "bottom": 4547.3
+        "height": 361.3,
+        "bottom": 4035
       },
       "footerComputed": {
         "paddingTop": "58px",
         "paddingBottom": "24px",
         "minHeight": "0px",
-        "height": "873.594px"
+        "height": "361.281px"
       },
       "footerGrid": {
         "rect": {
           "x": 92.5,
           "y": 3738.7,
           "width": 1240,
-          "height": 135.6,
-          "bottom": 3874.3
+          "height": 202.1,
+          "bottom": 3940.8
         },
-        "gridTemplateColumns": "412.297px 219.906px 219.891px 219.891px",
-        "gridTemplateRows": "135.625px",
-        "columnGap": "56px",
-        "rowGap": "56px",
+        "gridTemplateColumns": "309.812px 206.547px 206.547px 206.547px 206.547px",
+        "gridTemplateRows": "202.094px",
+        "columnGap": "26px",
+        "rowGap": "26px",
         "children": [
           {
             "tag": "DIV",
@@ -496,41 +536,69 @@
             "rect": {
               "x": 92.5,
               "y": 3738.7,
-              "width": 412.3,
-              "height": 135.6,
-              "bottom": 3874.3
+              "width": 309.8,
+              "height": 202.1,
+              "bottom": 3940.8
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "135.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
-              "x": 560.8,
-              "y": 3754.7,
-              "width": 219.9,
-              "height": 103.6,
-              "bottom": 3858.3
+              "x": 428.3,
+              "y": 3738.7,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3940.8
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "103.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 836.7,
-              "y": 3756.7,
-              "width": 219.9,
-              "height": 117.6,
-              "bottom": 3874.3
+              "x": 660.9,
+              "y": 3738.7,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3940.8
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "117.625px"
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 893.4,
+              "y": 3738.7,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3940.8
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 1126,
+              "y": 3738.7,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3940.8
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
           }
         ]
       },
@@ -538,14 +606,14 @@
         "root": {
           "x": 92.5,
           "y": 3738.7,
-          "width": 412.3,
-          "height": 135.6,
-          "bottom": 3874.3
+          "width": 309.8,
+          "height": 202.1,
+          "bottom": 3940.8
         },
         "brand": {
           "x": 92.5,
           "y": 3738.7,
-          "width": 412.3,
+          "width": 309.8,
           "height": 52,
           "bottom": 3790.7
         },
@@ -556,15 +624,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 92.5,
+          "y": 3803.7,
+          "width": 309.8,
+          "height": 63.1,
+          "bottom": 3866.8
+        },
+        "location": {
+          "x": 92.5,
+          "y": 3884.8,
+          "width": 309.8,
+          "height": 17.8,
+          "bottom": 3902.6
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 4485.1,
-        "width": 1425,
+        "x": 92.5,
+        "y": 3972.8,
+        "width": 1240,
         "height": 38.2,
-        "bottom": 4523.3
+        "bottom": 4011
       },
       "actionbar": {
         "x": 0,
@@ -603,7 +683,7 @@
       "document": {
         "scrollWidth": 1425,
         "clientWidth": 1425,
-        "scrollHeight": 3315
+        "scrollHeight": 2802
       },
       "header": {
         "x": 0,
@@ -697,27 +777,27 @@
         "x": 0,
         "y": 2441,
         "width": 1425,
-        "height": 873.6,
-        "bottom": 3314.6
+        "height": 361.3,
+        "bottom": 2802.3
       },
       "footerComputed": {
         "paddingTop": "58px",
         "paddingBottom": "24px",
         "minHeight": "0px",
-        "height": "873.594px"
+        "height": "361.281px"
       },
       "footerGrid": {
         "rect": {
           "x": 92.5,
           "y": 2506,
           "width": 1240,
-          "height": 135.6,
-          "bottom": 2641.6
+          "height": 202.1,
+          "bottom": 2708.1
         },
-        "gridTemplateColumns": "412.297px 219.906px 219.891px 219.891px",
-        "gridTemplateRows": "135.625px",
-        "columnGap": "56px",
-        "rowGap": "56px",
+        "gridTemplateColumns": "309.812px 206.547px 206.547px 206.547px 206.547px",
+        "gridTemplateRows": "202.094px",
+        "columnGap": "26px",
+        "rowGap": "26px",
         "children": [
           {
             "tag": "DIV",
@@ -725,41 +805,69 @@
             "rect": {
               "x": 92.5,
               "y": 2506,
-              "width": 412.3,
-              "height": 135.6,
-              "bottom": 2641.6
+              "width": 309.8,
+              "height": 202.1,
+              "bottom": 2708.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "135.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
-              "x": 560.8,
-              "y": 2522,
-              "width": 219.9,
-              "height": 103.6,
-              "bottom": 2625.6
+              "x": 428.3,
+              "y": 2506,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2708.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "103.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 836.7,
-              "y": 2524,
-              "width": 219.9,
-              "height": 117.6,
-              "bottom": 2641.6
+              "x": 660.9,
+              "y": 2506,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2708.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "117.625px"
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 893.4,
+              "y": 2506,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2708.1
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 1126,
+              "y": 2506,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2708.1
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
           }
         ]
       },
@@ -767,14 +875,14 @@
         "root": {
           "x": 92.5,
           "y": 2506,
-          "width": 412.3,
-          "height": 135.6,
-          "bottom": 2641.6
+          "width": 309.8,
+          "height": 202.1,
+          "bottom": 2708.1
         },
         "brand": {
           "x": 92.5,
           "y": 2506,
-          "width": 412.3,
+          "width": 309.8,
           "height": 52,
           "bottom": 2558
         },
@@ -785,15 +893,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 92.5,
+          "y": 2571,
+          "width": 309.8,
+          "height": 63.1,
+          "bottom": 2634.1
+        },
+        "location": {
+          "x": 92.5,
+          "y": 2652.1,
+          "width": 309.8,
+          "height": 17.8,
+          "bottom": 2669.9
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 3252.4,
-        "width": 1425,
+        "x": 92.5,
+        "y": 2740.1,
+        "width": 1240,
         "height": 38.2,
-        "bottom": 3290.6
+        "bottom": 2778.3
       },
       "actionbar": {
         "x": 0,
@@ -832,7 +952,7 @@
       "document": {
         "scrollWidth": 1425,
         "clientWidth": 1425,
-        "scrollHeight": 3771
+        "scrollHeight": 3259
       },
       "header": {
         "x": 0,
@@ -937,27 +1057,27 @@
         "x": 0,
         "y": 2897.5,
         "width": 1425,
-        "height": 873.6,
-        "bottom": 3771.1
+        "height": 361.3,
+        "bottom": 3258.8
       },
       "footerComputed": {
         "paddingTop": "58px",
         "paddingBottom": "24px",
         "minHeight": "0px",
-        "height": "873.594px"
+        "height": "361.281px"
       },
       "footerGrid": {
         "rect": {
           "x": 92.5,
           "y": 2962.5,
           "width": 1240,
-          "height": 135.6,
-          "bottom": 3098.1
+          "height": 202.1,
+          "bottom": 3164.6
         },
-        "gridTemplateColumns": "412.297px 219.906px 219.891px 219.891px",
-        "gridTemplateRows": "135.625px",
-        "columnGap": "56px",
-        "rowGap": "56px",
+        "gridTemplateColumns": "309.812px 206.547px 206.547px 206.547px 206.547px",
+        "gridTemplateRows": "202.094px",
+        "columnGap": "26px",
+        "rowGap": "26px",
         "children": [
           {
             "tag": "DIV",
@@ -965,41 +1085,69 @@
             "rect": {
               "x": 92.5,
               "y": 2962.5,
-              "width": 412.3,
-              "height": 135.6,
-              "bottom": 3098.1
+              "width": 309.8,
+              "height": 202.1,
+              "bottom": 3164.6
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "135.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
-              "x": 560.8,
-              "y": 2978.5,
-              "width": 219.9,
-              "height": 103.6,
-              "bottom": 3082.1
+              "x": 428.3,
+              "y": 2962.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3164.6
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "103.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 836.7,
-              "y": 2980.5,
-              "width": 219.9,
-              "height": 117.6,
-              "bottom": 3098.1
+              "x": 660.9,
+              "y": 2962.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3164.6
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "117.625px"
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 893.4,
+              "y": 2962.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3164.6
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 1126,
+              "y": 2962.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 3164.6
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
           }
         ]
       },
@@ -1007,14 +1155,14 @@
         "root": {
           "x": 92.5,
           "y": 2962.5,
-          "width": 412.3,
-          "height": 135.6,
-          "bottom": 3098.1
+          "width": 309.8,
+          "height": 202.1,
+          "bottom": 3164.6
         },
         "brand": {
           "x": 92.5,
           "y": 2962.5,
-          "width": 412.3,
+          "width": 309.8,
           "height": 52,
           "bottom": 3014.5
         },
@@ -1025,15 +1173,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 92.5,
+          "y": 3027.5,
+          "width": 309.8,
+          "height": 63.1,
+          "bottom": 3090.6
+        },
+        "location": {
+          "x": 92.5,
+          "y": 3108.6,
+          "width": 309.8,
+          "height": 17.8,
+          "bottom": 3126.4
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 3708.9,
-        "width": 1425,
+        "x": 92.5,
+        "y": 3196.6,
+        "width": 1240,
         "height": 38.2,
-        "bottom": 3747.1
+        "bottom": 3234.8
       },
       "actionbar": {
         "x": 0,
@@ -1084,7 +1244,7 @@
       "document": {
         "scrollWidth": 1425,
         "clientWidth": 1425,
-        "scrollHeight": 2932
+        "scrollHeight": 2420
       },
       "header": {
         "x": 0,
@@ -1167,27 +1327,27 @@
         "x": 0,
         "y": 2058.5,
         "width": 1425,
-        "height": 873.6,
-        "bottom": 2932.1
+        "height": 361.3,
+        "bottom": 2419.8
       },
       "footerComputed": {
         "paddingTop": "58px",
         "paddingBottom": "24px",
         "minHeight": "0px",
-        "height": "873.594px"
+        "height": "361.281px"
       },
       "footerGrid": {
         "rect": {
           "x": 92.5,
           "y": 2123.5,
           "width": 1240,
-          "height": 135.6,
-          "bottom": 2259.2
+          "height": 202.1,
+          "bottom": 2325.6
         },
-        "gridTemplateColumns": "412.297px 219.906px 219.891px 219.891px",
-        "gridTemplateRows": "135.625px",
-        "columnGap": "56px",
-        "rowGap": "56px",
+        "gridTemplateColumns": "309.812px 206.547px 206.547px 206.547px 206.547px",
+        "gridTemplateRows": "202.094px",
+        "columnGap": "26px",
+        "rowGap": "26px",
         "children": [
           {
             "tag": "DIV",
@@ -1195,41 +1355,69 @@
             "rect": {
               "x": 92.5,
               "y": 2123.5,
-              "width": 412.3,
-              "height": 135.6,
-              "bottom": 2259.2
+              "width": 309.8,
+              "height": 202.1,
+              "bottom": 2325.6
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "135.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
-              "x": 560.8,
-              "y": 2139.5,
-              "width": 219.9,
-              "height": 103.6,
-              "bottom": 2243.2
+              "x": 428.3,
+              "y": 2123.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2325.6
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "103.625px"
+            "height": "202.094px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 836.7,
-              "y": 2141.5,
-              "width": 219.9,
-              "height": 117.6,
-              "bottom": 2259.2
+              "x": 660.9,
+              "y": 2123.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2325.6
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "117.625px"
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 893.4,
+              "y": 2123.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2325.6
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 1126,
+              "y": 2123.5,
+              "width": 206.5,
+              "height": 202.1,
+              "bottom": 2325.6
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "202.094px"
           }
         ]
       },
@@ -1237,14 +1425,14 @@
         "root": {
           "x": 92.5,
           "y": 2123.5,
-          "width": 412.3,
-          "height": 135.6,
-          "bottom": 2259.2
+          "width": 309.8,
+          "height": 202.1,
+          "bottom": 2325.6
         },
         "brand": {
           "x": 92.5,
           "y": 2123.5,
-          "width": 412.3,
+          "width": 309.8,
           "height": 52,
           "bottom": 2175.5
         },
@@ -1255,15 +1443,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 92.5,
+          "y": 2188.5,
+          "width": 309.8,
+          "height": 63.1,
+          "bottom": 2251.7
+        },
+        "location": {
+          "x": 92.5,
+          "y": 2269.7,
+          "width": 309.8,
+          "height": 17.8,
+          "bottom": 2287.5
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 2869.9,
-        "width": 1425,
+        "x": 92.5,
+        "y": 2357.6,
+        "width": 1240,
         "height": 38.2,
-        "bottom": 2908.1
+        "bottom": 2395.8
       },
       "actionbar": {
         "x": 0,
@@ -1304,7 +1504,7 @@
       "document": {
         "scrollWidth": 375,
         "clientWidth": 375,
-        "scrollHeight": 16466
+        "scrollHeight": 16146
       },
       "header": {
         "x": 0,
@@ -1486,27 +1686,27 @@
         "x": 0,
         "y": 15347.5,
         "width": 375,
-        "height": 1046.1,
-        "bottom": 16393.7
+        "height": 726.4,
+        "bottom": 16074
       },
       "footerComputed": {
         "paddingTop": "44px",
         "paddingBottom": "88px",
         "minHeight": "0px",
-        "height": "1046.12px"
+        "height": "726.406px"
       },
       "footerGrid": {
         "rect": {
           "x": 15,
           "y": 15398.5,
           "width": 345,
-          "height": 251.8,
-          "bottom": 15650.3
+          "height": 486.8,
+          "bottom": 15885.4
         },
-        "gridTemplateColumns": "162.5px 162.5px",
-        "gridTemplateRows": "52px 175.781px",
-        "columnGap": "20px",
-        "rowGap": "24px",
+        "gridTemplateColumns": "163.5px 163.5px",
+        "gridTemplateRows": "124.188px 123.562px 195.094px",
+        "columnGap": "18px",
+        "rowGap": "22px",
         "children": [
           {
             "tag": "DIV",
@@ -1515,40 +1715,68 @@
               "x": 15,
               "y": 15398.5,
               "width": 345,
-              "height": 52,
-              "bottom": 15450.5
+              "height": 124.2,
+              "bottom": 15522.7
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "52px"
+            "height": "124.188px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
               "x": 15,
-              "y": 15489.5,
-              "width": 162.5,
-              "height": 145.8,
-              "bottom": 15635.3
+              "y": 15544.7,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 15668.3
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "145.781px"
+            "height": "123.562px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 197.5,
-              "y": 15492.5,
-              "width": 162.5,
-              "height": 157.8,
-              "bottom": 15650.3
+              "x": 196.5,
+              "y": 15544.7,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 15668.3
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "157.781px"
+            "height": "123.562px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 15,
+              "y": 15690.3,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 15885.4
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 196.5,
+              "y": 15690.3,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 15885.4
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
           }
         ]
       },
@@ -1557,8 +1785,8 @@
           "x": 15,
           "y": 15398.5,
           "width": 345,
-          "height": 52,
-          "bottom": 15450.5
+          "height": 124.2,
+          "bottom": 15522.7
         },
         "brand": {
           "x": 15,
@@ -1574,15 +1802,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 15,
+          "y": 15460.5,
+          "width": 345,
+          "height": 36,
+          "bottom": 15496.5
+        },
+        "location": {
+          "x": 15,
+          "y": 15506.5,
+          "width": 345,
+          "height": 16.2,
+          "bottom": 15522.7
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 16223.1,
-        "width": 375,
-        "height": 82.6,
-        "bottom": 16305.7
+        "x": 15,
+        "y": 15905.4,
+        "width": 345,
+        "height": 80.6,
+        "bottom": 15986
       },
       "actionbar": {
         "x": 0,
@@ -1657,7 +1897,7 @@
       "document": {
         "scrollWidth": 375,
         "clientWidth": 375,
-        "scrollHeight": 5954
+        "scrollHeight": 5634
       },
       "header": {
         "x": 0,
@@ -1773,27 +2013,27 @@
         "x": 0,
         "y": 4835.5,
         "width": 375,
-        "height": 1046.1,
-        "bottom": 5881.7
+        "height": 726.4,
+        "bottom": 5561.9
       },
       "footerComputed": {
         "paddingTop": "44px",
         "paddingBottom": "88px",
         "minHeight": "0px",
-        "height": "1046.12px"
+        "height": "726.406px"
       },
       "footerGrid": {
         "rect": {
           "x": 15,
           "y": 4886.5,
           "width": 345,
-          "height": 251.8,
-          "bottom": 5138.3
+          "height": 486.8,
+          "bottom": 5373.4
         },
-        "gridTemplateColumns": "162.5px 162.5px",
-        "gridTemplateRows": "52px 175.781px",
-        "columnGap": "20px",
-        "rowGap": "24px",
+        "gridTemplateColumns": "163.5px 163.5px",
+        "gridTemplateRows": "124.188px 123.562px 195.094px",
+        "columnGap": "18px",
+        "rowGap": "22px",
         "children": [
           {
             "tag": "DIV",
@@ -1802,40 +2042,68 @@
               "x": 15,
               "y": 4886.5,
               "width": 345,
-              "height": 52,
-              "bottom": 4938.5
+              "height": 124.2,
+              "bottom": 5010.7
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "52px"
+            "height": "124.188px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
               "x": 15,
-              "y": 4977.5,
-              "width": 162.5,
-              "height": 145.8,
-              "bottom": 5123.3
+              "y": 5032.7,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 5156.3
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "145.781px"
+            "height": "123.562px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 197.5,
-              "y": 4980.5,
-              "width": 162.5,
-              "height": 157.8,
-              "bottom": 5138.3
+              "x": 196.5,
+              "y": 5032.7,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 5156.3
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "157.781px"
+            "height": "123.562px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 15,
+              "y": 5178.3,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 5373.4
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 196.5,
+              "y": 5178.3,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 5373.4
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
           }
         ]
       },
@@ -1844,8 +2112,8 @@
           "x": 15,
           "y": 4886.5,
           "width": 345,
-          "height": 52,
-          "bottom": 4938.5
+          "height": 124.2,
+          "bottom": 5010.7
         },
         "brand": {
           "x": 15,
@@ -1861,15 +2129,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 15,
+          "y": 4948.5,
+          "width": 345,
+          "height": 36,
+          "bottom": 4984.5
+        },
+        "location": {
+          "x": 15,
+          "y": 4994.5,
+          "width": 345,
+          "height": 16.2,
+          "bottom": 5010.7
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 5711.1,
-        "width": 375,
-        "height": 82.6,
-        "bottom": 5793.7
+        "x": 15,
+        "y": 5393.4,
+        "width": 345,
+        "height": 80.6,
+        "bottom": 5473.9
       },
       "actionbar": {
         "x": 0,
@@ -1954,7 +2234,7 @@
       "document": {
         "scrollWidth": 375,
         "clientWidth": 375,
-        "scrollHeight": 3851
+        "scrollHeight": 3531
       },
       "header": {
         "x": 0,
@@ -2048,27 +2328,27 @@
         "x": 0,
         "y": 2732.6,
         "width": 375,
-        "height": 1046.1,
-        "bottom": 3778.7
+        "height": 726.4,
+        "bottom": 3459
       },
       "footerComputed": {
         "paddingTop": "44px",
         "paddingBottom": "88px",
         "minHeight": "0px",
-        "height": "1046.12px"
+        "height": "726.406px"
       },
       "footerGrid": {
         "rect": {
           "x": 15,
           "y": 2783.6,
           "width": 345,
-          "height": 251.8,
-          "bottom": 3035.4
+          "height": 486.8,
+          "bottom": 3270.5
         },
-        "gridTemplateColumns": "162.5px 162.5px",
-        "gridTemplateRows": "52px 175.781px",
-        "columnGap": "20px",
-        "rowGap": "24px",
+        "gridTemplateColumns": "163.5px 163.5px",
+        "gridTemplateRows": "124.188px 123.562px 195.094px",
+        "columnGap": "18px",
+        "rowGap": "22px",
         "children": [
           {
             "tag": "DIV",
@@ -2077,40 +2357,68 @@
               "x": 15,
               "y": 2783.6,
               "width": 345,
-              "height": 52,
-              "bottom": 2835.6
+              "height": 124.2,
+              "bottom": 2907.8
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "52px"
+            "height": "124.188px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
               "x": 15,
-              "y": 2874.6,
-              "width": 162.5,
-              "height": 145.8,
-              "bottom": 3020.4
+              "y": 2929.8,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 3053.4
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "145.781px"
+            "height": "123.562px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 197.5,
-              "y": 2877.6,
-              "width": 162.5,
-              "height": 157.8,
-              "bottom": 3035.4
+              "x": 196.5,
+              "y": 2929.8,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 3053.4
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "157.781px"
+            "height": "123.562px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 15,
+              "y": 3075.4,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 3270.5
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 196.5,
+              "y": 3075.4,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 3270.5
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
           }
         ]
       },
@@ -2119,8 +2427,8 @@
           "x": 15,
           "y": 2783.6,
           "width": 345,
-          "height": 52,
-          "bottom": 2835.6
+          "height": 124.2,
+          "bottom": 2907.8
         },
         "brand": {
           "x": 15,
@@ -2136,15 +2444,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 15,
+          "y": 2845.6,
+          "width": 345,
+          "height": 36,
+          "bottom": 2881.6
+        },
+        "location": {
+          "x": 15,
+          "y": 2891.6,
+          "width": 345,
+          "height": 16.2,
+          "bottom": 2907.8
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 3608.2,
-        "width": 375,
-        "height": 82.6,
-        "bottom": 3690.7
+        "x": 15,
+        "y": 3290.5,
+        "width": 345,
+        "height": 80.6,
+        "bottom": 3371
       },
       "actionbar": {
         "x": 0,
@@ -2416,7 +2736,7 @@
       "document": {
         "scrollWidth": 375,
         "clientWidth": 375,
-        "scrollHeight": 5383
+        "scrollHeight": 4937
       },
       "header": {
         "x": 0,
@@ -2429,10 +2749,10 @@
         "x": 0,
         "y": 77,
         "width": 375,
-        "height": 739.1,
-        "bottom": 816.1
+        "height": 613,
+        "bottom": 690
       },
-      "heroViewportRatio": 0.876,
+      "heroViewportRatio": 0.726,
       "h1": {
         "text": "Titanium and zirconium for corrosion-critical equipment.",
         "rect": {
@@ -2461,8 +2781,8 @@
             "x": 0,
             "y": 77,
             "width": 375,
-            "height": 739.1,
-            "bottom": 816.1
+            "height": 613,
+            "bottom": 690
           }
         },
         {
@@ -2470,10 +2790,10 @@
           "className": "visual-band page-specific-visual",
           "rect": {
             "x": 0,
-            "y": 816.1,
+            "y": 690,
             "width": 375,
             "height": 250,
-            "bottom": 1066.1
+            "bottom": 940
           }
         },
         {
@@ -2481,10 +2801,10 @@
           "className": "section",
           "rect": {
             "x": 0,
-            "y": 1066.1,
+            "y": 940,
             "width": 375,
             "height": 1463,
-            "bottom": 2529.1
+            "bottom": 2403.1
           }
         },
         {
@@ -2492,10 +2812,10 @@
           "className": "section soft",
           "rect": {
             "x": 0,
-            "y": 2529.1,
+            "y": 2403.1,
             "width": 375,
             "height": 1052.6,
-            "bottom": 3581.7
+            "bottom": 3455.7
           }
         },
         {
@@ -2503,104 +2823,132 @@
           "className": "titanium-rfq-strip",
           "rect": {
             "x": 0,
-            "y": 3581.7,
+            "y": 3455.7,
             "width": 375,
             "height": 219.4,
-            "bottom": 3801.1
+            "bottom": 3675.1
           }
         }
       ],
       "prefooter": {
         "x": 0,
-        "y": 3801.1,
+        "y": 3675.1,
         "width": 375,
         "height": 463.2,
-        "bottom": 4264.4
+        "bottom": 4138.3
       },
       "footer": {
         "x": 0,
-        "y": 4264.4,
+        "y": 4138.3,
         "width": 375,
-        "height": 1046.1,
-        "bottom": 5310.5
+        "height": 726.4,
+        "bottom": 4864.7
       },
       "footerComputed": {
         "paddingTop": "44px",
         "paddingBottom": "88px",
         "minHeight": "0px",
-        "height": "1046.12px"
+        "height": "726.406px"
       },
       "footerGrid": {
         "rect": {
           "x": 15,
-          "y": 4315.4,
+          "y": 4189.3,
           "width": 345,
-          "height": 251.8,
-          "bottom": 4567.2
+          "height": 486.8,
+          "bottom": 4676.2
         },
-        "gridTemplateColumns": "162.5px 162.5px",
-        "gridTemplateRows": "52px 175.781px",
-        "columnGap": "20px",
-        "rowGap": "24px",
+        "gridTemplateColumns": "163.5px 163.5px",
+        "gridTemplateRows": "124.188px 123.562px 195.094px",
+        "columnGap": "18px",
+        "rowGap": "22px",
         "children": [
           {
             "tag": "DIV",
             "className": "footer-brand",
             "rect": {
               "x": 15,
-              "y": 4315.4,
+              "y": 4189.3,
               "width": 345,
-              "height": 52,
-              "bottom": 4367.4
+              "height": 124.2,
+              "bottom": 4313.5
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "52px"
+            "height": "124.188px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
               "x": 15,
-              "y": 4406.4,
-              "width": 162.5,
-              "height": 145.8,
-              "bottom": 4552.2
+              "y": 4335.5,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 4459.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "145.781px"
+            "height": "123.562px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 197.5,
-              "y": 4409.4,
-              "width": 162.5,
-              "height": 157.8,
-              "bottom": 4567.2
+              "x": 196.5,
+              "y": 4335.5,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 4459.1
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "157.781px"
+            "height": "123.562px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 15,
+              "y": 4481.1,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 4676.2
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 196.5,
+              "y": 4481.1,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 4676.2
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
           }
         ]
       },
       "footerBrand": {
         "root": {
           "x": 15,
-          "y": 4315.4,
+          "y": 4189.3,
           "width": 345,
-          "height": 52,
-          "bottom": 4367.4
+          "height": 124.2,
+          "bottom": 4313.5
         },
         "brand": {
           "x": 15,
-          "y": 4315.4,
+          "y": 4189.3,
           "width": 345,
           "height": 52,
-          "bottom": 4367.4
+          "bottom": 4241.3
         },
         "mark": {
           "x": 0,
@@ -2609,15 +2957,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 15,
+          "y": 4251.3,
+          "width": 345,
+          "height": 36,
+          "bottom": 4287.3
+        },
+        "location": {
+          "x": 15,
+          "y": 4297.3,
+          "width": 345,
+          "height": 16.2,
+          "bottom": 4313.5
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 5139.9,
-        "width": 375,
-        "height": 82.6,
-        "bottom": 5222.5
+        "x": 15,
+        "y": 4696.2,
+        "width": 345,
+        "height": 80.6,
+        "bottom": 4776.7
       },
       "actionbar": {
         "x": 0,
@@ -2632,10 +2992,10 @@
           "text": "Send the Requirement ↗",
           "rect": {
             "x": 15,
-            "y": 453,
+            "y": 469,
             "width": 218.6,
             "height": 45.4,
-            "bottom": 498.4
+            "bottom": 514.4
           },
           "display": "flex",
           "visibility": "visible"
@@ -2668,7 +3028,7 @@
       "totalCTAcount": 6,
       "horizontalOverflow": false,
       "overflowElements": [],
-      "firstViewportTextChars": 384
+      "firstViewportTextChars": 292
     },
     "invar": {
       "url": "https://wuxi304-collab.github.io/tongjun-overseas/resource-invar-lng-vs-tooling.html",
@@ -2680,7 +3040,7 @@
       "document": {
         "scrollWidth": 375,
         "clientWidth": 375,
-        "scrollHeight": 3542
+        "scrollHeight": 3222
       },
       "header": {
         "x": 0,
@@ -2763,27 +3123,27 @@
         "x": 0,
         "y": 2424.1,
         "width": 375,
-        "height": 1046.1,
-        "bottom": 3470.2
+        "height": 726.4,
+        "bottom": 3150.5
       },
       "footerComputed": {
         "paddingTop": "44px",
         "paddingBottom": "88px",
         "minHeight": "0px",
-        "height": "1046.12px"
+        "height": "726.406px"
       },
       "footerGrid": {
         "rect": {
           "x": 15,
           "y": 2475.1,
           "width": 345,
-          "height": 251.8,
-          "bottom": 2726.8
+          "height": 486.8,
+          "bottom": 2961.9
         },
-        "gridTemplateColumns": "162.5px 162.5px",
-        "gridTemplateRows": "52px 175.781px",
-        "columnGap": "20px",
-        "rowGap": "24px",
+        "gridTemplateColumns": "163.5px 163.5px",
+        "gridTemplateRows": "124.188px 123.562px 195.094px",
+        "columnGap": "18px",
+        "rowGap": "22px",
         "children": [
           {
             "tag": "DIV",
@@ -2792,40 +3152,68 @@
               "x": 15,
               "y": 2475.1,
               "width": 345,
-              "height": 52,
-              "bottom": 2527.1
+              "height": 124.2,
+              "bottom": 2599.3
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "52px"
+            "height": "124.188px"
           },
           {
-            "tag": "P",
+            "tag": "DIV",
             "className": "",
             "rect": {
               "x": 15,
-              "y": 2566.1,
-              "width": 162.5,
-              "height": 145.8,
-              "bottom": 2711.8
+              "y": 2621.3,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 2744.8
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "145.781px"
+            "height": "123.562px"
           },
           {
-            "tag": "SPAN",
-            "className": "footer-location",
+            "tag": "DIV",
+            "className": "",
             "rect": {
-              "x": 197.5,
-              "y": 2569.1,
-              "width": 162.5,
-              "height": 157.8,
-              "bottom": 2726.8
+              "x": 196.5,
+              "y": 2621.3,
+              "width": 163.5,
+              "height": 123.6,
+              "bottom": 2744.8
             },
             "display": "block",
             "minHeight": "auto",
-            "height": "157.781px"
+            "height": "123.562px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 15,
+              "y": 2766.8,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 2961.9
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
+          },
+          {
+            "tag": "DIV",
+            "className": "",
+            "rect": {
+              "x": 196.5,
+              "y": 2766.8,
+              "width": 163.5,
+              "height": 195.1,
+              "bottom": 2961.9
+            },
+            "display": "block",
+            "minHeight": "auto",
+            "height": "195.094px"
           }
         ]
       },
@@ -2834,8 +3222,8 @@
           "x": 15,
           "y": 2475.1,
           "width": 345,
-          "height": 52,
-          "bottom": 2527.1
+          "height": 124.2,
+          "bottom": 2599.3
         },
         "brand": {
           "x": 15,
@@ -2851,15 +3239,27 @@
           "height": 0,
           "bottom": 0
         },
-        "copy": null,
-        "location": null
+        "copy": {
+          "x": 15,
+          "y": 2537.1,
+          "width": 345,
+          "height": 36,
+          "bottom": 2573.1
+        },
+        "location": {
+          "x": 15,
+          "y": 2583.1,
+          "width": 345,
+          "height": 16.2,
+          "bottom": 2599.3
+        }
       },
       "footerLegal": {
-        "x": 0,
-        "y": 3299.6,
-        "width": 375,
-        "height": 82.6,
-        "bottom": 3382.2
+        "x": 15,
+        "y": 2981.9,
+        "width": 345,
+        "height": 80.6,
+        "bottom": 3062.5
       },
       "actionbar": {
         "x": 0,
