@@ -209,6 +209,42 @@ jobs:
               sections:allSections,
               prefooter:R(prefooter),
               footer:R(footer),
+              footerComputed: footer ? {
+                paddingTop:S(footer).paddingTop,
+                paddingBottom:S(footer).paddingBottom,
+                minHeight:S(footer).minHeight,
+                height:S(footer).height
+              } : null,
+              footerGrid:(() => {
+                const el=document.querySelector('.footer .v13-footgrid, .footer .footgrid');
+                if(!el) return null;
+                const cs=S(el);
+                return {
+                  rect:R(el),
+                  gridTemplateColumns:cs.gridTemplateColumns,
+                  gridTemplateRows:cs.gridTemplateRows,
+                  columnGap:cs.columnGap,
+                  rowGap:cs.rowGap,
+                  children:[...el.children].map(ch=>({
+                    tag:ch.tagName,
+                    className:ch.className,
+                    rect:R(ch),
+                    display:S(ch).display,
+                    minHeight:S(ch).minHeight,
+                    height:S(ch).height
+                  }))
+                };
+              })(),
+              footerBrand:(() => {
+                const root=document.querySelector('.footer .footer-brand');
+                if(!root) return null;
+                const brand=root.querySelector('.brand');
+                const mark=root.querySelector('.mark,svg,img');
+                const copy=root.querySelector('p');
+                const loc=root.querySelector('.footer-location');
+                return {root:R(root),brand:R(brand),mark:R(mark),copy:R(copy),location:R(loc)};
+              })(),
+              footerLegal:R(document.querySelector('.footer .legal')),
               actionbar:R(actionbar),
               visibleCTAcount:visibleCtas.length,
               visibleCTAs:visibleCtas,
