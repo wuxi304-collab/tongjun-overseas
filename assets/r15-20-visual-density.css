@@ -366,3 +366,62 @@ body.page-invar-lng-tooling .article-prose h2:first-child{margin-top:0}
     margin-top:28px;
   }
 }
+
+
+/* R15.20 pass 4 — homepage mobile information pruning */
+@media (min-width:981px){
+  body.page-home .stat{padding:22px 20px}
+  body.page-home .stat strong{font-size:22px}
+  body.page-home .stat span{font-size:12px;line-height:1.45}
+}
+
+@media (max-width:640px){
+  body.page-home .hero-decision-dock,
+  body.page-home .hero-proofline{display:none}
+
+  body.page-home .hero-photo{
+    aspect-ratio:16/9;
+    border-radius:14px;
+  }
+
+  body.page-home .stats{
+    grid-template-columns:1fr 1fr;
+  }
+  body.page-home .stat{
+    padding:16px 14px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  body.page-home .stat:nth-child(2n){border-right:0}
+  body.page-home .stat strong{
+    font-size:17px;
+    line-height:1.1;
+  }
+  body.page-home .stat span{
+    margin-top:5px;
+    font-size:10.5px;
+    line-height:1.45;
+  }
+
+  body.page-home .performance-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  body.page-home .performance-grid .performance-lead{
+    grid-column:1/-1;
+    min-height:auto;
+    padding:17px 16px;
+  }
+  body.page-home .performance-lead strong{
+    font-size:18px;
+    line-height:1.18;
+  }
+  body.page-home .performance-grid>div{
+    min-height:74px;
+    padding:13px 14px;
+  }
+  body.page-home .performance-grid b{margin-bottom:4px;font-size:10px}
+  body.page-home .performance-grid>div:not(.performance-lead) span{
+    font-size:9.5px;
+    line-height:1.35;
+  }
+}
