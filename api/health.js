@@ -1,5 +1,6 @@
-const SITE_RELEASE = 'V34.152 R15.19';
+const SITE_RELEASE = 'V34.152 R15.25';
 const VISUAL_RELEASE = 'V34.152 R15.7';
+const HERO_RELEASE = 'V34.152 R15.24';
 
 function validHttpsWebhook(value){
   const raw=String(value||'').trim();
@@ -37,6 +38,7 @@ module.exports = async function handler(req, res) {
     service: 'tongjun-overseas',
     site_release: SITE_RELEASE,
     visual_release: VISUAL_RELEASE,
+    hero_release: HERO_RELEASE,
     release,
     deployment_environment: String(process.env.VERCEL_ENV || 'local').slice(0, 40),
     rfq_route_configured: routeConfigured,

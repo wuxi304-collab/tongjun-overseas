@@ -2,7 +2,10 @@ from pathlib import Path
 import re
 
 ROOT = Path('.')
-HERO = 'logistics-stock.webp?v=20260919-r15-5'
+VERSION = '20260922-r15-24'
+BASE = f'/assets/images/hero-special-metals-r15-24.webp?v={VERSION}'
+MOBILE = f'/assets/images/hero-special-metals-r15-24-mobile.webp?v={VERSION}'
+FOUR_K = f'/assets/images/hero-special-metals-r15-24-4k.webp?v={VERSION}'
 
 
 def fail(message):
@@ -26,6 +29,11 @@ def add_attr(tag: str, name: str, value: str) -> str:
     return body + f' {name}="{value}"' + closing
 
 
+def attr(tag: str, name: str) -> str:
+    match = re.search(rf'\b{name}\s*=\s*["\']([^"\']*)["\']', tag, flags=re.I)
+    return match.group(1) if match else ''
+
+
 def main():
     path = ROOT / 'index.html'
     text = path.read_text(encoding='utf-8')
@@ -34,14 +42,17 @@ def main():
         fail('homepage hero section missing')
 
     inner = match.group(2)
-    figures = re.findall(
+
+    # Idempotent cleanup: legacy figure may already have been removed by R13.1.
+    inner = re.sub(
         r'<figure\b[^>]*class=["\'][^"\']*\bhero-photo\b[^"\']*["\'][^>]*>[\s\S]*?</figure>',
+        '',
         inner,
         flags=re.I,
     )
-    if len(figures) != 1:
-        fail(f'expected exactly one legacy hero-photo figure before R15.9 cleanup, found {len(figures)}')
-    inner = inner.replace(figures[0], '', 1)
+
+    if 'hero-picture-r15-24' not in inner:
+        fail('R15.24 responsive HERO picture missing before media cleanup')
 
     bg = re.search(
         r'<img\b[^>]*class=["\'][^"\']*\bhero-bg-r6\b[^"\']*["\'][^>]*>',
@@ -49,37 +60,48 @@ def main():
         flags=re.I,
     )
     if not bg:
-        fail('homepage hero background image missing')
+        fail('R15.24 homepage HERO image missing')
+
     tag = bg.group(0)
-    tag = add_attr(tag, 'loading', 'eager')
-    tag = add_attr(tag, 'fetchpriority', 'high')
-    tag = add_attr(tag, 'decoding', 'async')
+    for name, value in (
+        ('loading', 'eager'),
+        ('fetchpriority', 'high'),
+        ('decoding', 'async'),
+        ('width', '2560'),
+        ('height', '1440'),
+        ('sizes', '100vw'),
+    ):
+        tag = add_attr(tag, name, value)
+
+    if BASE not in attr(tag, 'src'):
+        fail(f'R15.24 homepage HERO base source changed: {attr(tag, "src")}')
+    srcset = attr(tag, 'srcset')
+    if BASE not in srcset or FOUR_K not in srcset:
+        fail(f'R15.24 desktop srcset changed: {srcset}')
+
     inner = inner[:bg.start()] + tag + inner[bg.end():]
 
-    if inner.count('logistics-stock.webp') != 1:
-        fail(
-            'homepage hero must contain exactly one logistics-stock image after cleanup; '
-            f'found {inner.count("logistics-stock.webp")}'
-        )
-    if f'/assets/images/{HERO}' not in inner:
-        fail('frozen homepage hero URL/cache key changed')
-    if 'hero-special-metals.webp' in inner or 'r15-6-' in inner:
-        fail('homepage hero visual changed during R15.9 performance cleanup')
+    for required in (BASE, MOBILE, FOUR_K):
+        if required not in inner:
+            fail(f'R15.24 HERO delivery source missing after cleanup: {required}')
+    if 'hero-special-metals.webp' in inner or 'r15-6-' in inner or 'logistics-stock.webp' in inner:
+        fail('legacy homepage HERO reference returned during R15.9 cleanup')
 
     updated = text[:match.start(2)] + inner + text[match.end(2):]
-    preload_pattern = re.compile(
-        r'<link\b[^>]*rel=["\'][^"\']*\bpreload\b[^"\']*["\'][^>]*>',
-        re.I,
-    )
-    preloads = []
-    for link in preload_pattern.findall(updated):
-        if re.search(r'\bas=["\']image["\']', link, flags=re.I):
-            href = re.search(r'\bhref=["\']([^"\']+)["\']', link, flags=re.I)
-            if href:
-                preloads.append(href.group(1))
-    expected = f'/assets/images/{HERO}'
-    if preloads != [expected]:
-        fail(f'homepage image preload mismatch after cleanup: {preloads}')
+
+    image_preloads = []
+    for link in re.findall(r'<link\b[^>]*>', updated, flags=re.I):
+        rel = attr(link, 'rel').lower().split()
+        if 'preload' not in rel or attr(link, 'as').lower() != 'image':
+            continue
+        image_preloads.append((attr(link, 'href'), attr(link, 'media')))
+
+    expected = {
+        (MOBILE, '(max-width:860px)'),
+        (BASE, '(min-width:861px)'),
+    }
+    if set(image_preloads) != expected or len(image_preloads) != 2:
+        fail(f'R15.24 responsive HERO preload mismatch: {image_preloads}')
 
     malformed = re.findall(
         r'<img\b[^>]*?/\s+[A-Za-z_:][-A-Za-z0-9_:.]*\s*=',
@@ -91,8 +113,8 @@ def main():
 
     path.write_text(updated, encoding='utf-8')
     print(
-        'PASS: R15.9 homepage media cleanup — one frozen hero image, eager/high LCP candidate, '
-        'preload aligned; hidden duplicate removed; tag boundary conforming.'
+        'PASS: R15.24 homepage media cleanup — responsive picture preserved; '
+        '2K/4K/mobile sources and mutually-exclusive preloads aligned.'
     )
 
 

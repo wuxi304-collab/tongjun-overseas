@@ -5,7 +5,7 @@ import sys
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
 BUNDLE = ROOT / 'assets' / 'tongjun-site-r15-19.css'
-VERSION = '20260921-r15-19'
+VERSION = '20260922-r15-24'
 PARTS = [
     'assets/site.css',
     'assets/thank-you.css',
@@ -17,6 +17,7 @@ PARTS = [
     'assets/r15-21-home-mobile-density.css',
     'assets/r15-22-mobile-vertical-rhythm.css',
     'assets/r15-23-home-mobile-final-density.css',
+    'assets/r15-24-home-hero.css',
 ]
 
 
@@ -68,6 +69,7 @@ def main():
         'V34.152 R15.21',
         'V34.152 R15.22',
         'V34.152 R15.23',
+        'V34.152 R15.24',
         'V34.152 R15.12',
         'V34.152 R15.13',
         'body.brand-v34 .skip-link',
@@ -96,7 +98,7 @@ def main():
             fail(f'R15.19 final artifact must ship exactly one CSS file: {public_css}')
 
     print(
-        f'PASS: R15.19 CSS bundle gate — 50 pages use one versioned stylesheet; ten source layers preserve release order'
+        f'PASS: R15.19 CSS bundle gate — 50 pages use one versioned stylesheet; eleven source layers preserve release order'
         + ('; final artifact contains no source-only CSS.' if strict_artifact else '.')
     )
 

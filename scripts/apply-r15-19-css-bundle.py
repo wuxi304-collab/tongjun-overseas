@@ -3,7 +3,7 @@ import re
 
 ROOT = Path('.')
 BUNDLE = ROOT / 'assets' / 'tongjun-site-r15-19.css'
-VERSION = '20260921-r15-19'
+VERSION = '20260922-r15-24'
 
 PARTS = [
     'assets/site.css',
@@ -16,6 +16,7 @@ PARTS = [
     'assets/r15-21-home-mobile-density.css',
     'assets/r15-22-mobile-vertical-rhythm.css',
     'assets/r15-23-home-mobile-final-density.css',
+    'assets/r15-24-home-hero.css',
 ]
 TARGET_NAMES = {Path(p).name for p in PARTS}
 LINK_RE = re.compile(r'<link\b[^>]*>', re.I)
@@ -44,7 +45,7 @@ def is_target_stylesheet(tag: str) -> bool:
 
 def build_bundle():
     chunks = [
-        '/* V34.152 R15.19 base + V34.152 R15.20 visual candidate + V34.152 R15.21 home mobile candidate + V34.152 R15.22 mobile vertical candidate + V34.152 R15.23 home mobile final candidate — production CSS bundle. Source order is release-critical. */\n'
+        '/* V34.152 R15.19 base + V34.152 R15.20 visual candidate + V34.152 R15.21 home mobile candidate + V34.152 R15.22 mobile vertical candidate + V34.152 R15.23 home mobile final candidate + V34.152 R15.24 homepage HERO — production CSS bundle. Source order is release-critical. */\n'
     ]
     for rel in PARTS:
         path = ROOT / rel
@@ -71,7 +72,7 @@ def rewrite_html():
         text, footer_fixes = FOOTER_BRAND_FIX_RE.subn(lambda m: m.group(1) + m.group(2), text, count=1)
         tags = list(LINK_RE.finditer(text))
         targets = [m for m in tags if is_target_stylesheet(m.group(0))]
-        expected = 6 if page.name == 'thank-you.html' else 5
+        expected = 6 if page.name in {'thank-you.html', 'index.html'} else 5
         if len(targets) != expected:
             fail(f'{page.name}: expected {expected} source stylesheet links before bundling, found {len(targets)}')
 
@@ -107,7 +108,7 @@ def rewrite_html():
 def main():
     size = build_bundle()
     rewrite_html()
-    print(f'PASS: R15.23 home mobile final candidate bundle materialized — {BUNDLE.name}, {size // 1024} KB, {len(PARTS)} ordered source parts.')
+    print(f'PASS: R15.24 homepage HERO bundle materialized — {BUNDLE.name}, {size // 1024} KB, {len(PARTS)} ordered source parts.')
 
 
 if __name__ == '__main__':

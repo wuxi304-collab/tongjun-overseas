@@ -95,55 +95,69 @@ def main():
                 href = data.get('href', '')
                 if not href:
                     fail(f'{page.name}: image preload missing href')
-                image_preloads.append(href)
+                image_preloads.append((href, data.get('media', '')))
 
         if len(page_high) > 1:
             fail(f'{page.name}: more than one fetchpriority=high local image creates competing LCP candidates')
         if page_high and not image_preloads:
             fail(f'{page.name}: fetchpriority=high local image exists without a matching image preload')
-        if len(image_preloads) > 1:
-            fail(f'{page.name}: more than one image preload creates competing LCP candidates: {image_preloads}')
-        if image_preloads:
+        if page.name == 'index.html':
+            if len(image_preloads) != 2:
+                fail(f'index.html: expected two responsive HERO preloads, found {image_preloads}')
+            media = {m for _, m in image_preloads}
+            if media != {'(max-width:860px)', '(min-width:861px)'}:
+                fail(f'index.html: responsive HERO preload media drifted: {image_preloads}')
             preload_pages += 1
-            target = normalize_local(image_preloads[0])
-            matching = []
-            for tag, data in images:
-                if normalize_local(data.get('src', '')) == target:
-                    matching.append(data)
-            if len(matching) < 1:
-                fail(f'{page.name}: image preload does not map to a rendered local image: {image_preloads[0]}')
-            high_matching = [
-                data for data in matching
-                if data.get('loading', '').lower() == 'eager'
-                and data.get('fetchpriority', '').lower() == 'high'
-            ]
-            if len(high_matching) != 1:
-                fail(
-                    f'{page.name}: preloaded resource must have exactly one eager/high rendered node: '
-                    f'{image_preloads[0]} -> {len(matching)} rendered matches / {len(high_matching)} eager-high'
-                )
+        else:
+            if len(image_preloads) > 1:
+                fail(f'{page.name}: more than one image preload creates competing LCP candidates: {image_preloads}')
+            if image_preloads:
+                preload_pages += 1
+                target = normalize_local(image_preloads[0][0])
+                matching = []
+                for tag, data in images:
+                    if normalize_local(data.get('src', '')) == target:
+                        matching.append(data)
+                if len(matching) < 1:
+                    fail(f'{page.name}: image preload does not map to a rendered local image: {image_preloads[0][0]}')
+                high_matching = [
+                    data for data in matching
+                    if data.get('loading', '').lower() == 'eager'
+                    and data.get('fetchpriority', '').lower() == 'high'
+                ]
+                if len(high_matching) != 1:
+                    fail(
+                        f'{page.name}: preloaded resource must have exactly one eager/high rendered node: '
+                        f'{image_preloads[0][0]} -> {len(matching)} rendered matches / {len(high_matching)} eager-high'
+                    )
 
         if page.name == 'index.html':
             hero_match = re.search(r'<section class=["\']hero["\']>[\s\S]*?</section>', text, re.I)
             if not hero_match:
                 fail('index.html: homepage hero section missing')
             hero = hero_match.group(0)
-            if hero.count('logistics-stock.webp') != 1:
-                fail(f'index.html: expected exactly one frozen hero image, found {hero.count("logistics-stock.webp")}')
             if re.search(r'class=["\'][^"\']*\bhero-photo\b', hero, re.I):
                 fail('index.html: hidden legacy hero-photo figure returned')
+            if 'hero-picture-r15-24' not in hero:
+                fail('index.html: responsive R15.24 HERO picture missing')
+            if 'hero-special-metals-r15-24-mobile.webp' not in hero:
+                fail('index.html: mobile R15.24 HERO source missing')
             hero_tags = [
                 (tag, attrs(tag)[0])
                 for tag in IMG_TAG.findall(hero)
                 if 'hero-bg-r6' in attrs(tag)[0].get('class', '').split()
             ]
             if len(hero_tags) != 1:
-                fail(f'index.html: expected exactly one hero-bg-r6 image, found {len(hero_tags)}')
+                fail(f'index.html: expected exactly one R15.24 hero-bg-r6 image, found {len(hero_tags)}')
             _, data = hero_tags[0]
-            if data.get('width') != '2048' or data.get('height') != '1154':
-                fail('index.html: frozen hero intrinsic dimensions changed from 2048x1154')
+            if 'hero-special-metals-r15-24.webp' not in data.get('src', ''):
+                fail('index.html: R15.24 HERO base source drifted')
+            if 'hero-special-metals-r15-24-4k.webp' not in data.get('srcset', ''):
+                fail('index.html: R15.24 4K HERO candidate missing')
+            if data.get('width') != '2560' or data.get('height') != '1440':
+                fail('index.html: R15.24 HERO intrinsic dimensions changed from 2560x1440')
             if data.get('loading', '').lower() != 'eager' or data.get('fetchpriority', '').lower() != 'high':
-                fail('index.html: frozen hero must be eager + fetchpriority=high')
+                fail('index.html: R15.24 HERO must be eager + fetchpriority=high')
 
     print(
         f'PASS: R15.10 HTML/media conformance — {len(htmls)} pages, {total_images} local image nodes, '

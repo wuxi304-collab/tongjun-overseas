@@ -1,11 +1,15 @@
-# Deploy exoticalloycn.com — V34.152 R15.19
+# Deploy exoticalloycn.com — V34.152 R15.25
 
-## Current launch status — 2026-09-20
-**BLOCKED for production traffic until DNS and Vercel project binding are verified.**
+## Current launch status — 2026-09-22
+**CODE READY · EXTERNAL LAUNCH BLOCKED BY DNS / VERCEL BINDING.**
 
-From the current engineering environment, the production apex still could not be verified as externally reachable. The connected Vercel accounts currently expose no visible team/project through the connector. GitHub Pages is healthy as a temporary mirror, but that does **not** prove the production apex, Vercel domain binding, environment variables or serverless RFQ route are live.
+R15.25 production build is green. The full static build, 50-page validation suite and real Chromium QA pass with the native Columbus/Tongjun vector logo restored in header/footer and the R15.24 responsive homepage HERO selecting 2K, 4K and mobile assets correctly.
 
-Do not switch outbound campaigns, SEO promotion or buyer traffic to the apex until `npm run check:production` and the production RFQ smoke both pass.
+A read-only external preflight from GitHub Actions on 2026-09-22 fails at the first network gate: `DNS resolution failed for exoticalloycn.com`. No HTTPS, redirect, API health or RFQ production checks can be trusted until the apex resolves.
+
+The connected Vercel tool currently exposes no team/project, so domain binding and production environment variables cannot be verified from this engineering session.
+
+Do not switch outbound campaigns, SEO promotion or buyer traffic to the apex until DNS resolves, the R15.25 build is deployed, `npm run check:production` passes, and the production RFQ smoke passes.
 
 ## Recommended topology
 GitHub repo `wuxi304-collab/tongjun-overseas` → Vercel → `exoticalloycn.com`
@@ -55,21 +59,22 @@ If secure routing fails in the browser and the API returned a trace ID, the emai
 
 This lets the customer-facing fallback, Vercel logs and downstream webhook logs be correlated to the same attempt.
 
-## R15.19 release identity contract
+## R15.25 release identity contract
 Every built artifact now exposes a non-secret machine-readable identity at:
 
 `/.well-known/release.json`
 
 It contains:
 
-- `site_release: V34.152 R15.19`;
+- `site_release: V34.152 R15.25`;
 - source branch and exact 40-character source commit;
 - `visual_release: V34.152 R15.7`;
+- `hero_release: V34.152 R15.24`;
 - SHA256 of the frozen visual manifest;
 - deployment environment (`production` or `github-pages-mirror`);
 - canonical production origin.
 
-The production `/api/health` response exposes the same site/visual release plus the Vercel git commit and sends `X-Tongjun-Release: V34.152 R15.19`.
+The production `/api/health` response exposes the same site/visual release plus the Vercel git commit and sends `X-Tongjun-Release: V34.152 R15.25`.
 
 `npm run check:production` now requires the static `release.json` commit to exactly match `/api/health.release`. A mixed CDN/function deployment, stale static artifact or wrong production commit therefore fails the production gate even if the homepage itself returns HTTP 200.
 
@@ -153,7 +158,7 @@ The preflight does **not** submit an RFQ. It verifies:
 8. `/rfq` returns `200` and contains `#rfqForm`.
 9. `/thank-you` returns `200`.
 10. `/api/health` returns `200`, `ok: true`, `rfq_route_configured: true`, `rfq_route_https_valid: true` and `rfq_signature_configured: true`.
-11. `/.well-known/release.json` returns R15.19 production identity.
+11. `/.well-known/release.json` returns R15.25 production identity.
 12. Static release identity and `/api/health` report the exact same 40-character source commit.
 
 Any failure means production remains blocked.
@@ -196,7 +201,7 @@ Before switching outbound campaigns to the production domain:
 5. Run `npm run check:production` and require a full pass.
 6. Run `npm run smoke:rfq:production` against `https://exoticalloycn.com/api/rfq`.
 7. Confirm the same `TJ-...` trace ID exists in the downstream receiver.
-8. Verify `/.well-known/release.json` and `/api/health` expose the same R15.19 source commit.
+8. Verify `/.well-known/release.json` and `/api/health` expose the same R15.25 source commit.
 9. Verify `/rfq`, `/thank-you`, sitemap/canonical and current runtime one final time.
 10. Only then enable outbound campaigns, buyer traffic or SEO promotion.
 

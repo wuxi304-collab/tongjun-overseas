@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path('.')
-DESCRIPTOR = ROOT / 'RELEASE_R15_19.json'
+DESCRIPTOR = ROOT / 'RELEASE_R15_25.json'
 VISUAL_MANIFEST = ROOT / 'VISUAL_MANIFEST_R15_7.json'
 
 
@@ -51,16 +51,19 @@ def main():
     visual = json.loads(VISUAL_MANIFEST.read_text(encoding='utf-8'))
     required = {
         'service': 'tongjun-overseas',
-        'site_release': 'V34.152 R15.19',
-        'source_branch': 'feat/v34.152-r15.19-css-bundle-hygiene',
+        'site_release': 'V34.152 R15.25',
+        'source_branch': 'release/v34.152-r15.25-launch-candidate',
         'visual_release': 'V34.152 R15.7',
-        'release_identity_version': 1,
+        'hero_release': 'V34.152 R15.24',
+        'release_identity_version': 2,
     }
     for key, expected in required.items():
         if descriptor.get(key) != expected:
             fail(f'release descriptor mismatch for {key}: {descriptor.get(key)!r}')
     if visual.get('release') != descriptor['visual_release']:
         fail('release descriptor visual version does not match visual manifest')
+    if visual.get('hero_release') != descriptor['hero_release']:
+        fail('release descriptor HERO version does not match visual manifest')
 
     payload = {
         'service': descriptor['service'],
@@ -68,6 +71,7 @@ def main():
         'source_branch': descriptor['source_branch'],
         'source_commit': git_head(),
         'visual_release': descriptor['visual_release'],
+        'hero_release': descriptor['hero_release'],
         'visual_manifest_sha256': sha256(VISUAL_MANIFEST),
         'environment': environment,
         'canonical_origin': descriptor['canonical_origin'],

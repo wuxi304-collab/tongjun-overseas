@@ -68,8 +68,17 @@ def main():
 
     index = (ROOT / 'index.html').read_text(encoding='utf-8')
     hero = index.split('<section class="hero">',1)[1].split('</section>',1)[0]
-    if hero.count('logistics-stock.webp') != 1:
-        fail('R15.16 frozen homepage hero reference changed')
+    required_hero = (
+        'hero-picture-r15-24',
+        'hero-special-metals-r15-24.webp',
+        'hero-special-metals-r15-24-4k.webp',
+        'hero-special-metals-r15-24-mobile.webp',
+    )
+    for marker in required_hero:
+        if marker not in hero:
+            fail(f'R15.16 R15.24 homepage HERO reference changed: {marker}')
+    if 'logistics-stock.webp' in hero or 'hero-special-metals.webp' in hero:
+        fail('R15.16 legacy homepage HERO reference returned')
 
     print(
         'PASS: R15.17 runtime brand integrity — vector lockup survives runtime normalization on all '
