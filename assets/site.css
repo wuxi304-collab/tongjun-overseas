@@ -837,3 +837,76 @@ body.nav-open{overflow:hidden}
  .evidence-matrix,.buyer-acceptance-table{overflow-x:auto;display:block;scrollbar-width:thin}
  .evidence-matrix-row,.buyer-acceptance-row{min-width:760px}
 }
+
+
+/* R15.24 — homepage HERO background rebuild */
+/* Real industrial photography: Morteza Mohammadi / Unsplash (free under Unsplash License).
+   Intent: preserve metal texture and depth; no blur filters, no over-darkened wash. */
+.page-home .hero{
+  min-height:710px;
+  background-color:#0d151d;
+  background-image:
+    linear-gradient(180deg,rgba(4,11,18,.02) 0%,rgba(4,11,18,.06) 46%,rgba(4,11,18,.34) 100%),
+    linear-gradient(90deg,rgba(4,12,20,.80) 0%,rgba(4,12,20,.70) 34%,rgba(4,12,20,.42) 52%,rgba(4,12,20,.13) 72%,rgba(4,12,20,.04) 100%),
+    url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=88&w=2800&h=1320");
+  background-size:cover,cover,cover;
+  background-repeat:no-repeat;
+  background-position:center,center,58% 51%;
+  filter:none;
+}
+.page-home .hero:before{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.035) 0,rgba(255,255,255,0) 24%),
+    linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,0) 28%);
+  opacity:.34;
+}
+.page-home .hero:after{
+  width:34%;
+  height:6px;
+}
+.page-home .hero h1{
+  text-shadow:0 1px 2px rgba(0,0,0,.36);
+}
+.page-home .hero .lead{
+  color:#eef2f5;
+}
+.page-home .hero-positioning{
+  background:rgba(4,17,28,.54);
+  border-left-color:var(--orange);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.page-home .hero-decision-dock,
+.page-home .hero-proofline{
+  background:rgba(5,16,25,.44);
+}
+@media (min-width:1800px){
+  .page-home .hero{
+    background-image:
+      linear-gradient(180deg,rgba(4,11,18,.02) 0%,rgba(4,11,18,.06) 46%,rgba(4,11,18,.34) 100%),
+      linear-gradient(90deg,rgba(4,12,20,.80) 0%,rgba(4,12,20,.70) 34%,rgba(4,12,20,.42) 52%,rgba(4,12,20,.13) 72%,rgba(4,12,20,.04) 100%),
+      url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=90&w=3600&h=1540");
+    background-position:center,center,59% 50%;
+  }
+}
+@media (max-width:860px){
+  .page-home .hero{
+    min-height:620px;
+    background-image:
+      linear-gradient(180deg,rgba(4,11,18,.10) 0%,rgba(4,11,18,.20) 58%,rgba(4,11,18,.56) 100%),
+      linear-gradient(90deg,rgba(4,12,20,.84) 0%,rgba(4,12,20,.68) 58%,rgba(4,12,20,.28) 100%),
+      url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=88&w=1500&h=1540");
+    background-size:cover,cover,cover;
+    background-position:center,center,63% 50%;
+  }
+  .page-home .hero:before{opacity:.24}
+}
+@media (max-width:520px){
+  .page-home .hero{
+    background-image:
+      linear-gradient(180deg,rgba(4,11,18,.16) 0%,rgba(4,11,18,.22) 52%,rgba(4,11,18,.62) 100%),
+      linear-gradient(90deg,rgba(4,12,20,.88) 0%,rgba(4,12,20,.72) 70%,rgba(4,12,20,.36) 100%),
+      url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=88&w=1100&h=1500");
+    background-position:center,center,68% 50%;
+  }
+  .page-home .hero h1{text-shadow:0 1px 1px rgba(0,0,0,.42)}
+}
