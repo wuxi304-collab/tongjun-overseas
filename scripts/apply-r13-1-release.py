@@ -5,7 +5,18 @@ ROOT = Path('.')
 VERSION = '20260916-r13-1-safe'
 MARK = f'/assets/tongjun-logo.svg?v={VERSION}'
 STYLESHEET = f'/assets/brand-v34.152-r13-1.css?v={VERSION}'
-HERO = '/assets/images/logistics-stock.webp?v=20260915-r12fix2'
+HERO_VERSION = '20260922-r15-24'
+HERO = f'/assets/images/hero-special-metals-r15-24.webp?v={HERO_VERSION}'
+HERO_4K = f'/assets/images/hero-special-metals-r15-24-4k.webp?v={HERO_VERSION}'
+HERO_MOBILE = f'/assets/images/hero-special-metals-r15-24-mobile.webp?v={HERO_VERSION}'
+HERO_PICTURE = (
+    '<picture class="hero-picture-r15-24">'
+    f'<source media="(max-width:860px)" srcset="{HERO_MOBILE}"/>'
+    f'<img alt="High-performance metal coil in industrial production" class="hero-bg-r6" '
+    'decoding="async" fetchpriority="high" height="1440" loading="eager" sizes="100vw" '
+    f'src="{HERO}" srcset="{HERO} 2560w, {HERO_4K} 3840w" width="2560"/>'
+    '</picture>'
+)
 
 BRAND_HTML = (
     '<span class="tj-brand-composite">'
@@ -56,15 +67,27 @@ for p in ROOT.glob('*.html'):
     )
 
     if p.name == 'index.html':
-        # Keep the validated R12 logistics hero until a complete next-gen binary asset exists.
-        absolute_hero = 'https://exoticalloycn.com/assets/images/logistics-stock.webp'
+        absolute_hero = 'https://exoticalloycn.com/assets/images/hero-special-metals-r15-24.webp'
         s = re.sub(r'<meta content="[^"]*" property="og:image"\s*/?>', f'<meta content="{absolute_hero}" property="og:image"/>', s, count=1)
         s = re.sub(r'<meta content="[^"]*" name="twitter:image"\s*/?>', f'<meta content="{absolute_hero}" name="twitter:image"/>', s, count=1)
 
-        # Remove every image preload irrespective of attribute order, then add exactly one canonical hero preload.
+        # Normalize the homepage to one responsive HERO picture and mutually-exclusive preloads.
         s = re.sub(r'<link\b(?=[^>]*\brel=["\']preload["\'])(?=[^>]*\bas=["\']image["\'])[^>]*>', '', s, flags=re.I)
-        preload = f'<link rel="preload" as="image" href="{HERO}" fetchpriority="high">'
-        s = s.replace('</head>', preload + '</head>', 1)
+        mobile_preload = (
+            f'<link as="image" fetchpriority="high" href="{HERO_MOBILE}" '
+            'media="(max-width:860px)" rel="preload"/>'
+        )
+        desktop_preload = (
+            f'<link as="image" fetchpriority="high" href="{HERO}" '
+            f'imagesrcset="{HERO} 2560w, {HERO_4K} 3840w" imagesizes="100vw" '
+            'media="(min-width:861px)" rel="preload"/>'
+        )
+        s = s.replace('</head>', mobile_preload + desktop_preload + '</head>', 1)
+
+        s = re.sub(r'<picture class="hero-picture-r15-24">.*?</picture>', '', s, flags=re.S)
+        s = re.sub(r'<img\b[^>]*class="hero-bg-r6"[^>]*>', '', s, flags=re.I)
+        s = re.sub(r'<figure class="hero-photo">.*?</figure>', '', s, flags=re.S)
+        s = s.replace('<section class="hero">', '<section class="hero">' + HERO_PICTURE, 1)
 
     if p.name == '404.html':
         # 404 is part of the customer-facing site too: remove the legacy naming and load the same visual system.
