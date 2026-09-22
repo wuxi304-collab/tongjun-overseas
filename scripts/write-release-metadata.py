@@ -1,6 +1,7 @@
 from pathlib import Path
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -19,6 +20,9 @@ def sha256(path: Path) -> str:
 
 
 def git_head() -> str:
+    supplied = os.environ.get('TONGJUN_RELEASE_COMMIT', '').strip()
+    if re.fullmatch(r'[0-9a-f]{40}', supplied):
+        return supplied
     try:
         value = subprocess.run(
             ['git', 'rev-parse', 'HEAD'],
