@@ -54,6 +54,7 @@ def main():
         'site_release': 'V34.152 R15.25',
         'source_branch': 'feat/v34.152-r15.25-prelaunch',
         'visual_release': 'V34.152 R15.7',
+        'hero_release': 'V34.152 R15.24',
         'release_identity_version': 2,
     }
     for key, expected in required.items():
@@ -61,6 +62,8 @@ def main():
             fail(f'release descriptor mismatch for {key}: {descriptor.get(key)!r}')
     if visual.get('release') != descriptor['visual_release']:
         fail('release descriptor visual version does not match visual manifest')
+    if visual.get('hero_release') != descriptor['hero_release']:
+        fail('release descriptor HERO version does not match visual manifest')
 
     payload = {
         'service': descriptor['service'],
