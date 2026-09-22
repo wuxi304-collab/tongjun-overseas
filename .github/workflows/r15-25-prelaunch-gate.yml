@@ -1,0 +1,91 @@
+name: R15.25 Prelaunch Production Gate
+
+on:
+  push:
+    branches:
+      - feat/v34.152-r15.24-home-hero-background
+    paths:
+      - .github/workflows/r15-25-prelaunch-gate.yml
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v34.152-r15.25-prelaunch
+          fetch-depth: 0
+
+      - name: Production build and full gate
+        run: npm run build:production
+
+      - name: Install Playwright core
+        run: npm install --no-save playwright-core@1.55.0
+
+      - name: Start production artifact
+        run: |
+          python3 -m http.server 8123 --directory _prod >/tmp/prod-http.log 2>&1 &
+          sleep 2
+
+      - name: Browser QA production artifact
+        run: |
+          cat > prod-qa.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({
+            executablePath:'/usr/bin/google-chrome',
+            headless:true,
+            args:['--no-sandbox']
+          });
+          const cases=[
+            {name:'desktop',width:1440,height:1000,dpr:1,hero:'hero-special-metals-r15-24.webp'},
+            {name:'retina',width:1440,height:1000,dpr:2,hero:'hero-special-metals-r15-24-4k.webp'},
+            {name:'mobile',width:390,height:844,dpr:1,hero:'hero-special-metals-r15-24-mobile.webp'}
+          ];
+          for(const c of cases){
+            const ctx=await browser.newContext({viewport:{width:c.width,height:c.height},deviceScaleFactor:c.dpr});
+            const page=await ctx.newPage();
+            const req=[];
+            page.on('request',r=>{if(r.url().includes('hero-special-metals-r15-24')) req.push(r.url())});
+            await page.goto('http://127.0.0.1:8123/',{waitUntil:'networkidle'});
+            const q=await page.evaluate(()=>{
+              const hero=document.querySelector('.hero');
+              const logo=document.querySelector('.site-header .tj-brand-mark');
+              const oldMark=document.querySelector('.site-header .mark');
+              const picture=document.querySelector('.hero-picture-r15-24');
+              const img=document.querySelector('.hero-bg-r6');
+              return {
+                viewport:[innerWidth,innerHeight],
+                dpr:devicePixelRatio,
+                overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth),
+                logo:logo?.getAttribute('src')||null,
+                oldMark:!!oldMark,
+                picture:!!picture,
+                imgCurrent:img?.currentSrc||null,
+                heroHeight:hero?Math.round(hero.getBoundingClientRect().height):0,
+                dock:getComputedStyle(document.querySelector('.hero-decision-dock')).display,
+                proof:getComputedStyle(document.querySelector('.hero-proofline')).display
+              };
+            });
+            q.requests=[...new Set(req)];
+            console.log('PRODQA',c.name,JSON.stringify(q));
+            if(q.viewport[0]!==c.width) throw new Error(c.name+' viewport mismatch');
+            if(q.overflowX!==0) throw new Error(c.name+' horizontal overflow '+q.overflowX);
+            if(!q.logo?.includes('/assets/tongjun-logo.svg')) throw new Error(c.name+' Columbus/Tongjun vector mark missing');
+            if(q.oldMark) throw new Error(c.name+' legacy geometric mark returned');
+            if(!q.picture) throw new Error(c.name+' responsive hero picture missing');
+            if(!q.imgCurrent.includes(c.hero)) throw new Error(c.name+' wrong HERO selected '+q.imgCurrent);
+            if(q.heroHeight<600) throw new Error(c.name+' hero too short '+q.heroHeight);
+            if(q.dock==='none'||q.proof==='none') throw new Error(c.name+' hero release logic hidden');
+            await page.screenshot({path:'/tmp/r15-25-'+c.name+'.png',fullPage:false});
+            await ctx.close();
+          }
+          await browser.close();
+          JS
+          node prod-qa.mjs
+
+      - name: Production artifact summary
+        run: |
+          echo "HTML $(find _prod -maxdepth 1 -name '*.html' | wc -l)"
+          echo "CSS $(find _prod/assets -maxdepth 1 -name '*.css' | wc -l)"
+          ls -lh _prod/assets/images/hero-special-metals-r15-24*.webp
+          file /tmp/r15-25-*.png
