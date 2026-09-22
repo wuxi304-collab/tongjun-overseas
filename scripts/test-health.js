@@ -19,13 +19,13 @@ async function run(){
   const handler=require('../api/health.js');
   const oldWebhook=process.env.RFQ_WEBHOOK_URL;
   const oldSecret=process.env.RFQ_SHARED_SECRET;
-  const oldSha=process.env.VERCEL_GIT_COMMIT_SHA;
-  const oldEnv=process.env.VERCEL_ENV;
+  const oldSha=process.env.TONGJUN_RELEASE_COMMIT;
+  const oldEnv=process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT;
 
   delete process.env.RFQ_WEBHOOK_URL;
   delete process.env.RFQ_SHARED_SECRET;
-  process.env.VERCEL_GIT_COMMIT_SHA='1234567890abcdef1234567890abcdef12345678';
-  process.env.VERCEL_ENV='production';
+  process.env.TONGJUN_RELEASE_COMMIT='1234567890abcdef1234567890abcdef12345678';
+  process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT='production';
 
   let res=makeRes();
   await handler({method:'GET',headers:{}},res);
@@ -34,13 +34,13 @@ async function run(){
   assert.equal(res.payload.rfq_route_configured,false);
   assert.equal(res.payload.rfq_route_https_valid,false);
   assert.equal(res.payload.rfq_signature_configured,false);
-  assert.equal(res.payload.site_release,'V34.152 R15.25');
+  assert.equal(res.payload.site_release,'V34.152 R15.26');
   assert.equal(res.payload.visual_release,'V34.152 R15.7');
   assert.equal(res.payload.hero_release,'V34.152 R15.24');
   assert.equal(res.payload.release,'1234567890abcdef1234567890abcdef12345678'.slice(0,40));
   assert.equal(res.payload.deployment_environment,'production');
   assert.equal(res.headers['Cache-Control'],'no-store');
-  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.25');
+  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.26');
 
   // HTTP webhook URLs are never considered production-ready.
   process.env.RFQ_WEBHOOK_URL='http://example.invalid/hook';
@@ -71,7 +71,7 @@ async function run(){
   assert.equal(res.payload.rfq_route_configured,true);
   assert.equal(res.payload.rfq_route_https_valid,true);
   assert.equal(res.payload.rfq_signature_configured,true);
-  assert.equal(res.payload.site_release,'V34.152 R15.25');
+  assert.equal(res.payload.site_release,'V34.152 R15.26');
   assert.equal(res.payload.visual_release,'V34.152 R15.7');
   assert.equal(res.payload.hero_release,'V34.152 R15.24');
   assert.match(res.payload.checked_at,/^\d{4}-\d{2}-\d{2}T/);
@@ -80,7 +80,7 @@ async function run(){
   await handler({method:'HEAD',headers:{}},res);
   assert.equal(res.statusCode,200);
   assert.equal(res.ended,true);
-  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.25');
+  assert.equal(res.headers['X-Tongjun-Release'],'V34.152 R15.26');
 
   res=makeRes();
   await handler({method:'POST',headers:{}},res);
@@ -92,12 +92,12 @@ async function run(){
   else process.env.RFQ_WEBHOOK_URL=oldWebhook;
   if(oldSecret===undefined) delete process.env.RFQ_SHARED_SECRET;
   else process.env.RFQ_SHARED_SECRET=oldSecret;
-  if(oldSha===undefined) delete process.env.VERCEL_GIT_COMMIT_SHA;
-  else process.env.VERCEL_GIT_COMMIT_SHA=oldSha;
-  if(oldEnv===undefined) delete process.env.VERCEL_ENV;
-  else process.env.VERCEL_ENV=oldEnv;
+  if(oldSha===undefined) delete process.env.TONGJUN_RELEASE_COMMIT;
+  else process.env.TONGJUN_RELEASE_COMMIT=oldSha;
+  if(oldEnv===undefined) delete process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT;
+  else process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT=oldEnv;
 
-  console.log('PASS: R15.25 production health requires HTTPS RFQ routing + HMAC secret, with release identity, HEAD and method gates validated.');
+  console.log('PASS: R15.26 self-hosted production health requires HTTPS RFQ routing + HMAC secret, with release identity, HEAD and method gates validated.');
 }
 
 run().catch(err=>{console.error(err);process.exit(1);});
