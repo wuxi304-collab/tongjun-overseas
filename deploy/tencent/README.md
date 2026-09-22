@@ -52,7 +52,17 @@ Final canonical origin is the apex:
 
 Nginx permanently redirects `www` to the apex.
 
-## 2. Clone release source
+## 2. Obtain release source
+
+Two supported paths:
+
+**A. ZIP package (recommended for handoff to another AI/operator)**
+
+Extract the supplied project ZIP to `/opt/tongjun-overseas/app`. The package contains `RELEASE_PACKAGE_SHA`, so no Git metadata is required for release identity or deployment.
+
+**B. Git clone**
+
+Clone the release branch as below.
 
 Recommended path:
 
