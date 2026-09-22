@@ -18,6 +18,11 @@ jobs:
         with:
           ref: feat/v34.152-r15.24-home-hero-background
 
+      - name: Install image toolchain
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+
       - name: Fetch original 5K industrial photograph
         run: |
           set -euo pipefail
