@@ -1,4 +1,4 @@
-const SITE_RELEASE = 'V34.152 R15.25';
+const SITE_RELEASE = 'V34.152 R15.26';
 const VISUAL_RELEASE = 'V34.152 R15.7';
 const HERO_RELEASE = 'V34.152 R15.24';
 
@@ -28,8 +28,9 @@ module.exports = async function handler(req, res) {
   const signatureConfigured=Boolean(String(process.env.RFQ_SHARED_SECRET||'').trim());
   const ready=routeValid && signatureConfigured;
   const release = String(
-    process.env.VERCEL_GIT_COMMIT_SHA ||
+    process.env.TONGJUN_RELEASE_COMMIT ||
     process.env.GITHUB_SHA ||
+    process.env.VERCEL_GIT_COMMIT_SHA ||
     process.env.VERCEL_GIT_COMMIT_REF ||
     'local'
   ).slice(0, 40);
@@ -40,7 +41,7 @@ module.exports = async function handler(req, res) {
     visual_release: VISUAL_RELEASE,
     hero_release: HERO_RELEASE,
     release,
-    deployment_environment: String(process.env.VERCEL_ENV || 'local').slice(0, 40),
+    deployment_environment: String(process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT || process.env.VERCEL_ENV || 'local').slice(0, 40),
     rfq_route_configured: routeConfigured,
     rfq_route_https_valid: routeValid,
     rfq_signature_configured: signatureConfigured,
