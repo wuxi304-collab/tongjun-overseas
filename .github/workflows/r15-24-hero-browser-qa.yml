@@ -6,6 +6,8 @@ on:
       - feat/v34.152-r15.24-home-hero-background
     paths:
       - .github/workflows/r15-24-hero-browser-qa.yml
+      - assets/r15-24-home-hero.css
+      - index.html
 
 jobs:
   qa:
