@@ -2,11 +2,11 @@
   "release": "V34.152 R15.7",
   "policy": "frozen-binary-visuals",
   "hero": {
-    "file": "logistics-stock.webp",
-    "width": 2048,
-    "height": 1154,
-    "bytes": 130636,
-    "sha256": "8692b9d723a0c27dd6776e38c7fb33c3179eaaafafaf7e13637591a857b32a14"
+    "file": "hero-special-metals-r15-24.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 515200,
+    "sha256": "883b9e4a14dc839a0f2516694a4826bf0094f30d8a2811b8f83719b2b2e5f45b"
   },
   "assets": {
     "r15-6-about.webp": {
@@ -69,5 +69,6 @@
       "bytes": 333178,
       "sha256": "5981bebea9bc3433bba69c3ac8727224b4212171c3fcb95e9e7c6337267eb64f"
     }
-  }
+  },
+  "hero_release": "V34.152 R15.24"
 }
