@@ -1,5 +1,5 @@
 name: R15.25 Prelaunch Production Gate
-# identity-refresh: 20260922-2147
+# launch-candidate: 191e41dd
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/v34.152-r15.25-prelaunch
+          ref: release/v34.152-r15.25-launch-candidate
           fetch-depth: 0
 
       - name: Production build and full gate
