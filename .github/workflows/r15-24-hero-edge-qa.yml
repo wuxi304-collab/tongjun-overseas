@@ -1,0 +1,63 @@
+name: R15.24 Hero Edge QA
+
+on:
+  push:
+    branches:
+      - feat/v34.152-r15.24-home-hero-background
+    paths:
+      - .github/workflows/r15-24-hero-edge-qa.yml
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v34.152-r15.24-home-hero-background
+      - name: Resolve Chrome
+        run: |
+          echo "CHROME=$(command -v google-chrome)" >> "$GITHUB_ENV"
+      - name: Install Playwright core
+        run: npm install --no-save playwright-core@1.55.0
+      - name: Start local site
+        run: |
+          python3 -m http.server 8123 >/tmp/http.log 2>&1 &
+          sleep 2
+      - name: Edge viewport checks
+        run: |
+          cat > hero-edge-qa.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox']});
+          const cases=[
+            {name:'1920',width:1920,height:1080,dpr:1,asset:'hero-special-metals-r15-24.webp',pos:'61% 50%'},
+            {name:'390-dpr3',width:390,height:844,dpr:3,asset:'hero-special-metals-r15-24-mobile.webp',pos:'67% 48%'}
+          ];
+          for(const c of cases){
+            const ctx=await browser.newContext({viewport:{width:c.width,height:c.height},deviceScaleFactor:c.dpr});
+            const page=await ctx.newPage();
+            const requests=[];
+            page.on('request',r=>{if(r.url().includes('hero-special-metals-r15-24')) requests.push(r.url())});
+            await page.goto('http://127.0.0.1:8123/',{waitUntil:'networkidle'});
+            const q=await page.evaluate(()=>{
+              const hero=document.querySelector('.hero');
+              const s=getComputedStyle(hero);
+              return {
+                viewport:[innerWidth,innerHeight],
+                dpr:devicePixelRatio,
+                overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth),
+                hero:Math.round(hero.getBoundingClientRect().height),
+                bg:s.backgroundImage,
+                pos:s.backgroundPosition
+              };
+            });
+            q.requests=[...new Set(requests)];
+            console.log('EDGEQA',c.name,JSON.stringify(q));
+            if(q.viewport[0]!==c.width) throw new Error(c.name+' viewport mismatch');
+            if(q.overflowX!==0) throw new Error(c.name+' overflow '+q.overflowX);
+            if(!q.bg.includes(c.asset)) throw new Error(c.name+' wrong asset '+q.bg);
+            if(!q.pos.includes(c.pos)) throw new Error(c.name+' wrong position '+q.pos);
+            await ctx.close();
+          }
+          await browser.close();
+          JS
+          node hero-edge-qa.mjs
