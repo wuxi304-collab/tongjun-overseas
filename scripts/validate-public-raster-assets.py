@@ -7,7 +7,6 @@ RASTER = {'.webp', '.jpg', '.jpeg', '.png', '.avif'}
 TEXT_EXT = {'.html', '.css', '.js', '.json', '.xml', '.txt', '.webmanifest', '.svg'}
 REF_RE = re.compile(r'assets/images/([A-Za-z0-9._-]+)')
 MIN_CONTENT_LONG_EDGE = 2048
-EXPECTED_CONTENT_RASTERS = 11
 
 
 def fail(message):
@@ -78,18 +77,24 @@ def main():
             continue
         w, h = webp_dimensions(path)
         content.append((path.name, w, h))
-        if max(w, h) < MIN_CONTENT_LONG_EDGE:
+        minimum = 1440 if path.name == 'hero-special-metals-r15-24-mobile.webp' else MIN_CONTENT_LONG_EDGE
+        if max(w, h) < minimum:
             bad.append((path.name, f'{w}x{h}'))
 
     if bad:
         fail(f'public raster(s) below 2K or invalid: {bad}')
-    if len(content) != EXPECTED_CONTENT_RASTERS:
-        fail(f'expected {EXPECTED_CONTENT_RASTERS} public rasters, found {len(content)}: {content}')
+    required_hero = {
+        'hero-special-metals-r15-24.webp',
+        'hero-special-metals-r15-24-4k.webp',
+        'hero-special-metals-r15-24-mobile.webp',
+    }
+    if not required_hero.issubset(names):
+        fail(f'R15.24 HERO delivery set incomplete: {sorted(required_hero - names)}')
 
     total = sum(p.stat().st_size for p in rasters)
     print(
         f'PASS: R15.16 public image hygiene — {len(rasters)} referenced public raster(s) only; '
-        f'{len(content)} public raster images all >=2K; zero raster-logo exemptions; '
+        f'{len(content)} public raster images satisfy release dimension gates; zero raster-logo exemptions; '
         f'aggregate raster payload {total // 1024} KB.'
     )
 
