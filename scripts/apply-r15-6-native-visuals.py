@@ -55,10 +55,17 @@ def main():
     if '<section class="hero">' not in index:
         raise SystemExit('ERROR: homepage hero section missing')
     hero = index.split('<section class="hero">', 1)[1].split('</section>', 1)[0]
-    if 'logistics-stock.webp' not in hero:
-        raise SystemExit('ERROR: frozen homepage hero path changed')
+    required_hero = (
+        'hero-picture-r15-24',
+        'hero-special-metals-r15-24.webp',
+        'hero-special-metals-r15-24-4k.webp',
+        'hero-special-metals-r15-24-mobile.webp',
+    )
+    for marker in required_hero:
+        if marker not in hero:
+            raise SystemExit(f'ERROR: R15.24 homepage hero contract changed: {marker}')
     if 'r15-6-' in hero:
-        raise SystemExit('ERROR: R15.6 attempted to replace the frozen homepage hero')
+        raise SystemExit('ERROR: R15.6 attempted to replace the R15.24 homepage hero')
 
     legacy_refs = []
     for path in TARGETS:
@@ -71,7 +78,7 @@ def main():
     if legacy_refs:
         raise SystemExit(f'ERROR: legacy soft visual reference(s) remain after R15.6 rewrite: {legacy_refs[:20]}')
 
-    print(f'PASS: R15.6 native visual overlay — {changed} text assets updated; homepage hero kept frozen; all mapped content visuals now point to optimized high-resolution photography.')
+    print(f'PASS: R15.6 native visual overlay — {changed} text assets updated; R15.24 homepage hero preserved; all mapped inner-page content visuals now point to optimized high-resolution photography.')
 
 if __name__ == '__main__':
     main()
