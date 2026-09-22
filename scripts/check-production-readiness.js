@@ -91,14 +91,14 @@ async function run(){
   assert.equal(health.status,200,`/api/health expected 200, got ${health.status} (${body.error||'no JSON error'})`);
   assert.equal(body.ok,true,'/api/health must return ok=true');
   assert.equal(body.service,'tongjun-overseas','Unexpected health service identity');
-  assert.equal(body.site_release,'V34.152 R15.25','Unexpected health site release');
+  assert.equal(body.site_release,'V34.152 R15.26','Unexpected health site release');
   assert.equal(body.visual_release,'V34.152 R15.7','Unexpected health visual release');
   assert.equal(body.hero_release,'V34.152 R15.24','Unexpected homepage HERO release');
   assert.equal(body.rfq_route_configured,true,'RFQ secure route is not configured');
   assert.equal(body.rfq_route_https_valid,true,'RFQ webhook must be a valid HTTPS URL');
   assert.equal(body.rfq_signature_configured,true,'RFQ HMAC signing secret is not configured');
   assert.match(String(body.release||''),/^[0-9a-f]{40}$/i,'Health response must expose the production commit SHA');
-  assert.equal(health.headers.get('x-tongjun-release'),'V34.152 R15.25','Health release header mismatch');
+  assert.equal(health.headers.get('x-tongjun-release'),'V34.152 R15.26','Health release header mismatch');
   console.log(`/api/health: READY · ${body.site_release} · HTTPS webhook + HMAC · commit ${body.release.slice(0,12)}`);
 
   const releaseResponse=await fetchChecked(`${BASE}/.well-known/release.json`,{headers:{Accept:'application/json'}});
@@ -110,6 +110,7 @@ async function run(){
   assert.equal(release.visual_release,body.visual_release,'Static/API visual release mismatch');
   assert.equal(release.hero_release,body.hero_release,'Static/API homepage HERO release mismatch');
   assert.equal(release.environment,'production','Static release environment must be production');
+  assert.equal(release.deployment_target,'tencent-lighthouse','Static release deployment target mismatch');
   assert.match(String(release.visual_manifest_sha256||''),/^[0-9a-f]{64}$/i,'Visual manifest SHA256 missing');
   assert.equal(release.source_commit,body.release,'Static/API source commit mismatch');
   console.log(`/.well-known/release.json: ${release.site_release} · ${release.source_commit.slice(0,12)} · visuals ${release.visual_release}`);
