@@ -1,0 +1,69 @@
+name: R15.24 Screenshot Export
+
+on:
+  push:
+    branches:
+      - feat/v34.152-r15.24-home-hero-background
+    paths:
+      - .github/workflows/r15-24-screenshot-export.yml
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v34.152-r15.24-home-hero-final
+          fetch-depth: 1
+
+      - name: Install Playwright core
+        run: npm install --no-save playwright-core@1.55.0
+
+      - name: Start local site
+        run: |
+          python3 -m http.server 8123 >/tmp/http.log 2>&1 &
+          sleep 2
+
+      - name: Render desktop and mobile
+        run: |
+          cat > hero-shot.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({
+            executablePath:'/usr/bin/google-chrome',
+            headless:true,
+            args:['--no-sandbox']
+          });
+          const cases=[
+            {name:'desktop-1440',width:1440,height:1000,dpr:1},
+            {name:'mobile-390',width:390,height:844,dpr:1}
+          ];
+          for(const c of cases){
+            const ctx=await browser.newContext({
+              viewport:{width:c.width,height:c.height},
+              deviceScaleFactor:c.dpr
+            });
+            const page=await ctx.newPage();
+            await page.goto('http://127.0.0.1:8123/',{waitUntil:'networkidle'});
+            await page.screenshot({
+              path:'preview/r15-24/'+c.name+'.png',
+              fullPage:false
+            });
+            await ctx.close();
+          }
+          await browser.close();
+          JS
+          mkdir -p preview/r15-24
+          node hero-shot.mjs
+          file preview/r15-24/*.png
+          ls -lh preview/r15-24/*.png
+
+      - name: Commit screenshots to final branch
+        run: |
+          git config user.name 'tongjun-preview-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add preview/r15-24/desktop-1440.png preview/r15-24/mobile-390.png
+          git commit -m 'preview: add R15.24 homepage screenshots'
+          git push origin HEAD:feat/v34.152-r15.24-home-hero-final
