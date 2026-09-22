@@ -49,18 +49,23 @@ function readJsonBody(req){
   return new Promise((resolve,reject)=>{
     const chunks=[];
     let bytes=0;
+    let tooLarge=false;
     req.on('data',chunk=>{
+      if(tooLarge) return;
       bytes+=chunk.length;
       if(bytes>MAX_ADAPTER_BODY_BYTES){
-        const err=new Error('payload_too_large');
-        err.code='PAYLOAD_TOO_LARGE';
-        reject(err);
-        req.destroy();
+        tooLarge=true;
         return;
       }
       chunks.push(chunk);
     });
     req.on('end',()=>{
+      if(tooLarge){
+        const err=new Error('payload_too_large');
+        err.code='PAYLOAD_TOO_LARGE';
+        reject(err);
+        return;
+      }
       if(!chunks.length){ resolve({}); return; }
       try{
         const parsed=JSON.parse(Buffer.concat(chunks).toString('utf8'));
