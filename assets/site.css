@@ -840,7 +840,7 @@ body.nav-open{overflow:hidden}
 
 
 /* R15.24 — homepage HERO background rebuild */
-/* Real industrial photography: Morteza Mohammadi / Unsplash (free under Unsplash License).
+/* R15.24 local 2K real industrial photography.
    Intent: preserve metal texture and depth; no blur filters, no over-darkened wash. */
 .page-home .hero{
   min-height:710px;
@@ -848,7 +848,7 @@ body.nav-open{overflow:hidden}
   background-image:
     linear-gradient(180deg,rgba(4,11,18,.02) 0%,rgba(4,11,18,.06) 46%,rgba(4,11,18,.34) 100%),
     linear-gradient(90deg,rgba(4,12,20,.80) 0%,rgba(4,12,20,.70) 34%,rgba(4,12,20,.42) 52%,rgba(4,12,20,.13) 72%,rgba(4,12,20,.04) 100%),
-    url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=88&w=2800&h=1320");
+    url("/assets/images/hero-special-metals-r15-24.webp");
   background-size:cover,cover,cover;
   background-repeat:no-repeat;
   background-position:center,center,58% 51%;
@@ -884,7 +884,7 @@ body.nav-open{overflow:hidden}
     background-image:
       linear-gradient(180deg,rgba(4,11,18,.02) 0%,rgba(4,11,18,.06) 46%,rgba(4,11,18,.34) 100%),
       linear-gradient(90deg,rgba(4,12,20,.80) 0%,rgba(4,12,20,.70) 34%,rgba(4,12,20,.42) 52%,rgba(4,12,20,.13) 72%,rgba(4,12,20,.04) 100%),
-      url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=90&w=3600&h=1540");
+      url("/assets/images/hero-special-metals-r15-24.webp");
     background-position:center,center,59% 50%;
   }
 }
@@ -894,7 +894,7 @@ body.nav-open{overflow:hidden}
     background-image:
       linear-gradient(180deg,rgba(4,11,18,.10) 0%,rgba(4,11,18,.20) 58%,rgba(4,11,18,.56) 100%),
       linear-gradient(90deg,rgba(4,12,20,.84) 0%,rgba(4,12,20,.68) 58%,rgba(4,12,20,.28) 100%),
-      url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=88&w=1500&h=1540");
+      url("/assets/images/hero-special-metals-r15-24.webp");
     background-size:cover,cover,cover;
     background-position:center,center,63% 50%;
   }
@@ -905,7 +905,7 @@ body.nav-open{overflow:hidden}
     background-image:
       linear-gradient(180deg,rgba(4,11,18,.16) 0%,rgba(4,11,18,.22) 52%,rgba(4,11,18,.62) 100%),
       linear-gradient(90deg,rgba(4,12,20,.88) 0%,rgba(4,12,20,.72) 70%,rgba(4,12,20,.36) 100%),
-      url("https://images.unsplash.com/photo-1697698532634-ea59b636ccea?auto=format&fit=crop&fm=webp&q=88&w=1100&h=1500");
+      url("/assets/images/hero-special-metals-r15-24.webp");
     background-position:center,center,68% 50%;
   }
   .page-home .hero h1{text-shadow:0 1px 1px rgba(0,0,0,.42)}
