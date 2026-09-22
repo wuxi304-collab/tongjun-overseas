@@ -1,0 +1,26 @@
+[Unit]
+Description=Tongjun Overseas RFQ API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=__APP_DIR__
+EnvironmentFile=/etc/tongjun-overseas.env
+Environment=NODE_ENV=production
+Environment=TONGJUN_DEPLOYMENT_ENVIRONMENT=production
+ExecStart=/usr/bin/env node server/tongjun-api.js
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+KillSignal=SIGTERM
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
