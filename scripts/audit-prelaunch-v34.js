@@ -30,21 +30,32 @@ for(const file of htmls){
   }
 }
 
-for(const required of ['api/rfq.js','api/health.js','vercel.json','.vercelignore','robots.txt','sitemap.xml','RELEASE_R15_25.json','VISUAL_MANIFEST_R15_7.json','scripts/write-release-metadata.py','scripts/check-production-readiness.js','scripts/smoke-rfq-production.js']){
+for(const required of [
+  'api/rfq.js','api/health.js','server/tongjun-api.js',
+  'deploy/tencent/nginx-exoticalloycn.conf.template',
+  'deploy/tencent/tongjun-api.service.template',
+  'deploy/tencent/tongjun-overseas.env.example',
+  'deploy/tencent/bootstrap.sh','deploy/tencent/deploy.sh',
+  'robots.txt','sitemap.xml','RELEASE_R15_26.json','VISUAL_MANIFEST_R15_7.json',
+  'scripts/write-release-metadata.py','scripts/check-production-readiness.js','scripts/smoke-rfq-production.js'
+]){
   if(!fs.existsSync(path.join(root,required))) failures.push(`missing production release file ${required}`);
 }
 
-const vi=fs.readFileSync(path.join(root,'.vercelignore'),'utf8');
-if(/!ops(?:\/|\b)/.test(vi)) failures.push('.vercelignore exposes ops');
-if(!vi.includes('!api/**')) failures.push('.vercelignore must deploy serverless API');
-if(!vi.includes('!RELEASE_R15_25.json')) failures.push('.vercelignore must include R15.25 release descriptor for build identity');
-if(!vi.includes('!VISUAL_MANIFEST_R15_7.json')) failures.push('.vercelignore must include frozen visual manifest for build identity');
+const serverAdapter=fs.readFileSync(path.join(root,'server','tongjun-api.js'),'utf8');
+for(const marker of ['127.0.0.1','TONGJUN_API_HOST','TONGJUN_API_PORT','/api/health','/api/rfq']){
+  if(!serverAdapter.includes(marker)) failures.push(`self-hosted API adapter missing ${marker}`);
+}
+const nginx=fs.readFileSync(path.join(root,'deploy','tencent','nginx-exoticalloycn.conf.template'),'utf8');
+for(const marker of ['server_name exoticalloycn.com','proxy_pass http://127.0.0.1:8787','Strict-Transport-Security','Content-Security-Policy']){
+  if(!nginx.includes(marker)) failures.push(`Tencent Nginx template missing ${marker}`);
+}
 
 const robotsTxt=fs.readFileSync(path.join(root,'robots.txt'),'utf8');
 if(/Disallow:\s*\/$/m.test(robotsTxt)) failures.push('production robots.txt blocks the entire site');
 
 const health=fs.readFileSync(path.join(root,'api','health.js'),'utf8');
-for(const marker of ['rfq_route_configured','rfq_route_https_valid','rfq_signature_configured','Cache-Control','RFQ_WEBHOOK_URL','RFQ_SHARED_SECRET','V34.152 R15.25','X-Tongjun-Release','visual_release','hero_release','V34.152 R15.24']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
+for(const marker of ['rfq_route_configured','rfq_route_https_valid','rfq_signature_configured','Cache-Control','RFQ_WEBHOOK_URL','RFQ_SHARED_SECRET','TONGJUN_RELEASE_COMMIT','TONGJUN_DEPLOYMENT_ENVIRONMENT','V34.152 R15.26','X-Tongjun-Release','visual_release','hero_release','V34.152 R15.24']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
 if(/X-Tongjun-Webhook-Secret/.test(health)) failures.push('api/health.js must never expose the raw webhook secret header');
 if(/RFQ_SHARED_SECRET\s*[:=]\s*process\.env\.RFQ_SHARED_SECRET/.test(health)) failures.push('api/health.js must not serialize RFQ_SHARED_SECRET into the response payload');
 
@@ -53,4 +64,4 @@ if(!smoke.includes('RFQ_SMOKE_URL')) failures.push('production RFQ smoke is not 
 if(!smoke.includes('NO COMMERCIAL ORDER')) failures.push('production RFQ smoke is not clearly marked synthetic');
 
 if(failures.length){console.error('FAIL: R15 prelaunch audit');failures.forEach(x=>console.error(' - '+x));process.exit(1);}
-console.log('PASS: R15 prelaunch audit — production source, index/noindex sitemap consistency, deploy boundary, runtime version, health and smoke contracts validated.');
+console.log('PASS: R15.26 prelaunch audit — Tencent Lighthouse runtime, Nginx/API boundary, release identity, indexability, health and RFQ smoke contracts validated.');
