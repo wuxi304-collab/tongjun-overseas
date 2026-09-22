@@ -1,0 +1,120 @@
+name: R15.24 Hero Browser QA
+
+on:
+  push:
+    branches:
+      - feat/v34.152-r15.24-home-hero-background
+    paths:
+      - .github/workflows/r15-24-hero-browser-qa.yml
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v34.152-r15.24-home-hero-background
+
+      - name: Resolve Chrome
+        run: |
+          set -euo pipefail
+          if command -v google-chrome >/dev/null; then
+            echo "CHROME=$(command -v google-chrome)" >> "$GITHUB_ENV"
+          elif command -v google-chrome-stable >/dev/null; then
+            echo "CHROME=$(command -v google-chrome-stable)" >> "$GITHUB_ENV"
+          elif command -v chromium >/dev/null; then
+            echo "CHROME=$(command -v chromium)" >> "$GITHUB_ENV"
+          else
+            sudo apt-get update -y
+            sudo apt-get install -y chromium
+            echo "CHROME=$(command -v chromium)" >> "$GITHUB_ENV"
+          fi
+
+      - name: Inject non-persistent QA probe
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          probe=r'''
+          <script>
+          addEventListener('load',()=>setTimeout(()=>{
+            const hero=document.querySelector('.hero');
+            const h1=document.querySelector('.hero h1');
+            const lead=document.querySelector('.hero .lead');
+            const dock=document.querySelector('.hero-decision-dock');
+            const q={
+              viewport:[innerWidth,innerHeight],
+              dpr:devicePixelRatio,
+              scrollWidth:document.documentElement.scrollWidth,
+              overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth),
+              hero:hero?Math.round(hero.getBoundingClientRect().height):null,
+              h1:h1?Math.round(h1.getBoundingClientRect().height):null,
+              lead:lead?Math.round(lead.getBoundingClientRect().height):null,
+              dock:dock?Math.round(dock.getBoundingClientRect().height):null,
+              heroBg:hero?getComputedStyle(hero).backgroundImage:null,
+              heroPos:hero?getComputedStyle(hero).backgroundPosition:null
+            };
+            const out=document.createElement('pre');
+            out.id='qa-output';
+            out.textContent='QAJSON:'+JSON.stringify(q);
+            document.body.appendChild(out);
+          },700));
+          </script>
+          '''
+          p.write_text(s.replace('</body>',probe+'</body>'))
+          PY
+
+      - name: Start local site
+        run: |
+          python3 -m http.server 8123 >/tmp/tongjun-http.log 2>&1 &
+          echo $! >/tmp/tongjun-http.pid
+          sleep 2
+
+      - name: Desktop 1440 DPR1
+        run: |
+          "$CHROME" --headless=new --no-sandbox --disable-gpu \
+            --window-size=1440,1000 --force-device-scale-factor=1 \
+            --virtual-time-budget=2500 --dump-dom http://127.0.0.1:8123/ \
+            > /tmp/qa-1440.html
+          grep -o 'QAJSON:[^<]*' /tmp/qa-1440.html | tail -1
+
+      - name: Desktop 1440 DPR2
+        run: |
+          : > /tmp/tongjun-http.log
+          "$CHROME" --headless=new --no-sandbox --disable-gpu \
+            --window-size=1440,1000 --force-device-scale-factor=2 \
+            --virtual-time-budget=2500 --dump-dom http://127.0.0.1:8123/ \
+            > /tmp/qa-1440-dpr2.html
+          grep -o 'QAJSON:[^<]*' /tmp/qa-1440-dpr2.html | tail -1
+          echo 'REQUESTS_DPR2'
+          grep 'hero-special-metals-r15-24' /tmp/tongjun-http.log || true
+
+      - name: Mobile 390
+        run: |
+          : > /tmp/tongjun-http.log
+          "$CHROME" --headless=new --no-sandbox --disable-gpu \
+            --window-size=390,844 --force-device-scale-factor=1 \
+            --virtual-time-budget=2500 --dump-dom http://127.0.0.1:8123/ \
+            > /tmp/qa-390.html
+          grep -o 'QAJSON:[^<]*' /tmp/qa-390.html | tail -1
+          echo 'REQUESTS_MOBILE'
+          grep 'hero-special-metals-r15-24' /tmp/tongjun-http.log || true
+
+      - name: Assert HERO layout
+        run: |
+          python3 - <<'PY'
+          import html, json, re
+          from pathlib import Path
+          for name in ('1440','1440-dpr2','390'):
+              s=Path(f'/tmp/qa-{name}.html').read_text(errors='ignore')
+              m=re.findall(r'QAJSON:([^<]+)',s)
+              if not m:
+                  raise SystemExit(f'ERROR: no QA metrics for {name}')
+              q=json.loads(html.unescape(m[-1]))
+              print(name,q)
+              if q['overflowX'] != 0:
+                  raise SystemExit(f"ERROR: {name} overflowX={q['overflowX']}")
+              if q['hero'] < 600:
+                  raise SystemExit(f"ERROR: {name} hero unexpectedly short: {q['hero']}")
+          PY
