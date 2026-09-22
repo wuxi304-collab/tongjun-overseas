@@ -7,11 +7,19 @@ WEB_ROOT="${WEB_ROOT:-/var/www/exoticalloycn}"
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
-echo "[1/7] Fetch release branch"
-git fetch --prune origin "$BRANCH"
-git checkout -B "$BRANCH" "origin/$BRANCH"
-
-SHA="$(git rev-parse HEAD)"
+echo "[1/7] Resolve release source"
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  git fetch --prune origin "$BRANCH"
+  git checkout -B "$BRANCH" "origin/$BRANCH"
+  SHA="$(git rev-parse HEAD)"
+elif [[ -f RELEASE_PACKAGE_SHA ]]; then
+  SHA="$(tr -d '[:space:]' < RELEASE_PACKAGE_SHA)"
+  [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "ERROR: invalid RELEASE_PACKAGE_SHA"; exit 1; }
+else
+  echo "ERROR: neither Git metadata nor RELEASE_PACKAGE_SHA is available."
+  exit 1
+fi
+export TONGJUN_RELEASE_COMMIT="$SHA"
 echo "Release commit: $SHA"
 
 echo "[2/7] Build and validate production artifact"
