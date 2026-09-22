@@ -154,32 +154,33 @@ def main():
 
     release_path = ROOT / '.well-known' / 'release.json'
     if not release_path.is_file():
-        fail('R15.25 production release identity missing')
+        fail('R15.26 production release identity missing')
     try:
         release = json.loads(release_path.read_text(encoding='utf-8'))
     except Exception as exc:
-        fail(f'R15.25 production release identity is invalid JSON: {exc}')
+        fail(f'R15.26 production release identity is invalid JSON: {exc}')
     expected_release = {
         'service': 'tongjun-overseas',
-        'site_release': 'V34.152 R15.25',
-        'source_branch': 'release/v34.152-r15.25-launch-candidate',
+        'site_release': 'V34.152 R15.26',
+        'source_branch': 'release/v34.152-r15.26-tencent-lighthouse',
         'visual_release': 'V34.152 R15.7',
         'hero_release': 'V34.152 R15.24',
+        'deployment_target': 'tencent-lighthouse',
         'environment': 'production',
         'canonical_origin': 'https://exoticalloycn.com',
-        'release_identity_version': 2,
+        'release_identity_version': 3,
     }
     for key, expected in expected_release.items():
         if release.get(key) != expected:
-            fail(f'R15.25 production release identity mismatch for {key}: {release.get(key)!r}')
+            fail(f'R15.26 production release identity mismatch for {key}: {release.get(key)!r}')
     if not re.fullmatch(r'[0-9a-f]{40}', str(release.get('source_commit') or '')):
-        fail('R15.25 production release source_commit must be a 40-character git SHA')
+        fail('R15.26 production release source_commit must be a 40-character git SHA')
     visual_manifest = Path('VISUAL_MANIFEST_R15_7.json')
     if not visual_manifest.is_file():
         fail('R15.7 visual manifest source missing while validating release identity')
     expected_visual_sha = hashlib.sha256(visual_manifest.read_bytes()).hexdigest()
     if release.get('visual_manifest_sha256') != expected_visual_sha:
-        fail('R15.25 production release visual manifest SHA256 mismatch')
+        fail('R15.26 production release visual manifest SHA256 mismatch')
 
     required = [
         ROOT / 'assets' / 'site.js',
@@ -196,7 +197,7 @@ def main():
 
     print(
         'PASS: R15 production static release — 50 pages, canonical/indexing consistency, '
-        '0 internal leaks, 0 broken assets/routes/anchors, R15.25 release identity and current RFQ runtime active.'
+        '0 internal leaks, 0 broken assets/routes/anchors, R15.26 Tencent release identity and current RFQ runtime active.'
     )
 
 
