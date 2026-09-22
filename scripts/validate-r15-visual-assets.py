@@ -7,7 +7,7 @@ import sys
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
 MANIFEST = Path('VISUAL_MANIFEST_R15_7.json')
 MIN_LONG_EDGE = 2048
-VERSION = '20260919-r15-5'
+VERSION = '20260922-r15-24'
 RASTER = {'.webp', '.jpg', '.jpeg', '.png', '.avif'}
 LOGO_EXEMPT = {'columbus-logo-v2.webp', 'columbus-mark.webp'}
 
@@ -64,7 +64,8 @@ def main():
             bad.append((name, 'missing'))
             continue
         w, h = dimensions(path)
-        if max(w, h) < MIN_LONG_EDGE:
+        minimum = 1440 if name == 'hero-special-metals-r15-24-mobile.webp' else MIN_LONG_EDGE
+        if max(w, h) < minimum:
             bad.append((name, f'{w}x{h}'))
     if bad:
         fail(f'content raster(s) below 2K or missing: {bad}')
@@ -83,6 +84,17 @@ def main():
         fail('homepage hero reference changed')
     if f"{hero_meta['file']}?v={VERSION}" not in hero:
         fail('homepage hero cache key missing')
+    for name, expected in {
+        'hero-special-metals-r15-24-4k.webp': (3840, 2160),
+        'hero-special-metals-r15-24-mobile.webp': (1440, 1800),
+    }.items():
+        path = ROOT / 'assets' / 'images' / name
+        if not path.is_file():
+            fail(f'R15.24 HERO variant missing: {name}')
+        if dimensions(path) != expected:
+            fail(f'R15.24 HERO variant dimensions drifted: {name} {dimensions(path)}')
+        if name not in index:
+            fail(f'R15.24 HERO variant is not referenced by homepage: {name}')
 
     w, h = dimensions(hero_path)
     print(
