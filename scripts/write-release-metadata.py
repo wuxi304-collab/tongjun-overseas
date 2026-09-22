@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path('.')
-DESCRIPTOR = ROOT / 'RELEASE_R15_25.json'
+DESCRIPTOR = ROOT / 'RELEASE_R15_26.json'
 VISUAL_MANIFEST = ROOT / 'VISUAL_MANIFEST_R15_7.json'
 
 
@@ -51,11 +51,12 @@ def main():
     visual = json.loads(VISUAL_MANIFEST.read_text(encoding='utf-8'))
     required = {
         'service': 'tongjun-overseas',
-        'site_release': 'V34.152 R15.25',
-        'source_branch': 'release/v34.152-r15.25-launch-candidate',
+        'site_release': 'V34.152 R15.26',
+        'source_branch': 'release/v34.152-r15.26-tencent-lighthouse',
         'visual_release': 'V34.152 R15.7',
         'hero_release': 'V34.152 R15.24',
-        'release_identity_version': 2,
+        'deployment_target': 'tencent-lighthouse',
+        'release_identity_version': 3,
     }
     for key, expected in required.items():
         if descriptor.get(key) != expected:
@@ -70,6 +71,7 @@ def main():
         'site_release': descriptor['site_release'],
         'source_branch': descriptor['source_branch'],
         'source_commit': git_head(),
+        'deployment_target': descriptor['deployment_target'],
         'visual_release': descriptor['visual_release'],
         'hero_release': descriptor['hero_release'],
         'visual_manifest_sha256': sha256(VISUAL_MANIFEST),
