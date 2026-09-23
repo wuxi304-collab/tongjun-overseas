@@ -62,7 +62,8 @@ const releaseCache=(releaseHeaderRule?.headers||[]).find(x=>x.key==='Cache-Contr
 if(!/no-store/i.test(String(releaseCache))) failures.push('vercel.json: release identity must be no-store');
 const api=fs.readFileSync(path.join(root,'api','rfq.js'),'utf8');
 if(!api.includes('RATE_MAX')) failures.push('api/rfq.js: rate gate missing');
-if(!api.includes("rfq_route_not_configured")) failures.push('api/rfq.js: fail-closed route guard missing');
+if(!api.includes("mail_transport_not_configured")) failures.push('api/rfq.js: fail-closed mail configuration guard missing');
+if(!api.includes("rfq_delivery_failed")) failures.push('api/rfq.js: loud delivery-failure contract missing');
 
 if(failures.length){ console.error('FAIL: launch audit'); failures.forEach(x=>console.error(' - '+x)); process.exit(1); }
 console.log(`PASS: launch audit (${htmlFiles.length} HTML; SEO, sitemap, JSON-LD, CTA routes, legal links, RFQ fallback).`);

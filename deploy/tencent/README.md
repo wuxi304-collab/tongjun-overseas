@@ -74,21 +74,47 @@ cd /opt/tongjun-overseas/app
 git checkout release/v34.152-r15.26-tencent-lighthouse
 ```
 
-## 3. Configure RFQ secrets
+## 3. Configure RFQ mail delivery
 
 The bootstrap script creates `/etc/tongjun-overseas.env` from the safe example if the file does not exist.
 
-Required for full production readiness:
+Buyer submissions are delivered by the Node service itself — there is no webhook hop. Required for full production readiness:
 
 ```
-RFQ_WEBHOOK_URL=https://your-secure-receiver.example/path
-RFQ_SHARED_SECRET=<strong-random-secret>
+RFQ_MAIL_TRANSPORT=resend
+RFQ_MAIL_TO=wuxi304@outlook.com
+RFQ_MAIL_FROM=rfq@exoticalloycn.com
+RESEND_API_KEY=<provider-api-key>
 RFQ_ALLOWED_ORIGINS=https://exoticalloycn.com,https://www.exoticalloycn.com
 ```
 
+Pick exactly one transport and supply its credentials:
+
+| Transport | Credentials | Notes |
+|---|---|---|
+| `resend` | `RESEND_API_KEY` | Sender must be on a verified domain. Simplest and most deliverable. |
+| `graph` | `MS_GRAPH_TENANT_ID` + `MS_GRAPH_CLIENT_ID` + `MS_GRAPH_CLIENT_SECRET` | Microsoft 365 **work/school** mailbox. Application permissions. |
+| `graph` (delegated) | `MS_GRAPH_CLIENT_ID` + `MS_GRAPH_REFRESH_TOKEN` | The only mode a personal `@outlook.com` account supports. Set `MS_GRAPH_TENANT_ID` to `common` (the default). |
+| `smtp` | `RFQ_SMTP_HOST` + `RFQ_SMTP_USER` + `RFQ_SMTP_PASS` | Port 465 implicit TLS, or 587 with STARTTLS. |
+| `log` | none | Local only. Delivers nothing, so production readiness is refused. |
+
+Two hard constraints worth knowing before you choose:
+
+1. **A personal Microsoft account cannot use application permissions.** Microsoft documents this explicitly ("Personal accounts do not support application permissions, only delegated permissions"), and OAuth for SMTP/IMAP is likewise unsupported for personal accounts. So `wuxi304@outlook.com` can only be reached by Graph in delegated mode, or by a provider that sends from a domain you own.
+2. **A transactional provider cannot send from `outlook.com`.** `RFQ_MAIL_FROM` must be on a domain you have verified with the provider, e.g. `rfq@exoticalloycn.com`. The service rejects a consumer-domain sender at configuration time rather than failing on a buyer's submission.
+
 Keep the file mode at 0600. Never commit the real values.
 
-If the secure RFQ route is not configured, the website still has its client-side email fallback, but `/api/health` deliberately returns 503 and the release is not considered fully production-ready.
+If mail delivery is not configured, the website still has its client-side email fallback, but `/api/health` deliberately returns 503, lists the missing variables in `mail_missing_env`, and the release is not considered production-ready.
+
+Delivery ledger: every submission appends one JSON line to `RFQ_LEDGER_PATH` (default `/var/lib/tongjun-rfq/rfq-ledger.jsonl`) with `request_id`, timestamps, status, transport, `message_id`, company, email, country, grade and form. The inquiry body is never written, by design.
+
+```bash
+# Recent deliveries, newest last
+sudo tail -n 20 /var/lib/tongjun-rfq/rfq-ledger.jsonl
+# Anything that failed to deliver
+sudo grep '"status":"failed"' /var/lib/tongjun-rfq/rfq-ledger.jsonl
+```
 
 ## 4. Install Nginx + systemd configuration
 
@@ -155,8 +181,13 @@ A fully ready health response is HTTP 200 with:
 - `site_release: V34.152 R15.26`
 - `hero_release: V34.152 R15.24`
 - `deployment_environment: production`
-- `rfq_route_https_valid: true`
-- `rfq_signature_configured: true`
+- `mail_transport_configured: true`
+- `mail_recipient_configured: true`
+- `mail_sender_configured: true`
+- `mail_delivery_mode_safe: true` (false when a `log` transport is selected in production)
+- `rfq_ledger_configured: true`
+
+When it is not ready, `mail_missing_env` and `mail_invalid_env` name the offending variables.
 
 ## 7. External launch gate
 

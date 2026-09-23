@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const { buildRfqEmail, resolveMailConfig, sendRfqEmail } = require('../server/mailer.js');
+const { appendLedger } = require('../server/rfq-ledger.js');
 
 const MAX_BODY_BYTES = 24000;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
@@ -55,16 +57,6 @@ function withinRateLimit(req,res){
   return true;
 }
 
-function validHttpsWebhook(value){
-  const raw=String(value||'').trim();
-  if(!raw) return false;
-  try{
-    const url=new URL(raw);
-    return url.protocol==='https:' && Boolean(url.hostname);
-  }catch{
-    return false;
-  }
-}
 function allowedOrigin(req){
   const origin = req.headers.origin;
   if (!origin) return true;
@@ -73,30 +65,21 @@ function allowedOrigin(req){
   if (process.env.VERCEL_URL) configured.push(`https://${process.env.VERCEL_URL}`);
   return configured.includes(origin);
 }
-function signedWebhookHeaders(secret, bodyText, requestId){
-  const headers={'Content-Type':'application/json','X-Tongjun-Request-Id':requestId};
-  if(!secret) return headers;
-  const timestamp=String(Math.floor(Date.now()/1000));
-  const signature=crypto
-    .createHmac('sha256',secret)
-    .update(`${timestamp}.${bodyText}`)
-    .digest('hex');
-  if(/^(?:1|true|yes)$/i.test(String(process.env.RFQ_LEGACY_SECRET_HEADER || '').trim())) {
-    headers['X-Tongjun-Webhook-Secret']=secret;
-  }
-  headers['X-Tongjun-Webhook-Timestamp']=timestamp;
-  headers['X-Tongjun-Webhook-Signature']=`sha256=${signature}`;
-  headers['X-Tongjun-Webhook-Signature-Version']='v1';
-  return headers;
-}
-async function postWebhook(url, body, requestId){
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),8000);
-  const bodyText=JSON.stringify(body);
-  const headers=signedWebhookHeaders(process.env.RFQ_SHARED_SECRET,bodyText,requestId);
-  try{
-    return await fetch(url,{method:'POST',headers,body:bodyText,signal:controller.signal});
-  } finally { clearTimeout(timer); }
+
+/**
+ * Record the submission locally before anything else can fail, so a buyer who submitted is
+ * never invisible even when mail delivery is broken.
+ */
+function recordLedger(record, status, extras){
+  return appendLedger({
+    requestId: record.request_id,
+    record,
+    status,
+    transport: (extras && extras.transport) || '',
+    messageId: (extras && extras.messageId) || '',
+    deliveredAt: (extras && extras.deliveredAt) || '',
+    error: (extras && extras.error) || ''
+  });
 }
 
 module.exports = async function handler(req, res) {
@@ -125,17 +108,38 @@ module.exports = async function handler(req, res) {
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)) return respond(res,400,{ok:false,error:'invalid_email'},requestId);
 
   const record={request_id:requestId,received_at:new Date().toISOString(),site:'exoticalloycn.com',...b};
-  const webhook=String(process.env.RFQ_WEBHOOK_URL||'').trim();
-  if(!webhook) return respond(res,503,{ok:false,error:'rfq_route_not_configured'},requestId);
-  if(!validHttpsWebhook(webhook)) return respond(res,503,{ok:false,error:'rfq_route_invalid'},requestId);
-  if(!String(process.env.RFQ_SHARED_SECRET||'').trim()) return respond(res,503,{ok:false,error:'rfq_signature_not_configured'},requestId);
+
+  const mail=resolveMailConfig(process.env);
+  if(!mail.recipientConfigured){
+    recordLedger(record,'rejected_config',{error:'mail_recipient_not_configured'});
+    return respond(res,503,{ok:false,error:'mail_recipient_not_configured'},requestId);
+  }
+  if(!mail.senderConfigured){
+    recordLedger(record,'rejected_config',{error:'mail_sender_not_configured'});
+    return respond(res,503,{ok:false,error:'mail_sender_not_configured'},requestId);
+  }
+  if(!mail.transportConfigured){
+    recordLedger(record,'rejected_config',{error:'mail_transport_not_configured'});
+    return respond(res,503,{ok:false,error:'mail_transport_not_configured'},requestId);
+  }
+  if(!mail.deliveryModeSafe){
+    recordLedger(record,'rejected_config',{error:'mail_delivery_mode_unsafe',transport:mail.transport});
+    return respond(res,503,{ok:false,error:'mail_delivery_mode_unsafe'},requestId);
+  }
 
   try{
-    const r=await postWebhook(webhook,record,requestId);
-    if(!r.ok) throw new Error(`webhook_${r.status}`);
-    return respond(res,202,{ok:true},requestId);
+    const message=buildRfqEmail(record,mail);
+    const result=await sendRfqEmail(message,mail);
+    recordLedger(record,'delivered',{
+      transport:result.transport || mail.transport,
+      messageId:result.messageId,
+      deliveredAt:new Date().toISOString()
+    });
+    return respond(res,202,{ok:true,delivery:result.transport || mail.transport},requestId);
   } catch(e){
-    console.error('RFQ_WEBHOOK_ERROR', requestId, e && e.message ? e.message : 'unknown');
-    return respond(res,502,{ok:false,error:'rfq_delivery_failed'},requestId);
+    const code=(e && e.code) || 'mail_delivery_failed';
+    console.error('RFQ_MAIL_ERROR', requestId, code, (e && e.message) || 'unknown');
+    recordLedger(record,'failed',{transport:mail.transport,error:code});
+    return respond(res,502,{ok:false,error:'rfq_delivery_failed',delivery_error:code},requestId);
   }
 };

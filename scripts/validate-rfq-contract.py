@@ -141,21 +141,26 @@ def main():
         "respond(res,413,{ok:false,error:'payload_too_large'},requestId)",
         "respond(res,400,{ok:false,error:'missing_fields',missing},requestId)",
         "respond(res,400,{ok:false,error:'invalid_email'},requestId)",
-        "respond(res,503,{ok:false,error:'rfq_route_not_configured'},requestId)",
-        "respond(res,503,{ok:false,error:'rfq_route_invalid'},requestId)",
-        "respond(res,503,{ok:false,error:'rfq_signature_not_configured'},requestId)",
-        "respond(res,502,{ok:false,error:'rfq_delivery_failed'},requestId)",
+        "respond(res,503,{ok:false,error:'mail_recipient_not_configured'},requestId)",
+        "respond(res,503,{ok:false,error:'mail_sender_not_configured'},requestId)",
+        "respond(res,503,{ok:false,error:'mail_transport_not_configured'},requestId)",
+        "respond(res,503,{ok:false,error:'mail_delivery_mode_unsafe'},requestId)",
+        "respond(res,502,{ok:false,error:'rfq_delivery_failed'",
         "crypto.randomBytes(6)",
         "Buffer.byteLength(rawText,'utf8')",
-        "X-Tongjun-Webhook-Timestamp",
-        "X-Tongjun-Webhook-Signature",
-        "X-Tongjun-Webhook-Signature-Version",
-        "RFQ_LEGACY_SECRET_HEADER",
-        "function validHttpsWebhook(value)",
+        "resolveMailConfig(process.env)",
+        "buildRfqEmail(record,mail)",
+        "await sendRfqEmail(message,mail)",
+        "appendLedger(",
     )
     for marker in api_markers:
         if marker not in api_text:
-            raise SystemExit(f'ERROR: RFQ API trace contract marker missing: {marker}')
+            raise SystemExit(f'ERROR: RFQ API delivery contract marker missing: {marker}')
+
+    # The retired webhook hop must not return: RFQ now delivers by mail from the server itself.
+    for retired in ("RFQ_WEBHOOK_URL", "postWebhook", "X-Tongjun-Webhook-Signature", "rfq_route_not_configured"):
+        if retired in api_text:
+            raise SystemExit(f'ERROR: api/rfq.js still references the retired webhook contract: {retired}')
 
     # The source-stage contract gate also executes the real Node handler regression suite.
     if ROOT.resolve() == Path('.').resolve():
@@ -172,7 +177,7 @@ def main():
         f'{len(form_fields)} form fields covered by API, '
         f'{len(form_required)} required fields match backend, '
         f'{len(fallback_required)} non-honeypot fields preserved in email fallback, '
-        f'{len(visible_fields)} visible buyer fields audited, JSON media type + 48-bit traces + HMAC integrity + runtime cache version gated.'
+        f'{len(visible_fields)} visible buyer fields audited, JSON media type + 48-bit traces + mail delivery + runtime cache version gated.'
     )
 
 

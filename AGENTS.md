@@ -9,6 +9,9 @@ Tongjun Special Metals is an engineering-led special-metals sourcing and qualifi
 - Technical claims must be tied to material, product form, condition, standard and qualification boundary.
 - Do not publish unverified mill capability, stock, origin, dimensional range or approval claims.
 - RFQ email fallback is ask2205@outlook.com.
+- RFQ delivery is server-side mail (`server/mailer.js`, transports: graph / smtp / resend). The former webhook hop is retired. Delivery failure must return 502, never a false success.
+- A personal Microsoft account (@outlook.com) cannot use Graph application permissions; use delegated refresh-token mode or send from a verified domain through a provider.
+- The RFQ ledger (`server/rfq-ledger.js`) stores delivery metadata only — never the inquiry body.
 - Canonical production domain is https://exoticalloycn.com.
 - Public visual language: industrial enterprise, full-bleed real materials photography, square geometry, deep blue/graphite, restrained orange accent.
 - Public copy must not mention the competitor used as an internal design reference.

@@ -55,9 +55,17 @@ const robotsTxt=fs.readFileSync(path.join(root,'robots.txt'),'utf8');
 if(/Disallow:\s*\/$/m.test(robotsTxt)) failures.push('production robots.txt blocks the entire site');
 
 const health=fs.readFileSync(path.join(root,'api','health.js'),'utf8');
-for(const marker of ['rfq_route_configured','rfq_route_https_valid','rfq_signature_configured','Cache-Control','RFQ_WEBHOOK_URL','RFQ_SHARED_SECRET','TONGJUN_RELEASE_COMMIT','TONGJUN_DEPLOYMENT_ENVIRONMENT','V34.152 R15.26','X-Tongjun-Release','visual_release','hero_release','V34.152 R15.24']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
-if(/X-Tongjun-Webhook-Secret/.test(health)) failures.push('api/health.js must never expose the raw webhook secret header');
-if(/RFQ_SHARED_SECRET\s*[:=]\s*process\.env\.RFQ_SHARED_SECRET/.test(health)) failures.push('api/health.js must not serialize RFQ_SHARED_SECRET into the response payload');
+for(const marker of ['mail_transport_configured','mail_recipient_configured','mail_sender_configured','mail_delivery_mode_safe','mail_missing_env','mail_invalid_env','rfq_ledger_configured','rfq_ledger_path','Cache-Control','TONGJUN_RELEASE_COMMIT','TONGJUN_DEPLOYMENT_ENVIRONMENT','V34.152 R15.26','X-Tongjun-Release','visual_release','hero_release','V34.152 R15.24']) if(!health.includes(marker)) failures.push(`api/health.js missing ${marker}`);
+// The retired webhook contract must not creep back in: readiness is a mail question now.
+for(const retired of ['rfq_route_configured','rfq_route_https_valid','rfq_signature_configured','RFQ_WEBHOOK_URL','RFQ_SHARED_SECRET']) if(health.includes(retired)) failures.push(`api/health.js must no longer reference the retired webhook contract: ${retired}`);
+if(/MS_GRAPH_CLIENT_SECRET\s*[:=]\s*process\.env\.MS_GRAPH_CLIENT_SECRET|RESEND_API_KEY\s*[:=]\s*process\.env\.RESEND_API_KEY|RFQ_SMTP_PASS\s*[:=]\s*process\.env\.RFQ_SMTP_PASS/.test(health)) failures.push('api/health.js must not serialize mail credentials into the response payload');
+
+// A log-only transport in production is the silent-failure trap this contract exists to block.
+const mailer=fs.readFileSync(path.join(root,'server','mailer.js'),'utf8');
+for(const marker of ['deliveryModeSafe','mail_not_configured','RFQ_MAIL_TO','RFQ_MAIL_FROM']) if(!mailer.includes(marker)) failures.push(`server/mailer.js missing ${marker}`);
+const rfqApi=fs.readFileSync(path.join(root,'api','rfq.js'),'utf8');
+if(/RFQ_WEBHOOK_URL|postWebhook|X-Tongjun-Webhook-Signature/.test(rfqApi)) failures.push('api/rfq.js must deliver by mail, not by webhook');
+for(const marker of ["'rfq_delivery_failed'",'sendRfqEmail','appendLedger']) if(!rfqApi.includes(marker)) failures.push(`api/rfq.js missing ${marker}`);
 
 const smoke=fs.readFileSync(path.join(root,'scripts','smoke-rfq-production.js'),'utf8');
 if(!smoke.includes('RFQ_SMOKE_URL')) failures.push('production RFQ smoke is not explicitly opt-in');

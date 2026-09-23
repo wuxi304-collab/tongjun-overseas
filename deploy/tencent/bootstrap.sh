@@ -22,9 +22,16 @@ mkdir -p "$WEB_ROOT/releases"
 chown root:www-data "$WEB_ROOT" "$WEB_ROOT/releases"
 chmod 0755 "$WEB_ROOT" "$WEB_ROOT/releases"
 
+# Delivery ledger directory. Owned by the API user so `ProtectSystem=full` still allows
+# appends, and mode 0750 so the inquiry metadata is not world readable.
+LEDGER_DIR="${LEDGER_DIR:-/var/lib/tongjun-rfq}"
+mkdir -p "$LEDGER_DIR"
+chown www-data:www-data "$LEDGER_DIR"
+chmod 0750 "$LEDGER_DIR"
+
 if [[ ! -f /etc/tongjun-overseas.env ]]; then
   install -m 0600 "$ROOT/deploy/tencent/tongjun-overseas.env.example" /etc/tongjun-overseas.env
-  echo "Created /etc/tongjun-overseas.env. Fill RFQ_WEBHOOK_URL and RFQ_SHARED_SECRET before launch."
+  echo "Created /etc/tongjun-overseas.env. Fill RFQ_MAIL_TRANSPORT, RFQ_MAIL_TO, RFQ_MAIL_FROM and the transport credentials before launch."
 else
   chmod 0600 /etc/tongjun-overseas.env
 fi

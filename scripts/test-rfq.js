@@ -1,5 +1,10 @@
 const assert = require('assert');
-const crypto = require('crypto');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+// RFQ handler regression suite for the mail-delivery architecture: browser -> /api/rfq ->
+// mail transport -> buyer-facing mailbox, with a body-free local delivery ledger.
 
 function makeRes(){
   let statusCode=200,payload=null;
@@ -20,24 +25,36 @@ function assertTrace(res){
   assert.equal(res.headers['X-Tongjun-Request-Id'],res.payload.request_id);
 }
 
-async function run(){
-  process.env.RFQ_WEBHOOK_URL='https://example.invalid/hook';
-  process.env.RFQ_ALLOWED_ORIGINS='https://exoticalloycn.com';
-  process.env.RFQ_SHARED_SECRET='unit-test-secret';
+function readLedger(file){
+  try{
+    return fs.readFileSync(file,'utf8').trim().split('\n').filter(Boolean).map(line=>JSON.parse(line));
+  }catch{
+    return [];
+  }
+}
 
-  let sent=null;
-  let sentBodyText='';
-  let sentHeaders=null;
+async function run(){
+  const ledgerDir=fs.mkdtempSync(path.join(os.tmpdir(),'tongjun-rfq-test-'));
+  const ledgerFile=path.join(ledgerDir,'rfq-ledger.jsonl');
+
+  process.env.RFQ_MAIL_TRANSPORT='resend';
+  process.env.RFQ_MAIL_TO='wuxi304@outlook.com';
+  process.env.RFQ_MAIL_FROM='rfq@exoticalloycn.com';
+  process.env.RESEND_API_KEY='re_unit_test';
+  process.env.RFQ_ALLOWED_ORIGINS='https://exoticalloycn.com';
+  process.env.RFQ_LEDGER_PATH=ledgerFile;
+  delete process.env.RFQ_LEDGER_DISABLED;
+  process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT='production';
+
+  let sentMail=null;
   let fetchMode='success';
   let fetchCount=0;
-  global.fetch=async (_url,opts)=>{
+  global.fetch=async (url,opts)=>{
     fetchCount+=1;
-    sentBodyText=String(opts.body||'');
-    sent=JSON.parse(sentBodyText);
-    sentHeaders=opts.headers||{};
+    sentMail=JSON.parse(String(opts.body||'{}'));
     if(fetchMode==='throw') throw new Error('network_down');
-    if(fetchMode==='fail') return {ok:false,status:503};
-    return {ok:true,status:202};
+    if(fetchMode==='fail') return {ok:false,status:503,json:async()=>({message:'relay_unavailable'})};
+    return {ok:true,status:200,json:async()=>({id:`msg-${fetchCount}`})};
   };
 
   const handler=require('../api/rfq.js');
@@ -57,55 +74,52 @@ async function run(){
     headers:{origin:'https://exoticalloycn.com','content-type':'application/json',...headers},
     body:{...body}
   });
+  const mailHas=value=>assert.ok(String(sentMail&&sentMail.text||'').includes(value),`email body missing: ${value}`);
 
-  // Successful secure routing preserves advanced technical + attribution context.
+  // Successful delivery preserves advanced technical + attribution context in the email body.
   let res=makeRes();
   await handler(req(),res);
   assert.equal(res.statusCode,202);
   assert.equal(res.payload.ok,true);
+  assert.equal(res.payload.delivery,'resend');
   assertTrace(res);
-  assert.equal(sent.request_id,res.payload.request_id);
-  assert.equal(sent.procurement_stage,'trial');
-  assert.equal(sent.buyer_gate,'approval');
-  assert.equal(sent.decision_ref,'BR-20260907-ABC123');
-  assert.equal(sent.approval,'Project AVL');
-  assert.equal(sent.incoterm,'CIF');
-  assert.equal(sent.destination,'Hamburg, Germany');
-  assert.equal(sent.delivery_target,'2026-11-15');
-  assert.equal(sent.packing,'Export seaworthy');
-  assert.equal(sent.offer_ref,'OF-20260907-ABC123');
-  assert.equal(sent.quote_assumptions,'Lead time starts after technical release');
-  assert.equal(sent.deviation_status,'buyer-decision');
-  assert.match(sent.deviation_register,/DEV-01/);
-  assert.equal(sent.alternate_route_permission,'separate-alternate');
-  assert.equal(sent.certificate_responsibility,'buyer-specifies-source-provides');
-  assert.equal(sent.inspection_responsibility,'third-party-witness');
-  assert.equal(sent.release_status,'QUALIFIED WITH CONDITIONS');
-  assert.match(sent.release_checklist,/technical=READY/);
-  assert.equal(sent.technical_review_plan,'VERIFY > QUALIFY > ALIGN > OFFER');
-  assert.equal(sent.product,'alloy-625');
-  assert.equal(sent.first_seen,'2026-09-16T03:00:00.000Z');
+  assert.deepEqual(sentMail.to,['wuxi304@outlook.com']);
+  assert.equal(sentMail.reply_to,'buyer@example.com','Reply-To must be the buyer');
+  assert.equal(sentMail.headers['X-Tongjun-Request-Id'],res.payload.request_id);
+  assert.ok(sentMail.subject.startsWith('[Tongjun RFQ] UNS N06625 · Sheet'),`unexpected subject: ${sentMail.subject}`);
+  mailHas(res.payload.request_id);
+  mailHas('trial');
+  mailHas('approval');
+  mailHas('BR-20260907-ABC123');
+  mailHas('Project AVL');
+  mailHas('CIF');
+  mailHas('Hamburg, Germany');
+  mailHas('2026-11-15');
+  mailHas('Export seaworthy');
+  mailHas('OF-20260907-ABC123');
+  mailHas('Lead time starts after technical release');
+  mailHas('buyer-decision');
+  mailHas('DEV-01');
+  mailHas('separate-alternate');
+  mailHas('buyer-specifies-source-provides');
+  mailHas('third-party-witness');
+  mailHas('QUALIFIED WITH CONDITIONS');
+  mailHas('technical=READY');
+  mailHas('VERIFY > QUALIFY > ALIGN > OFFER');
+  mailHas('alloy-625');
+  mailHas('2026-09-16T03:00:00.000Z');
+  mailHas('Buyer note');
 
-  // Shared-secret mode adds an integrity signature over timestamp + exact JSON body.
-  assert.equal(sentHeaders['X-Tongjun-Webhook-Secret'],undefined);
-  assert.equal(sentHeaders['X-Tongjun-Webhook-Signature-Version'],'v1');
-  assert.match(String(sentHeaders['X-Tongjun-Webhook-Timestamp']||''),/^\d{10}$/);
-  const expectedSignature=crypto
-    .createHmac('sha256','unit-test-secret')
-    .update(`${sentHeaders['X-Tongjun-Webhook-Timestamp']}.${sentBodyText}`)
-    .digest('hex');
-  assert.equal(sentHeaders['X-Tongjun-Webhook-Signature'],`sha256=${expectedSignature}`);
-  assert.equal(sentHeaders['X-Tongjun-Request-Id'],res.payload.request_id);
-
-  // Raw shared-secret forwarding is disabled by default and only available as an explicit migration switch.
-  process.env.RFQ_LEGACY_SECRET_HEADER='1';
-  res=makeRes();
-  await handler(req(baseBody,{'x-forwarded-for':'198.51.100.21'}),res);
-  assert.equal(res.statusCode,202);
-  assertTrace(res);
-  assert.equal(sentHeaders['X-Tongjun-Webhook-Secret'],'unit-test-secret');
-  assert.equal(sentHeaders['X-Tongjun-Webhook-Signature-Version'],'v1');
-  delete process.env.RFQ_LEGACY_SECRET_HEADER;
+  // The local ledger records delivery without ever storing the inquiry body.
+  let ledger=readLedger(ledgerFile);
+  assert.equal(ledger.length,1,'one submission must produce exactly one ledger line');
+  assert.equal(ledger[0].status,'delivered');
+  assert.equal(ledger[0].request_id,res.payload.request_id);
+  assert.equal(ledger[0].message_id,'msg-1');
+  assert.equal(ledger[0].transport,'resend');
+  assert.equal(ledger[0].company,'Example');
+  assert.ok(!('notes' in ledger[0]) && !('application' in ledger[0]),'the inquiry body must never reach the ledger');
+  assert.ok(!JSON.stringify(ledger[0]).includes('Buyer note'),'customer notes must never reach the ledger');
 
   // Only POST is accepted.
   res=makeRes();
@@ -143,7 +157,7 @@ async function run(){
   assert.equal(res.statusCode,202);
   assertTrace(res);
 
-  // Required-field and email validation are traceable and do not call the webhook.
+  // Required-field and email validation are traceable and never reach the transport.
   const beforeValidationFetches=fetchCount;
   const missing={...baseBody}; delete missing.grade;
   res=makeRes();
@@ -160,13 +174,16 @@ async function run(){
   assertTrace(res);
   assert.equal(fetchCount,beforeValidationFetches);
 
-  // Honeypot submissions are accepted silently without delivery.
+  // Honeypot submissions are accepted silently without delivery or ledger noise.
+  const ledgerBeforeHoneypot=readLedger(ledgerFile).length;
   res=makeRes();
   await handler(req({...baseBody,website:'https://spam.example'},{'x-forwarded-for':'198.51.100.13'}),res);
   assert.equal(res.statusCode,202);
   assert.equal(res.payload.ok,true);
   assertTrace(res);
   assert.equal(fetchCount,beforeValidationFetches);
+  assert.equal(readLedger(ledgerFile).length,ledgerBeforeHoneypot);
+  assert.ok(!String(sentMail.text).includes('spam.example'),'the honeypot value must never be delivered');
 
   // Payload guard is byte-based and runs before field validation.
   res=makeRes();
@@ -179,45 +196,65 @@ async function run(){
   res=makeRes();
   await handler(req({...baseBody,name:'N'.repeat(180),application:'A'.repeat(2800)},{'x-forwarded-for':'198.51.100.15'}),res);
   assert.equal(res.statusCode,202);
-  assert.equal(sent.name.length,120);
-  assert.equal(sent.application.length,2500);
+  assert.ok(sentMail.text.includes('N'.repeat(120)),'name must be truncated to 120 characters');
+  assert.ok(!sentMail.text.includes('N'.repeat(121)),'name must not exceed 120 characters');
+  assert.ok(sentMail.text.includes('A'.repeat(2500)),'application must be truncated to 2500 characters');
+  assert.ok(!sentMail.text.includes('A'.repeat(2501)),'application must not exceed 2500 characters');
 
-  // Missing, invalid or unsigned downstream routes fail closed with traceable IDs.
-  const oldWebhook=process.env.RFQ_WEBHOOK_URL;
-  const oldSecret=process.env.RFQ_SHARED_SECRET;
+  // Mail configuration gaps fail closed with distinct, traceable 503 errors.
+  const mailEnv=['RFQ_MAIL_TRANSPORT','RFQ_MAIL_TO','RFQ_MAIL_FROM','RESEND_API_KEY'];
+  const savedMailEnv={};
+  for(const key of mailEnv) savedMailEnv[key]=process.env[key];
 
-  delete process.env.RFQ_WEBHOOK_URL;
+  delete process.env.RFQ_MAIL_TO;
+  const ledgerBeforeConfigFailure=readLedger(ledgerFile).length;
   res=makeRes();
   await handler(req(baseBody,{'x-forwarded-for':'198.51.100.16'}),res);
   assert.equal(res.statusCode,503);
-  assert.equal(res.payload.error,'rfq_route_not_configured');
+  assert.equal(res.payload.error,'mail_recipient_not_configured');
   assertTrace(res);
 
-  process.env.RFQ_WEBHOOK_URL='http://example.invalid/hook';
-  process.env.RFQ_SHARED_SECRET='unit-test-secret';
+  process.env.RFQ_MAIL_TO='wuxi304@outlook.com';
+  delete process.env.RFQ_MAIL_FROM;
+  res=makeRes();
+  await handler(req(baseBody,{'x-forwarded-for':'198.51.100.21'}),res);
+  assert.equal(res.statusCode,503);
+  assert.equal(res.payload.error,'mail_sender_not_configured');
+  assertTrace(res);
+
+  process.env.RFQ_MAIL_FROM='rfq@exoticalloycn.com';
+  delete process.env.RESEND_API_KEY;
   res=makeRes();
   await handler(req(baseBody,{'x-forwarded-for':'198.51.100.22'}),res);
   assert.equal(res.statusCode,503);
-  assert.equal(res.payload.error,'rfq_route_invalid');
+  assert.equal(res.payload.error,'mail_transport_not_configured');
   assertTrace(res);
 
-  process.env.RFQ_WEBHOOK_URL='https://example.invalid/hook';
-  delete process.env.RFQ_SHARED_SECRET;
+  // A submission that could not be delivered must still be visible locally.
+  const configFailures=readLedger(ledgerFile).slice(ledgerBeforeConfigFailure);
+  assert.equal(configFailures.length,3,'every undeliverable submission must be recorded');
+  assert.ok(configFailures.every(entry=>entry.status==='rejected_config'));
+
+  // A log transport in production is refused outright rather than pretending to deliver.
+  process.env.RFQ_MAIL_TRANSPORT='log';
   res=makeRes();
   await handler(req(baseBody,{'x-forwarded-for':'198.51.100.23'}),res);
   assert.equal(res.statusCode,503);
-  assert.equal(res.payload.error,'rfq_signature_not_configured');
+  assert.equal(res.payload.error,'mail_delivery_mode_unsafe','a log-only transport must never look like a working delivery path');
   assertTrace(res);
 
-  process.env.RFQ_WEBHOOK_URL=oldWebhook;
-  process.env.RFQ_SHARED_SECRET=oldSecret;
+  process.env.RFQ_MAIL_TRANSPORT='resend';
+  process.env.RESEND_API_KEY='re_unit_test';
+  for(const key of mailEnv) if(savedMailEnv[key]===undefined) delete process.env[key]; else process.env[key]=savedMailEnv[key];
 
-  // Downstream non-2xx and network failures become traceable 502 responses.
+  // Transport failures and network errors become traceable 502 responses, and are logged.
+  const ledgerBeforeDeliveryFailure=readLedger(ledgerFile).length;
   fetchMode='fail';
   res=makeRes();
   await handler(req(baseBody,{'x-forwarded-for':'198.51.100.17'}),res);
   assert.equal(res.statusCode,502);
   assert.equal(res.payload.error,'rfq_delivery_failed');
+  assert.equal(res.payload.delivery_error,'resend_send_rejected');
   assertTrace(res);
 
   fetchMode='throw';
@@ -225,8 +262,14 @@ async function run(){
   await handler(req(baseBody,{'x-forwarded-for':'198.51.100.18'}),res);
   assert.equal(res.statusCode,502);
   assert.equal(res.payload.error,'rfq_delivery_failed');
+  assert.equal(res.payload.delivery_error,'resend_unreachable');
   assertTrace(res);
   fetchMode='success';
+
+  const deliveryFailures=readLedger(ledgerFile).slice(ledgerBeforeDeliveryFailure);
+  assert.equal(deliveryFailures.length,2);
+  assert.ok(deliveryFailures.every(entry=>entry.status==='failed'));
+  assert.equal(deliveryFailures[0].error,'resend_send_rejected');
 
   // Per-instance abuse gate remains bounded and exposes retry metadata.
   for(let i=1;i<=9;i++){
@@ -243,7 +286,16 @@ async function run(){
     }
   }
 
-  console.log('PASS: RFQ handler — JSON media gate, 48-bit trace IDs, origin semantics, validation, UTF-8 byte limit, honeypot, HMAC webhook integrity, route failures and rate gate validated.');
+  // Every reply the buyer can send goes to the buyer, never back to the server.
+  res=makeRes();
+  await handler(req({...baseBody,email:'second.buyer@example.org'},{'x-forwarded-for':'198.51.100.25'}),res);
+  assert.equal(res.statusCode,202);
+  assert.equal(sentMail.reply_to,'second.buyer@example.org');
+
+  delete process.env.RFQ_LEDGER_PATH;
+  fs.rmSync(ledgerDir,{recursive:true,force:true});
+
+  console.log('PASS: RFQ handler — JSON media gate, 48-bit trace IDs, origin semantics, validation, UTF-8 byte limit, honeypot, mail delivery with buyer Reply-To, fail-closed mail configuration, 502 delivery failures, body-free ledger and rate gate validated.');
 }
 
 run().catch(err=>{ console.error(err); process.exit(1); });

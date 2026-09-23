@@ -17,7 +17,7 @@
 ## Required before public sales launch
 - [ ] Confirm domain registration is complete
 - [ ] Connect exoticalloycn.com DNS to Vercel
-- [ ] Configure RFQ_WEBHOOK_URL
+- [ ] Configure RFQ mail delivery (`RFQ_MAIL_TRANSPORT` + `RFQ_MAIL_TO` + `RFQ_MAIL_FROM` + transport credentials) and confirm `/api/health` returns `ok: true`
 - [ ] Set up branded email: rfq@ / sales@ / named mailbox
 - [ ] Configure SPF / DKIM / DMARC
 - [ ] Create GitHub private repo `tongjun-overseas` and push current branch
@@ -37,5 +37,5 @@
 - [ ] GitHub private repo exists and is connected
 - [ ] Vercel project is connected
 - [ ] exoticalloycn.com DNS attached to Vercel
-- [ ] RFQ_WEBHOOK_URL configured and end-to-end tested
+- [ ] RFQ mail delivery configured and end-to-end tested (buyer receives the `[Tongjun RFQ] …` email at the configured recipient, Reply-To points at the buyer)
 - [ ] branded mailbox configured; replace temporary Outlook contact when ready

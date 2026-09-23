@@ -55,13 +55,15 @@ async function run(){
 
   console.log(`RFQ smoke status: ${response.status}`);
   console.log(`RFQ smoke request ID: ${bodyId||headerId||'(missing)'}`);
+  console.log(`RFQ smoke delivery channel: ${body.delivery||'(not reported)'}`);
 
   assert.equal(response.status,202,`Expected secure delivery 202, got ${response.status} (${body.error||'no JSON error'})`);
   assert.equal(body.ok,true,'Expected response body ok=true');
   assert.match(bodyId,/^TJ-\d{8}-[0-9A-F]{12}$/,'Response request_id format is invalid');
   assert.equal(headerId,bodyId,'X-Tongjun-Request-Id must match response body request_id');
+  assert.ok(body.delivery,'Response must report which mail transport delivered the inquiry');
 
-  console.log('PASS: production RFQ endpoint accepted the synthetic smoke inquiry and returned a correlated trace ID.');
+  console.log(`PASS: production RFQ endpoint delivered the synthetic smoke inquiry by ${body.delivery} and returned a correlated trace ID.`);
 }
 
 run().catch(err=>{

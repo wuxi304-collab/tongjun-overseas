@@ -7,8 +7,14 @@ async function run(){
   process.env.TONGJUN_API_PORT='0';
   process.env.TONGJUN_RELEASE_COMMIT='1234567890abcdef1234567890abcdef12345678';
   process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT='production';
-  delete process.env.RFQ_WEBHOOK_URL;
-  delete process.env.RFQ_SHARED_SECRET;
+  delete process.env.RFQ_MAIL_TRANSPORT;
+  delete process.env.RFQ_MAIL_TO;
+  delete process.env.RFQ_MAIL_FROM;
+  delete process.env.RESEND_API_KEY;
+  delete process.env.MS_GRAPH_CLIENT_ID;
+  delete process.env.MS_GRAPH_CLIENT_SECRET;
+  delete process.env.MS_GRAPH_REFRESH_TOKEN;
+  delete process.env.RFQ_SMTP_HOST;
 
   const {createServer}=require('../server/tongjun-api.js');
   const server=createServer();

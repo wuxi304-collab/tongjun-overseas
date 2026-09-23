@@ -1,17 +1,9 @@
+const { resolveMailConfig, transportEnvName } = require('../server/mailer.js');
+const { ledgerEnabled, ledgerPath } = require('../server/rfq-ledger.js');
+
 const SITE_RELEASE = 'V34.152 R15.26';
 const VISUAL_RELEASE = 'V34.152 R15.7';
 const HERO_RELEASE = 'V34.152 R15.24';
-
-function validHttpsWebhook(value){
-  const raw=String(value||'').trim();
-  if(!raw) return false;
-  try{
-    const url=new URL(raw);
-    return url.protocol==='https:' && Boolean(url.hostname);
-  }catch{
-    return false;
-  }
-}
 
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -23,10 +15,9 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ok:false,error:'method_not_allowed'});
   }
 
-  const routeConfigured=Boolean(String(process.env.RFQ_WEBHOOK_URL||'').trim());
-  const routeValid=validHttpsWebhook(process.env.RFQ_WEBHOOK_URL);
-  const signatureConfigured=Boolean(String(process.env.RFQ_SHARED_SECRET||'').trim());
-  const ready=routeValid && signatureConfigured;
+  // Readiness is now a question about mail delivery, not about a downstream webhook hop.
+  const mail = resolveMailConfig(process.env);
+  const ready = mail.ready;
   const release = String(
     process.env.TONGJUN_RELEASE_COMMIT ||
     process.env.GITHUB_SHA ||
@@ -42,9 +33,18 @@ module.exports = async function handler(req, res) {
     hero_release: HERO_RELEASE,
     release,
     deployment_environment: String(process.env.TONGJUN_DEPLOYMENT_ENVIRONMENT || process.env.VERCEL_ENV || 'local').slice(0, 40),
-    rfq_route_configured: routeConfigured,
-    rfq_route_https_valid: routeValid,
-    rfq_signature_configured: signatureConfigured,
+    rfq_delivery: 'email',
+    mail_transport: mail.transport || transportEnvName(mail.transport) || 'unconfigured',
+    mail_delivery_mode: mail.transportDetail,
+    mail_transport_configured: mail.transportConfigured,
+    mail_recipient_configured: mail.recipientConfigured,
+    mail_sender_configured: mail.senderConfigured,
+    mail_delivery_mode_safe: mail.deliveryModeSafe,
+    // Environment variable NAMES only — never values. Lets an operator debug without shell access.
+    mail_missing_env: mail.missing.slice(0, 12),
+    mail_invalid_env: mail.invalid.slice(0, 12),
+    rfq_ledger_configured: ledgerEnabled(process.env),
+    rfq_ledger_path: ledgerPath(process.env),
     checked_at: new Date().toISOString()
   };
 

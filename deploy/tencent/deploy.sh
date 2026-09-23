@@ -56,7 +56,7 @@ fi
 curl -fsS --resolve exoticalloycn.com:443:127.0.0.1 https://exoticalloycn.com/ >/dev/null
 echo "PASS: R15.26 deployed locally through Nginx. API health HTTP $STATUS."
 if [[ "$STATUS" == "503" ]]; then
-  echo "WARNING: RFQ route is not production-ready yet. Configure RFQ_WEBHOOK_URL and RFQ_SHARED_SECRET in /etc/tongjun-overseas.env."
+  echo "WARNING: RFQ mail delivery is not production-ready yet. Set RFQ_MAIL_TRANSPORT, RFQ_MAIL_TO, RFQ_MAIL_FROM and the transport credentials in /etc/tongjun-overseas.env, then check mail_missing_env in /api/health."
 fi
 
 if [[ "${RUN_EXTERNAL_CHECK:-0}" == "1" ]]; then
