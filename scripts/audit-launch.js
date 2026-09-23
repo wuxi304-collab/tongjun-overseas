@@ -48,7 +48,7 @@ if(!fs.existsSync(path.join(root,'.well-known','security.txt'))) failures.push('
 if(!fs.existsSync(path.join(root,'404.html'))) failures.push('404.html missing');
 const rfq=fs.readFileSync(path.join(root,'rfq.html'),'utf8');
 if(!rfq.includes('href="/privacy"')) failures.push('rfq.html: privacy acknowledgement missing');
-if(!fs.readFileSync(path.join(root,'assets','site.js'),'utf8').includes('mailto:ask2205@outlook.com')) failures.push('site.js: email fallback missing');
+if(!fs.readFileSync(path.join(root,'assets','site.js'),'utf8').includes('mailto:wuxi304@outlook.com')) failures.push('site.js: email fallback missing');
 const vercel=JSON.parse(fs.readFileSync(path.join(root,'vercel.json'),'utf8'));
 const headerPairs=vercel.headers?.flatMap(x=>x.headers||[])||[];
 const headerMap=Object.fromEntries(headerPairs.map(x=>[x.key,x.value]));

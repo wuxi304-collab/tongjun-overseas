@@ -35,18 +35,23 @@ if 'routeError.requestId=safe(result.request_id,80)' not in s:
     s = s.replace(old_error, new_error, 1)
 
 old_fallback = """        showToast('Secure routing is not active yet. Opening email fallback.');
-        setTimeout(()=>{location.href=`mailto:ask2205@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},350);
+        setTimeout(()=>{location.href=`mailto:wuxi304@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},350);
 """
 old_fallback_r141 = """        setStore('tj_last_rfq','email_fallback');
         showToast('Secure routing unavailable. Opening email fallback; use Copy Structured RFQ if no mail app opens.');
-        setTimeout(()=>{location.href=`mailto:ask2205@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},350);
+        setTimeout(()=>{location.href=`mailto:wuxi304@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},350);
 """
+# The mailbox inside new_fallback is the single source of truth for the SHIPPED RFQ
+# fallback address. assets/site.js holds the PRE-overlay block, so editing the address
+# only in site.js changes nothing at runtime and stops old_fallback/old_fallback_r141
+# above from matching (the build then fails loudly). Change it here, in both the
+# old_* patterns and new_fallback, so source, overlay and gate stay in agreement.
 new_fallback = """        const fallbackRef=safe(err&&err.requestId,80);
         if(fallbackRef) setStore('tj_rfq_id',fallbackRef);
         const fallbackBody=fallbackRef?`${body}\n\nSecure Route Attempt: ${fallbackRef}`:body;
         setStore('tj_last_rfq','email_fallback');
         showToast(fallbackRef?`Secure routing failed · ${fallbackRef}. Opening email fallback; use Copy Structured RFQ if no mail app opens.`:'Secure routing unavailable. Opening email fallback; use Copy Structured RFQ if no mail app opens.');
-        setTimeout(()=>{location.href=`mailto:ask2205@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fallbackBody)}`;},350);
+        setTimeout(()=>{location.href=`mailto:wuxi304@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fallbackBody)}`;},350);
 """
 if 'Secure Route Attempt:' not in s:
     if old_fallback_r141 in s:
