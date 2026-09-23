@@ -118,7 +118,7 @@ def main():
         'Secure Route Attempt:',
         "setStore('tj_last_rfq','email_fallback')",
         'Copy Structured RFQ',
-        'mailto:ask2205@outlook.com',
+        'mailto:wuxi304@outlook.com',
     )
     for marker in runtime_markers:
         if marker not in js_text:

@@ -445,7 +445,7 @@
       }catch(err){
         if(btn){btn.disabled=false;btn.textContent=original}
         showToast('Secure routing is not active yet. Opening email fallback.');
-        setTimeout(()=>{location.href=`mailto:ask2205@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},350);
+        setTimeout(()=>{location.href=`mailto:wuxi304@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},350);
       }
     });
 
