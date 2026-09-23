@@ -57,6 +57,10 @@ async function run(){
   assert.equal(res.payload.mail_delivery_mode,'unconfigured');
   assert.equal(res.payload.rfq_delivery,'email');
   assert.deepEqual(res.payload.mail_missing_env.includes('RFQ_MAIL_TRANSPORT'),true);
+  // The recipient and sender variables belong in the same list: an operator whose only window
+  // is /api/health must see every prerequisite, not just the transport one.
+  assert.equal(res.payload.mail_missing_env.includes('RFQ_MAIL_TO'),true);
+  assert.equal(res.payload.mail_missing_env.includes('RFQ_MAIL_FROM'),true);
   assert.equal(res.payload.rfq_ledger_configured,true);
   assert.equal(res.payload.rfq_ledger_path,'/var/lib/tongjun-rfq/rfq-ledger.jsonl');
   assert.equal(res.payload.site_release,'V34.152 R15.26');
@@ -82,6 +86,8 @@ async function run(){
   assert.equal(res.payload.mail_recipient_configured,true);
   assert.equal(res.payload.mail_sender_configured,false);
   assert.equal(res.payload.ok,false);
+  assert.equal(res.payload.mail_missing_env.includes('RFQ_MAIL_FROM'),true);
+  assert.equal(res.payload.mail_missing_env.includes('RFQ_MAIL_TO'),false);
 
   // A consumer-domain sender cannot work with a transactional provider.
   process.env.RFQ_MAIL_FROM='wuxi304@outlook.com';

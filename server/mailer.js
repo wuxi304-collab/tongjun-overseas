@@ -180,6 +180,21 @@ function resolveMailConfig(env) {
     config.transportDetail = 'unconfigured';
   }
 
+  // The transport branch above only reports transport-specific variables. An operator whose
+  // only window is /api/health should see every prerequisite they still owe, so the recipient
+  // and sender variables are folded into the same two lists (deduplicated against the
+  // transport branch, which can already flag RFQ_MAIL_FROM as invalid for Resend).
+  const noteMissing = key => {
+    if (!config.missing.includes(key)) config.missing.push(key);
+  };
+  const noteInvalid = key => {
+    if (!config.invalid.includes(key)) config.invalid.push(key);
+  };
+  if (recipientList.length === 0) noteMissing('RFQ_MAIL_TO');
+  else if (invalidRecipients.length) noteInvalid('RFQ_MAIL_TO');
+  if (!fromAddress) noteMissing('RFQ_MAIL_FROM');
+  else if (!senderConfigured) noteInvalid('RFQ_MAIL_FROM');
+
   const environment = readEnv(source, 'TONGJUN_DEPLOYMENT_ENVIRONMENT') || readEnv(source, 'NODE_ENV') || 'local';
   config.environment = environment;
   // A log transport must never let production report healthy: that is exactly the
