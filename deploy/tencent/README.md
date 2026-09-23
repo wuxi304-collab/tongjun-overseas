@@ -88,20 +88,21 @@ RESEND_API_KEY=<provider-api-key>
 RFQ_ALLOWED_ORIGINS=https://exoticalloycn.com,https://www.exoticalloycn.com
 ```
 
-Pick exactly one transport and supply its credentials:
+This deployment uses **`resend`**. The other rows are kept because the code supports them, not because they are planned.
 
 | Transport | Credentials | Notes |
 |---|---|---|
-| `resend` | `RESEND_API_KEY` | Sender must be on a verified domain. Simplest and most deliverable. |
-| `graph` | `MS_GRAPH_TENANT_ID` + `MS_GRAPH_CLIENT_ID` + `MS_GRAPH_CLIENT_SECRET` | Microsoft 365 **work/school** mailbox. Application permissions. |
-| `graph` (delegated) | `MS_GRAPH_CLIENT_ID` + `MS_GRAPH_REFRESH_TOKEN` | The only mode a personal `@outlook.com` account supports. Set `MS_GRAPH_TENANT_ID` to `common` (the default). |
+| `resend` | `RESEND_API_KEY` | **Selected.** Sender must be on a domain verified in Resend. One key to store, nothing that expires. |
+| `graph` | `MS_GRAPH_TENANT_ID` + `MS_GRAPH_CLIENT_ID` + `MS_GRAPH_CLIENT_SECRET` | Microsoft 365 **work/school** mailbox only. Application permissions. |
+| `graph` (delegated) | `MS_GRAPH_CLIENT_ID` + `MS_GRAPH_REFRESH_TOKEN` | The only Graph mode a personal `@outlook.com` account supports. Set `MS_GRAPH_TENANT_ID` to `common` (the default). |
 | `smtp` | `RFQ_SMTP_HOST` + `RFQ_SMTP_USER` + `RFQ_SMTP_PASS` | Port 465 implicit TLS, or 587 with STARTTLS. |
 | `log` | none | Local only. Delivers nothing, so production readiness is refused. |
 
-Two hard constraints worth knowing before you choose:
+Three constraints worth knowing before you choose:
 
-1. **A personal Microsoft account cannot use application permissions.** Microsoft documents this explicitly ("Personal accounts do not support application permissions, only delegated permissions"), and OAuth for SMTP/IMAP is likewise unsupported for personal accounts. So `wuxi304@outlook.com` can only be reached by Graph in delegated mode, or by a provider that sends from a domain you own.
-2. **A transactional provider cannot send from `outlook.com`.** `RFQ_MAIL_FROM` must be on a domain you have verified with the provider, e.g. `rfq@exoticalloycn.com`. The service rejects a consumer-domain sender at configuration time rather than failing on a buyer's submission.
+1. **A personal Microsoft account cannot use Graph application permissions.** Microsoft states this plainly ("Personal accounts do not support application permissions, only delegated permissions"). That is a Graph restriction. It is *not* a protocol restriction: OAuth2 for IMAP/POP/SMTP is documented as available to Outlook.com users as well as Microsoft 365 users, and Graph's delegated `Mail.Send` works for personal accounts too. The real reason this deployment does not use Graph is different — delegated mode would mean holding a refresh token tied to one person's Microsoft account and re-consenting whenever it is invalidated, which is more fragile than a single API key.
+2. **A transactional provider cannot send from `outlook.com`.** `RFQ_MAIL_FROM` must be on a domain you have verified with the provider. `wuxi304@outlook.com` stays the *recipient*; the *sender* is on `exoticalloycn.com`. The service rejects a consumer-domain sender at configuration time rather than failing on a buyer's submission.
+3. **Mail is only one direction here.** Nothing in the RFQ path reads a mailbox. The customer's address travels as `Reply-To`, so replying from Outlook answers the buyer without the server ever needing inbox access.
 
 Keep the file mode at 0600. Never commit the real values.
 
@@ -115,6 +116,37 @@ sudo tail -n 20 /var/lib/tongjun-rfq/rfq-ledger.jsonl
 # Anything that failed to deliver
 sudo grep '"status":"failed"' /var/lib/tongjun-rfq/rfq-ledger.jsonl
 ```
+
+### Verifying a sending domain with Resend
+
+Resend will not accept a sender on a domain it has not verified. Add the domain in the Resend
+dashboard, then create the DNS records it displays in the DNSPod console for the zone. The
+shape is always the same three records plus DMARC:
+
+| Type | Host | Value |
+|---|---|---|
+| TXT | `send` | `v=spf1 include:amazonses.com ~all` |
+| MX | `send` | `feedback-smtp.<region>.amazonses.com` (priority 10) |
+| TXT | `resend._domainkey` | `p=MIGf...` — the DKIM public key, copy it verbatim |
+| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:dmarc@exoticalloycn.com` |
+
+The `send` subdomain is what Resend uses as the envelope (Return-Path) sender, which is why
+SPF lives there rather than on the apex. Copy the DKIM value exactly as shown — a truncated or
+line-wrapped key verifies as a signature failure rather than a malformed record, so it fails
+at delivery time instead of at verification time.
+
+Check propagation before clicking Verify in Resend:
+
+```bash
+dig +short TXT send.exoticalloycn.com
+dig +short MX  send.exoticalloycn.com
+dig +short TXT resend._domainkey.exoticalloycn.com
+dig +short TXT _dmarc.exoticalloycn.com
+```
+
+A record that is published but not yet propagated returns empty from `dig`, which is
+indistinguishable from "never added" if you only look at the dashboard. Confirm with `dig`
+first, then verify.
 
 ## 4. Install Nginx + systemd configuration
 

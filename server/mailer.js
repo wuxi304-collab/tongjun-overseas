@@ -54,6 +54,33 @@ function splitList(value) {
     .filter(Boolean);
 }
 
+// Operators reasonably write RFQ_MAIL_FROM the way a mail client shows it, e.g.
+//   Tongjun RFQ <rfq@exoticalloycn.com>
+//   "Tongjun RFQ Desk" <rfq@exoticalloycn.com>
+// A bare address is still accepted. Anything more exotic — several addresses, stray angle
+// brackets, an unterminated quote — is rejected rather than silently mis-parsed, because a
+// mis-read sender is exactly how a relay ends up sending as the wrong identity.
+function parseFromValue(value) {
+  const raw = String(value == null ? '' : value).trim();
+  const empty = { address: '', name: '' };
+  if (!raw) return empty;
+
+  const open = raw.indexOf('<');
+  if (open < 0) return { address: normalizeAddress(raw), name: '' };
+
+  const close = raw.indexOf('>', open + 1);
+  if (close < 0) return empty;
+  if (raw.indexOf('<', open + 1) >= 0 || raw.indexOf('>', close + 1) >= 0) return empty;
+  if (raw.slice(close + 1).trim()) return empty;
+
+  const name = raw.slice(0, open).trim().replace(/^"(.*)"$/, '$1').trim();
+  const address = normalizeAddress(raw.slice(open + 1, close));
+  if (!address) return empty;
+  // A display name containing a comma would be read as an address separator by relays.
+  if (name.includes(',')) return empty;
+  return { address, name };
+}
+
 function escapeHtml(value) {
   return String(value == null ? '' : value)
     .replace(/&/g, '&amp;')
@@ -93,7 +120,9 @@ function resolveMailConfig(env) {
   const recipients = recipientList.filter(address => isValidAddress(address)).map(normalizeAddress);
   const recipientConfigured = recipients.length > 0 && invalidRecipients.length === 0;
 
-  const fromAddress = normalizeAddress(readEnv(source, 'RFQ_MAIL_FROM'));
+  const fromRaw = readEnv(source, 'RFQ_MAIL_FROM');
+  const parsedFrom = parseFromValue(fromRaw);
+  const fromAddress = parsedFrom.address;
   const senderConfigured = isValidAddress(fromAddress);
 
   const config = {
@@ -103,7 +132,9 @@ function resolveMailConfig(env) {
     recipientInvalid: invalidRecipients,
     fromAddress,
     senderConfigured,
-    fromName: readEnv(source, 'RFQ_MAIL_FROM_NAME') || DEFAULT_FROM_NAME,
+    // An explicit RFQ_MAIL_FROM_NAME wins; otherwise a display name written into
+    // RFQ_MAIL_FROM is honoured, which keeps the single-variable form workable.
+    fromName: readEnv(source, 'RFQ_MAIL_FROM_NAME') || parsedFrom.name || DEFAULT_FROM_NAME,
     replyToCustomer: readEnv(source, 'RFQ_MAIL_REPLY_TO_CUSTOMER') !== '0',
     requestTimeoutMs: Number(readEnv(source, 'RFQ_MAIL_TIMEOUT_MS') || 15000),
     transportConfigured: false,
@@ -192,8 +223,17 @@ function resolveMailConfig(env) {
   };
   if (recipientList.length === 0) noteMissing('RFQ_MAIL_TO');
   else if (invalidRecipients.length) noteInvalid('RFQ_MAIL_TO');
-  if (!fromAddress) noteMissing('RFQ_MAIL_FROM');
+  // A sender that was supplied but cannot be read is invalid, not missing: telling an
+  // operator to set a variable they already set sends them down the wrong path.
+  if (!fromRaw) noteMissing('RFQ_MAIL_FROM');
   else if (!senderConfigured) noteInvalid('RFQ_MAIL_FROM');
+  if (fromRaw && !senderConfigured) {
+    config.notes.push(
+      'RFQ_MAIL_FROM could not be read as an address; use "Display Name <user@example.com>" or a bare address'
+    );
+  } else if (parsedFrom.name && !readEnv(source, 'RFQ_MAIL_FROM_NAME')) {
+    config.notes.push(`RFQ_MAIL_FROM display name "${parsedFrom.name}" will be used as the sender name`);
+  }
 
   const environment = readEnv(source, 'TONGJUN_DEPLOYMENT_ENVIRONMENT') || readEnv(source, 'NODE_ENV') || 'local';
   config.environment = environment;
@@ -477,6 +517,7 @@ module.exports = {
   buildRfqEmail,
   buildRfqSubject,
   escapeHtml,
+  parseFromValue,
   renderHtml,
   renderText,
   resolveMailConfig,

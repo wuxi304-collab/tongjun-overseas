@@ -16,10 +16,11 @@ const path = require('path');
 const {
   buildRfqEmail,
   buildRfqSubject,
+  parseFromValue,
   resolveMailConfig,
   sendRfqEmail
 } = require('../server/mailer.js');
-const { MailTransportError, encodeHeaderText } = require('../server/mail-transports.js');
+const { MailTransportError, encodeHeaderText, isValidAddress } = require('../server/mail-transports.js');
 const { appendLedger, buildEntry, LEDGER_FIELDS } = require('../server/rfq-ledger.js');
 
 const ROOT = path.join(__dirname, '..');
@@ -163,6 +164,80 @@ function testConfiguration() {
 
   const unknown = configFor({ RFQ_MAIL_TRANSPORT: 'carrier-pigeon', RFQ_MAIL_TO: 'a@b.com', RFQ_MAIL_FROM: 'c@d.com' });
   assert.equal(unknown.ready, false);
+}
+
+// ------------------------------------------------------------ RFQ_MAIL_FROM forms
+
+// Operators write a sender the way a mail client displays it, and Resend accepts
+// `Display Name <addr>` verbatim. Rejecting that form would silently leave every RFQ
+// unsendable while the operator believes the address is configured, so the resolver has
+// to read it. Ambiguous input still fails closed rather than being guessed at.
+function testFromValueParsing() {
+  assert.deepEqual(parseFromValue('rfq@exoticalloycn.com'), { address: 'rfq@exoticalloycn.com', name: '' });
+  assert.deepEqual(
+    parseFromValue('Tongjun RFQ <rfq@exoticalloycn.com>'),
+    { address: 'rfq@exoticalloycn.com', name: 'Tongjun RFQ' }
+  );
+  assert.deepEqual(
+    parseFromValue('"Tongjun RFQ Desk" <RFQ@exoticalloycn.com>'),
+    { address: 'rfq@exoticalloycn.com', name: 'Tongjun RFQ Desk' },
+    'quotes around the display name are decoration, not content'
+  );
+
+  // None of these may yield a usable address: an ambiguous sender is a mis-send waiting
+  // to happen, and the operator must be told instead of having it silently interpreted.
+  const rejected = [
+    'Tongjun RFQ <rfq@exoticalloycn.com',
+    '<a@b.com> <c@d.com>',
+    'A <a@b.com> trailing',
+    'a@b.com, c@d.com',
+    '<>',
+    'A, B <a@b.com>'
+  ];
+  for (const value of rejected) {
+    const parsed = parseFromValue(value);
+    assert.equal(isValidAddress(parsed.address), false, `must not accept RFQ_MAIL_FROM="${value}"`);
+  }
+
+  const displayName = configFor({
+    RFQ_MAIL_TRANSPORT: 'resend',
+    RFQ_MAIL_TO: 'wuxi304@outlook.com',
+    RFQ_MAIL_FROM: 'Tongjun RFQ <rfq@exoticalloycn.com>',
+    RESEND_API_KEY: 're_test'
+  });
+  assert.equal(displayName.senderConfigured, true);
+  assert.equal(displayName.fromAddress, 'rfq@exoticalloycn.com');
+  assert.equal(displayName.fromName, 'Tongjun RFQ');
+  assert.equal(displayName.ready, true, 'a display-name sender must not block delivery');
+
+  // The consumer-domain guard reads the parsed address, so a display name cannot disguise
+  // a mailbox Resend is not allowed to send from.
+  const disguised = configFor({
+    RFQ_MAIL_TRANSPORT: 'resend',
+    RFQ_MAIL_TO: 'wuxi304@outlook.com',
+    RFQ_MAIL_FROM: 'Tongjun RFQ <wuxi304@outlook.com>',
+    RESEND_API_KEY: 're_test'
+  });
+  assert.equal(disguised.ready, false, 'a consumer domain must not hide behind a display name');
+  assert.ok(disguised.notes.join(' ').includes('verified sending domain'));
+
+  const explicit = configFor({
+    RFQ_MAIL_TRANSPORT: 'resend',
+    RFQ_MAIL_TO: 'wuxi304@outlook.com',
+    RFQ_MAIL_FROM: 'Embedded <rfq@exoticalloycn.com>',
+    RFQ_MAIL_FROM_NAME: 'Explicit',
+    RESEND_API_KEY: 're_test'
+  });
+  assert.equal(explicit.fromName, 'Explicit', 'an explicit RFQ_MAIL_FROM_NAME wins');
+
+  const malformed = configFor({
+    RFQ_MAIL_TRANSPORT: 'resend',
+    RFQ_MAIL_TO: 'wuxi304@outlook.com',
+    RFQ_MAIL_FROM: 'Tongjun RFQ <rfq@exoticalloycn.com',
+    RESEND_API_KEY: 're_test'
+  });
+  assert.equal(malformed.ready, false, 'an unparseable sender must fail closed');
+  assert.ok(malformed.invalid.includes('RFQ_MAIL_FROM'));
 }
 
 // ---------------------------------------------------------------- subject + body
@@ -558,6 +633,7 @@ async function testLedger() {
 
 async function main() {
   testConfiguration();
+  testFromValueParsing();
   testSubject();
   testBodyCoversEveryAcceptedField();
   await testGraphTransportIsTwoStepAndFailsLoud();
@@ -567,6 +643,7 @@ async function main() {
 
   console.log(
     'PASS: RFQ mail delivery — fail-closed configuration (incl. log-in-production refusal), '
+    + 'RFQ_MAIL_FROM display-name parsing with fail-closed rejection of ambiguous senders, '
     + 'subject/body composition with header-injection defence and full field coverage, '
     + 'graph two-step draft+send with loud failures, resend API, SMTP over a live mock relay, '
     + 'and a body-free local ledger all validated.'
