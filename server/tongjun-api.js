@@ -1,6 +1,8 @@
 'use strict';
 
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const { execFileSync } = require('child_process');
 const rfqHandler = require('../api/rfq.js');
 const healthHandler = require('../api/health.js');
@@ -11,11 +13,21 @@ const MAX_ADAPTER_BODY_BYTES = 32 * 1024;
 
 function resolveGitCommit(){
   if(process.env.TONGJUN_RELEASE_COMMIT) return process.env.TONGJUN_RELEASE_COMMIT;
+  // The unit runs as www-data while the checkout is owned by root, so git's ownership guard
+  // rejects the repository and the release identity silently degraded to "local". Passing
+  // safe.directory for this one read-only call keeps the reported identity truthful.
   try{
-    return execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+    return execFileSync('git',['-c','safe.directory=*','rev-parse','HEAD'],{encoding:'utf8'}).trim();
   }catch{
-    return 'local';
+    /* fall through to the pinned package identity */
   }
+  try{
+    const pinned=fs.readFileSync(path.join(__dirname,'..','RELEASE_PACKAGE_SHA'),'utf8').trim();
+    if(/^[0-9a-f]{40}$/i.test(pinned)) return pinned;
+  }catch{
+    /* no pinned identity available */
+  }
+  return 'local';
 }
 
 if(!process.env.TONGJUN_RELEASE_COMMIT){

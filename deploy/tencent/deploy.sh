@@ -37,7 +37,11 @@ echo "[4/7] Atomically switch current static release"
 sudo mkdir -p "$WEB_ROOT/releases"
 sudo ln -sfn "$RELEASE_DIR" "$WEB_ROOT/current"
 
-echo "[5/7] Restart localhost API"
+echo "[5/7] Pin release identity and restart localhost API"
+sudo mkdir -p /etc/systemd/system/tongjun-api.service.d
+printf '[Service]\nEnvironment=TONGJUN_RELEASE_COMMIT=%s\n' "$SHA" \
+  | sudo tee /etc/systemd/system/tongjun-api.service.d/10-release.conf >/dev/null
+sudo systemctl daemon-reload
 sudo systemctl restart tongjun-api.service
 
 echo "[6/7] Validate and reload Nginx"
