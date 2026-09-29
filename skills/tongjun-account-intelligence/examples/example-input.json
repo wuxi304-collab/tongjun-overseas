@@ -1,0 +1,23 @@
+{
+  "run_date": "2026-09-29",
+  "account": {
+    "id": "example-001",
+    "name": "Example Process Equipment",
+    "country": "Example",
+    "domain": "example.com"
+  },
+  "official": {
+    "emails": ["sales@example.com"],
+    "urls": ["https://example.com/contact"],
+    "contacts": [
+      {
+        "name": "Example Contact",
+        "title": "Purchasing Manager",
+        "email": "buyer@example.com",
+        "source": "https://example.com/contact"
+      }
+    ]
+  },
+  "authorized_security_scope": false,
+  "allow_person_account_checks": false
+}
